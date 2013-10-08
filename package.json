@@ -35,11 +35,11 @@
   },
   "devDependencies": {
     "sinon": "~1.7.3",
+    "mongoose": "~3.6.20",
     "mocha": "~1.11.0",
     "chai": "~1.7.1"
   },
   "peerDependencies": {
-    "mongoose": "~3.6.20"
   },
   "keywords": [
     "entity",

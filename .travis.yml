@@ -5,5 +5,4 @@ env:
   - TRAVIS=true
 services:
   - mongodb
-before_script: "npm install --dev"
 
