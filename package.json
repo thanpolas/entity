@@ -1,7 +1,7 @@
 {
   "name": "node-entity",
   "description": "The MVCe implementation for Node.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/thanpolas/entity",
   "author": {
     "name": "Thanasis Polychronakis",
@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "lodash": "~1.3.1",
-    "async": "~0.2.9",
     "middlewarify": "~0.0.2"
   },
   "devDependencies": {
@@ -39,7 +38,9 @@
     "mocha": "~1.11.0",
     "chai": "~1.7.1"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "mongoose": "~3.6.20"
+  },
   "keywords": [
     "entity",
     "mvc",
