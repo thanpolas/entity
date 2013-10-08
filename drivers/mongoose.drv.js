@@ -1,5 +1,5 @@
 /**
- * @fileOverview The entities base class.
+ * @fileOverview The Mongoose CRUD implementation.
  */
 var util = require('util');
 
@@ -7,7 +7,7 @@ var __ = require('lodash');
 var EntityCrud = require('../entity-crud');
 
 /**
- * The base Entity Class all entities extend from.
+ * The Mongoose CRUD implementation.
  *
  * @param {mongoose.Model} Model the model that this entity relates to.
  * @param {Object=} optUdo Optionally define the current handling user.
