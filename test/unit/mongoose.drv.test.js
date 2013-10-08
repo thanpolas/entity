@@ -10,11 +10,17 @@ var assert = chai.assert;
 // module to test
 var Entity = require('../../drivers/mongoose.drv');
 
+// libs
+var mongoStub = require('../lib/mongoose-stub');
+var fix = require('../fixture/data.fix');
+
 // var noop = function(){};
 
 suite('2. Mongoose Driver', function() {
 
-  setup(function() {});
+  setup(function(done) {
+    mongoStub.connect(done);
+  });
   teardown(function() {});
 
 
@@ -22,7 +28,7 @@ suite('2. Mongoose Driver', function() {
   // The purpose is to provide a unique string so specific tests are
   // run by using the mocha --grep "1.1.1" option.
 
-  suite('2.1 Test Interface', function() {
+  suite('2.1 Surface Tests', function() {
     var ent;
     setup(function() {
       ent = new Entity();

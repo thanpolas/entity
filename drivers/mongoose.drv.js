@@ -15,7 +15,10 @@ var EntityCrud = require('../entity');
  * @extends {crude.Entity}
  */
 var Entity = module.exports = function(Model, optUdo) {
-  EntityCrud.call(this, Model, optUdo);
+  EntityCrud.call(this, optUdo);
+
+  /** @type {mongoose.Model} The mongoose model */
+  this.Model = Model;
 };
 util.inherits(Entity, EntityCrud);
 
@@ -49,7 +52,7 @@ Entity.prototype._readOne = function(id, done) {
 };
 
 /**
- * Read items based on query or if not defined, read all items. 
+ * Read items based on query or if not defined, read all items.
  * Do practice common sense!
  *
  * @param {Object=} optQuery Limit the results.
