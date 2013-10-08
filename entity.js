@@ -1,6 +1,6 @@
 /**
  * @fileOverview The Entity base class.
- * 
+ *
  */
 
 var EventEmitter = require('events').EventEmitter;
@@ -44,7 +44,7 @@ Entity.prototype.setUdo = function(udo) {
  * Create an entity item.
  *
  * @param {Object} itemData The data to use for creating.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
 Entity.prototype._create = function(itemData, done) {
@@ -55,7 +55,7 @@ Entity.prototype._create = function(itemData, done) {
  * Read one entity item.
  *
  * @param {string|Object} id the item id or an Object to query against.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
 Entity.prototype._readOne = function(id, done) {
@@ -63,11 +63,11 @@ Entity.prototype._readOne = function(id, done) {
 };
 
 /**
- * Read items based on query or if not defined, read all items. 
+ * Read items based on query or if not defined, read all items.
  * Do practice common sense!
  *
  * @param {Object|string=} optQuery Optionally define a query to limit results.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
 Entity.prototype._read = function(optQuery, done) {
@@ -80,7 +80,7 @@ Entity.prototype._read = function(optQuery, done) {
  * @param {?Object} query Narrow down the set, set to null for all.
  * @param {number} skip starting position.
  * @param {number} limit how many records to fetch.
- * @param {Function(ts.error.Abstract=, Array.<mongoose.Document>=)} done callback.
+ * @param {Function(Error=, Array.<Object>=)} done callback.
  * @protected
  */
 Entity.prototype._readLimit = function(query, skip, limit, done) {
@@ -91,7 +91,7 @@ Entity.prototype._readLimit = function(query, skip, limit, done) {
  * Get the count of items.
  *
  * @param {?Object} query Narrow down the set, set to null for all.
- * @param {Function(ts.error.Abstract=, number=)} done callback.
+ * @param {Function(Error=, number=)} done callback.
  * @protected
  */
 Entity.prototype._count = function(query, done) {
@@ -103,7 +103,7 @@ Entity.prototype._count = function(query, done) {
  *
  * @param {string} id the item id.
  * @param {Object} itemData The data to use for creating.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
 Entity.prototype._update = function(id, itemData, done) {
@@ -114,7 +114,7 @@ Entity.prototype._update = function(id, itemData, done) {
  * Remove an entity item.
  *
  * @param {string} id the item id.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
 Entity.prototype._delete = function(id, done) {

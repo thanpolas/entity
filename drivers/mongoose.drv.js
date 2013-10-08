@@ -26,7 +26,7 @@ util.inherits(Entity, EntityCrud);
  * Create an entity item.
  *
  * @param {Object} itemData The data to use for creating.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, mongoose.Document=)} done callback.
  * @override
  */
 Entity.prototype._create = function(itemData, done) {
@@ -38,7 +38,7 @@ Entity.prototype._create = function(itemData, done) {
  * Read one entity item.
  *
  * @param {string|Object} id the item id or an Object to query against.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, mongoose.Document=)} done callback.
  * @override
  */
 Entity.prototype._readOne = function(id, done) {
@@ -56,7 +56,7 @@ Entity.prototype._readOne = function(id, done) {
  * Do practice common sense!
  *
  * @param {Object=} optQuery Limit the results.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, mongoose.Document=)} done callback.
  * @override
  */
 Entity.prototype._read = function(optQuery, done) {
@@ -76,7 +76,7 @@ Entity.prototype._read = function(optQuery, done) {
  * @param {?Object} query Narrow down the set, set to null for all.
  * @param {number} skip starting position.
  * @param {number} limit how many records to fetch.
- * @param {Function(ts.error.Abstract=, Array.<mongoose.Document>=)} done callback.
+ * @param {Function(Error=, Array.<mongoose.Document>=)} done callback.
  * @override
  */
 Entity.prototype._readLimit = function(query, skip, limit, done) {
@@ -89,8 +89,8 @@ Entity.prototype._readLimit = function(query, skip, limit, done) {
 /**
  * Get the count of items.
  *
- * @param {?Object} query Narrow down the set, set to null for all.
- * @param {Function(ts.error.Abstract=, number=)} done callback.
+ * @param {?Object} query Narrow down the set, null for all.
+ * @param {Function(Error=, number=)} done callback.
  * @override
  */
 Entity.prototype._count = function(query, done) {
@@ -102,7 +102,7 @@ Entity.prototype._count = function(query, done) {
  *
  * @param {string|Object} id the item id or query for item.
  * @param {Object} itemData The data to use for creating.
- * @param {Function(ts.error.Abstract=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, mongoose.Document=)} done callback.
  * @override
  */
 Entity.prototype._update = function(id, itemData, done) {

@@ -7,48 +7,71 @@ var chai = require('chai');
 var sinon = require('sinon');
 var assert = chai.assert;
 
-// module to test
-var Entity = require('../../');
-
 // var noop = function(){};
 
-suite('1. Entity Base', function() {
+var tests = module.exports = {};
 
-  setup(function() {});
-  teardown(function() {});
+/**
+ * Surface test the entity API.
+ *
+ * @param {Entity} Entity DI for the entity implementation.
+ * @param {string} majNum The Major number.
+ */
+tests.surface = function(Entity, majNum) {
+  suite(majNum + '. Entity Base', function() {
+
+    setup(function() {});
+    teardown(function() {});
 
 
-  // The numbering (e.g. 1.1.1) has nothing to do with order
-  // The purpose is to provide a unique string so specific tests are
-  // run by using the mocha --grep "1.1.1" option.
+    // The numbering (e.g. 1.1.1) has nothing to do with order
+    // The purpose is to provide a unique string so specific tests are
+    // run by using the mocha --grep "1.1.1" option.
 
-  suite('1.1 Test Interface', function() {
+    suite(majNum + '.1 API Surface', function() {
+      var ent;
+      setup(function() {
+        ent = new Entity();
+      });
+      test(majNum + '.1.1 Primitive Methods', function(){
+        assert.isFunction(ent.create, 'Entity should have a "create" method');
+        assert.isFunction(ent.read, 'Entity should have a "read" method');
+        assert.isFunction(ent.readOne, 'Entity should have a "readOne" method');
+        assert.isFunction(ent.readLimit, 'Entity should have a "readLimit" method');
+        assert.isFunction(ent.update, 'Entity should have a "update" method');
+        assert.isFunction(ent.delete, 'Entity should have a "delete" method');
+        assert.isFunction(ent.count, 'Entity should have a "count" method');
+      });
+      test(majNum + '.1.2 Helper Methods', function(){
+        assert.isFunction(ent.setUdo, 'Entity should have a "setUdo" method');
+      });
+      test(majNum + '.1.3 Primitive Methods middleware "use" method', function(){
+        assert.isFunction(ent.create.use, 'Entity should have a "create.use" method');
+        assert.isFunction(ent.read.use, 'Entity should have a "read.use" method');
+        assert.isFunction(ent.readOne.use, 'Entity should have a "readOne.use" method');
+        assert.isFunction(ent.readLimit.use, 'Entity should have a "readLimit.use" method');
+        assert.isFunction(ent.update.use, 'Entity should have a "update.use" method');
+        assert.isFunction(ent.delete.use, 'Entity should have a "delete.use" method');
+        assert.isFunction(ent.count.use, 'Entity should have a "count.use" method');
+      });
+    });
+  });
+};
+
+
+/**
+ * Raw Interface test, the primitives.
+ *
+ * @param {Entity} Entity DI for the entity implementation.
+ * @param {string} majNum The Major number.
+ */
+tests.iface = function(Entity, majNum) {
+  suite(majNum + '.2 Raw Interface', function() {
     var ent;
     setup(function() {
       ent = new Entity();
     });
-    test('1.1.1 Primitive Methods', function(){
-      assert.isFunction(ent.create, 'Entity should have a "create" method');
-      assert.isFunction(ent.read, 'Entity should have a "read" method');
-      assert.isFunction(ent.readOne, 'Entity should have a "readOne" method');
-      assert.isFunction(ent.readLimit, 'Entity should have a "readLimit" method');
-      assert.isFunction(ent.update, 'Entity should have a "update" method');
-      assert.isFunction(ent.delete, 'Entity should have a "delete" method');
-      assert.isFunction(ent.count, 'Entity should have a "count" method');
-    });
-    test('1.1.2 Helper Methods', function(){
-      assert.isFunction(ent.setUdo, 'Entity should have a "setUdo" method');
-    });
-    test('1.1.3 Primitive Methods middleware "use" method', function(){
-      assert.isFunction(ent.create.use, 'Entity should have a "create.use" method');
-      assert.isFunction(ent.read.use, 'Entity should have a "read.use" method');
-      assert.isFunction(ent.readOne.use, 'Entity should have a "readOne.use" method');
-      assert.isFunction(ent.readLimit.use, 'Entity should have a "readLimit.use" method');
-      assert.isFunction(ent.update.use, 'Entity should have a "update.use" method');
-      assert.isFunction(ent.delete.use, 'Entity should have a "delete.use" method');
-      assert.isFunction(ent.count.use, 'Entity should have a "count.use" method');
-    });
-    test('1.1.4 Primitive methods are not implemented', function(){
+    test(majNum + '.2.1 Primitive methods are not implemented', function(){
       var spyCreate = sinon.spy();
       var spyRead = sinon.spy();
       var spyReadOne = sinon.spy();
@@ -83,4 +106,4 @@ suite('1. Entity Base', function() {
       assert.equal(spyCount.args[0][0].message, message, 'Error Message of "count" should be "Not Implemented"');
     });
   });
-});
+};
