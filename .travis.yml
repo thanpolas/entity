@@ -5,4 +5,5 @@ env:
   - TRAVIS=true
 services:
   - mongodb
-
+before_script:
+  - psql -c 'create database entity_test;' -U postgres
