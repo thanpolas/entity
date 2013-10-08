@@ -4,7 +4,7 @@
 var util = require('util');
 
 var __ = require('lodash');
-var EntityCrud = require('../entity');
+var EntityCrud = require('../entity-crud');
 
 /**
  * The base Entity Class all entities extend from.

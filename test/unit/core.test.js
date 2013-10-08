@@ -4,7 +4,6 @@
 
 var mongStub = require('../lib/mongoose-stub');
 var Entity = require('../..');
-var MongDrv = require('../../drivers/mongoose.drv');
 var testEntity = require('./entity.test');
 var testDrivers = require('./drivers.test');
 
@@ -17,7 +16,7 @@ var core = module.exports = {};
 core.init = function() {
 
   var drivers = [
-    MongDrv, // test major num: 2
+    Entity.Mongoose, // test major num: 2
   ];
 
   suite('Master Wrapper', function() {

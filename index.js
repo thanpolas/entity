@@ -2,4 +2,6 @@
  * @fileOverview bootstrap file.
  */
 
-module.exports = require('./entity');
+var Entity = module.exports = require('./entity');
+
+Entity.Mongoose = require('./drivers/mongoose.drv');
