@@ -1,6 +1,7 @@
 /**
  * @fileOverview Stub a Sequelize model.
  */
+var exec = require('child_process').exec;
 
 var Sequelize = require('sequelize');
 
@@ -30,25 +31,34 @@ seq.Model = null;
  * @private
  */
 seq.connect = function(done) {
-  seq.instance = new Sequelize(
-    'entity_test',
-    'postgres',
-    '',
-    {
-      host: '127.0.0.1',
-      dialect: 'postgres',
-    }
-  );
+  if (_init) {return done();}
+  _init = true;
 
-  seq.Model = seq.instance.define('stubModel', seq.Schema);
+  var createUserCmd = 'createuser postgres --superuser --createdb';
+  var createDbCmd = 'createdb -O postgres entity_test';
+  exec(createUserCmd, {}, function(err) {
+    if (err && err.message.indexOf('already exists') === -1) { return done(err);}
+    exec(createDbCmd, {}, function(err) {
+      if (err && err.message.indexOf('already exists') === -1) { return done(err);}
 
-  seq.instance.sync()
-    .success(done)
-    .error(done);
+      seq.instance = new Sequelize(
+        'entity_test',
+        'postgres',
+        '',
+        {
+          host: '127.0.0.1',
+          dialect: 'postgres',
+        }
+      );
+
+      seq.Model = seq.instance.define('stubModel', seq.Schema);
+
+      seq.instance.sync()
+        .success(done)
+        .error(done);
+    });
+  });
 };
-
-
-
 
 /**
  * Nuke the stub database.

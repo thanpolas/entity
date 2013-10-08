@@ -38,7 +38,8 @@
     "mongoose": "~3.6.20",
     "mocha": "~1.11.0",
     "chai": "~1.7.1",
-    "sequelize": "~2.0.0-beta.0"
+    "sequelize": "~2.0.0-beta.0",
+    "pg": "~2.7.0"
   },
   "peerDependencies": {},
   "keywords": [
