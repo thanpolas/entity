@@ -19,7 +19,7 @@ core.init = function() {
     Entity.Mongoose, // test major num: 2
   ];
 
-  suite('Master Wrapper', function() {
+  suite('E.', function() {
     setup(function(done) {
       mongStub.connect(function(err) {
         if (err) {return done(err);}
@@ -28,9 +28,9 @@ core.init = function() {
       });
     });
 
-    // Test core interface first
-    testEntity.surface(Entity, 1);
-    testEntity.iface(Entity, 1);
+    // Test CRUD interface
+    testEntity.surface(Entity.CrudIface, 1);
+    testEntity.iface(Entity.CrudIface, 1);
 
     // Then all drivers
     var count = 2;
