@@ -8,11 +8,11 @@ var sinon = require('sinon');
 var assert = chai.assert;
 
 // module to test
-var Entity = require('../../entity');
+var Entity = require('../../');
 
 // var noop = function(){};
 
-suite('1. Entity', function() {
+suite('1. Entity Base', function() {
 
   setup(function() {});
   teardown(function() {});
@@ -57,13 +57,13 @@ suite('1. Entity', function() {
       var spyDelete = sinon.spy();
       var spyCount = sinon.spy();
 
-      ent.create(spyCreate);
-      ent.read(spyRead);
-      ent.readOne(spyReadOne);
-      ent.readLimit(spyReadLimit);
-      ent.update(spyUpdate);
-      ent.delete(spyDelete);
-      ent.count(spyCount);
+      ent.create().done(spyCreate);
+      ent.read().done(spyRead);
+      ent.readOne().done(spyReadOne);
+      ent.readLimit().done(spyReadLimit);
+      ent.update().done(spyUpdate);
+      ent.delete().done(spyDelete);
+      ent.count().done(spyCount);
 
       assert.instanceOf(spyCreate.args[0][0], Error, 'first arg should be instanceOf Error');
       assert.instanceOf(spyRead.args[0][0], Error, 'first arg should be instanceOf Error');
