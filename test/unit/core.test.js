@@ -41,9 +41,7 @@ core.init = function() {
     });
 
   });
-
 };
-
 
 // ignite
 core.init();
