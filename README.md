@@ -4,6 +4,8 @@ A Node.js for the MVCe pattern.
 
 Entities are the middlemen between your controllers and models. They describe the business logic of your application and are persistent storage agnostic.
 
+[![Build Status](https://travis-ci.org/thanpolas/entity.png)](https://travis-ci.org/thanpolas/entity)
+
 ## Install
 
 ```shell
