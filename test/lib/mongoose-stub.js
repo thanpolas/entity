@@ -31,7 +31,7 @@ mong._initModels = function() {
 
 /**
  * Nuke the stub database.
- * 
+ *
  * @param  {Function} done callback
  * @return {[type]}        [description]
  */
@@ -48,7 +48,7 @@ mong.nukedb = function(done) {
 mong.connect = function(done) {
   if (_init) {return done();}
   _init = true;
-  
+
   // check if already connected
   if (1 === mongoose.connection.readyState) {
     done();
@@ -81,15 +81,9 @@ mong.connect = function(done) {
     cbDone = true;
     db.removeListener('error', onErrorLocal);
 
-    mong.nukedb(function(err){
-      if (err) {return done(err);}
-      
-      mong._initModels();
-      done();
-    });
-
+    mong._initModels();
+    done();
   }
-
   mongoose.connection.once('error', onErrorLocal);
   mongoose.connection.once('open', onOpenLocal);
 };

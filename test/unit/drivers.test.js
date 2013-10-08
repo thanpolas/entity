@@ -4,10 +4,12 @@
 
 // var sinon  = require('sinon');
 var chai = require('chai');
-var sinon = require('sinon');
+// var sinon = require('sinon');
 var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
+var mongStub = require('../lib/mongoose-stub');
+
 // var noop = function(){};
 
 var tests = module.exports = {};
@@ -22,12 +24,13 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.3 Create records', function() {
     var ent;
     setup(function() {
-      ent = new Entity();
+      ent = new Entity(mongStub.Model);
     });
     test(majNum + '.3.1 Create a record', function(done) {
       ent.create(fix.one, function(err, data) {
         assert.notInstanceOf(err, Error, 'Should have no error');
-        assert.deepEqual(data, fix.one, 'Should return the provided fixture object');
+        assert.equal(data.name, fix.one.name, 'Name should be the same');
+        assert.equal(data.isActive, fix.one.isActive, 'isActive should be the same');
         done();
       });
     });
@@ -36,7 +39,7 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.4 Update records', function() {
     var ent, id;
     setup(function(done) {
-      ent = new Entity();
+      ent = new Entity(mongStub.Model);
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -74,7 +77,7 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.5 Read records', function() {
     var ent, id;
     setup(function(done) {
-      ent = new Entity();
+      ent = new Entity(mongStub.Model);
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -114,7 +117,7 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.6 Count records', function() {
     var ent, id;
     setup(function(done) {
-      ent = new Entity();
+      ent = new Entity(mongStub.Model);
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;

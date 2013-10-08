@@ -42,6 +42,7 @@
   "peerDependencies": {},
   "keywords": [
     "entity",
-    "mvc"
+    "mvc",
+    "mvce"
   ]
 }
