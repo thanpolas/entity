@@ -8,7 +8,6 @@ var chai = require('chai');
 var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
-var mongStub = require('../lib/mongoose-stub');
 
 // var noop = function(){};
 
@@ -18,13 +17,14 @@ var tests = module.exports = {};
  * Test CRUD methods.
  *
  * @param {Entity} Entity DI for the entity implementation.
+ * @param {Object} Model required by the ORM.
  * @param {string} majNum The Major number.
  */
-tests.crud = function(Entity, majNum) {
+tests.crud = function(Entity, Model, majNum) {
   suite(majNum + '.3 Create records', function() {
     var ent;
     setup(function() {
-      ent = new Entity(mongStub.Model);
+      ent = new Entity(Model);
     });
     test(majNum + '.3.1 Create a record', function(done) {
       ent.create(fix.one, function(err, data) {
@@ -39,7 +39,7 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.4 Update records', function() {
     var ent, id;
     setup(function(done) {
-      ent = new Entity(mongStub.Model);
+      ent = new Entity(Model);
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -77,7 +77,7 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.5 Read records', function() {
     var ent, id;
     setup(function(done) {
-      ent = new Entity(mongStub.Model);
+      ent = new Entity(Model);
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -117,7 +117,7 @@ tests.crud = function(Entity, majNum) {
   suite(majNum + '.6 Count records', function() {
     var ent, id;
     setup(function(done) {
-      ent = new Entity(mongStub.Model);
+      ent = new Entity(Model);
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;

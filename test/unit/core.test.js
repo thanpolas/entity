@@ -3,6 +3,7 @@
  */
 
 var mongStub = require('../lib/mongoose-stub');
+var seqStub = require('../lib/sequelize-stub');
 var Entity = require('../..');
 var testEntity = require('./entity.test');
 var testDrivers = require('./drivers.test');
@@ -16,15 +17,30 @@ var core = module.exports = {};
 core.init = function() {
 
   var drivers = [
-    Entity.Mongoose, // test major num: 2
+    {
+      Entity: Entity.Mongoose,
+      majNum: '2',
+      stub: mongStub
+    },
+    {
+      Entity: Entity.Sequelize,
+      majNum: '3',
+      stub: seqStub
+    },
   ];
 
   suite('E.', function() {
+    // the spiral of death
     setup(function(done) {
       mongStub.connect(function(err) {
         if (err) {return done(err);}
-
-        mongStub.nukedb(done);
+        mongStub.nukedb(function(err){
+          if (err) {return done(err);}
+          seqStub.connect(function(err) {
+            if (err) {return done(err);}
+            seqStub.nukedb(done);
+          });
+        });
       });
     });
 
@@ -33,11 +49,9 @@ core.init = function() {
     testEntity.iface(Entity.CrudIface, 1);
 
     // Then all drivers
-    var count = 2;
-    drivers.forEach(function(Driver) {
-      testEntity.surface(Driver, count);
-      testDrivers.crud(Driver, count);
-      count++;
+    drivers.forEach(function(driver) {
+      testEntity.surface(driver.Entity, driver.stub.Model, driver.majNum);
+      testDrivers.crud(driver.Entity, driver.stub.Model, driver.majNum);
     });
 
   });
