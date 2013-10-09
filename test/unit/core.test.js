@@ -6,7 +6,11 @@ var mongStub = require('../lib/mongoose-stub');
 var seqStub = require('../lib/sequelize-stub');
 var Entity = require('../..');
 var testEntity = require('./entity.test');
-var testDrivers = require('./drivers.test');
+var testDriverUtils = require('./drivers.test');
+var testDriverCreate = require('./drivers-create.test');
+var testDriverRead = require('./drivers-read.test');
+var testDriverUpdate = require('./drivers-update.test');
+var testDriverDelete = require('./drivers-delete.test');
 
 var core = module.exports = {};
 
@@ -59,7 +63,11 @@ core.init = function() {
 
 
       testEntity.surface(driver, driver.majNum);
-      testDrivers.crud(driver, driver.majNum);
+      testDriverUtils(driver, driver.majNum);
+      testDriverCreate(driver, driver.majNum);
+      testDriverRead(driver, driver.majNum);
+      testDriverUpdate(driver, driver.majNum);
+      testDriverDelete(driver, driver.majNum);
 
     });
   });
