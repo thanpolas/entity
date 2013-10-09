@@ -55,20 +55,18 @@ seq.connect = function(done) {
 
       seq.Model = seq.instance.define('stubModel', seq.Schema);
 
-      seq.instance.sync()
-        .success(done.bind(null, null))
-        .error(done);
+      seq.nukedb(done);
     });
   });
 };
 
 /**
- * Nuke the stub database.
+ * Nuke the stub database, force recreation.
  *
  * @param  {Function} done callback
- * @return {[type]}        [description]
  */
 seq.nukedb = function(done) {
-  // perform drop db
-  seq.Model.destroy({name: '%'}).success(done.bind(null, null)).error(done);
+  seq.instance.sync({force: true})
+    .success(done.bind(null, null))
+    .error(done);
 };
