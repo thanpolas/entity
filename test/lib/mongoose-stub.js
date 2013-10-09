@@ -17,6 +17,9 @@ mong.Schema = {
   isActive: {type: Boolean, required: true, default: true},
 };
 
+/** @type {?Mongoose.Model} */
+mong.Model = null;
+
 /**
  * Initialize all the models.
  *
@@ -33,7 +36,6 @@ mong._initModels = function() {
  * Nuke the stub database.
  *
  * @param  {Function} done callback
- * @return {[type]}        [description]
  */
 mong.nukedb = function(done) {
   // perform drop db
@@ -84,6 +86,13 @@ mong.connect = function(done) {
     mong._initModels();
     done();
   }
+
+
   mongoose.connection.once('error', onErrorLocal);
   mongoose.connection.once('open', onOpenLocal);
+  // setup global mongoose event error handler
+  mongoose.connection.on('error', function(err) {
+    console.error('Mongoose ERROR:', err);
+    throw err;
+  });
 };

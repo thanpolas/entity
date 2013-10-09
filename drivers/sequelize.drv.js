@@ -17,6 +17,17 @@ var EntityCrud = require('../entity-crud');
 var Entity = module.exports = function(Model, optUdo) {
   EntityCrud.call(this, optUdo);
 
+  // perform some heuristics on Model identity cause instanceof will not work
+  if (
+    !Model.name ||
+    !Model.tableName ||
+    !Model.options ||
+    !Model.DAO
+
+    ) {
+    throw new TypeError('Model provided not a Mongoose.Model instance');
+  }
+
   /** @type {Sequelize.Model} The sequelize Model */
   this.Model = Model;
 };
@@ -157,7 +168,7 @@ Entity.prototype._delete = function(id, done) {
 
 /**
  * Helper for handling Sequelize type outcomes.
- * 
+ *
  * @param {Object} op a promise object.
  * @param {Function} done the callback.
  * @param {Object=} optItemData Data passed to the op.
@@ -171,7 +182,7 @@ Entity.prototype._handleOp = function(op, done, optItemData) {
 
 /**
  * Helper to return the query properly formated based on type of id.
- * 
+ *
  * @param {string|Object} id the item id or query for item.
  * @private
  */

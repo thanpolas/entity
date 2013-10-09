@@ -17,6 +17,18 @@ var EntityCrud = require('../entity-crud');
 var Entity = module.exports = function(Model, optUdo) {
   EntityCrud.call(this, optUdo);
 
+
+  // perform some heuristics on Model identity cause instanceof will not work
+  if (
+    Model.name !== 'model' ||
+    !Model.db ||
+    !Model.model ||
+    !Model.schema
+
+    ) {
+    throw new TypeError('Model provided not a Mongoose.Model instance');
+  }
+
   /** @type {mongoose.Model} The mongoose model */
   this.Model = Model;
 };

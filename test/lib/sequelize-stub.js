@@ -2,6 +2,7 @@
  * @fileOverview Stub a Sequelize model.
  */
 var exec = require('child_process').exec;
+var util = require('util');
 
 var Sequelize = require('sequelize');
 
@@ -14,8 +15,8 @@ var _init = false;
  * @type {Object}
  */
 seq.Schema = {
-  name: {type: String, trim: true, required: true},
-  isActive: {type: Boolean, required: true, default: true},
+  name: {type: Sequelize.STRING, allowNull: false},
+  isActive: {type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true},
 };
 
 /** @type {?Sequelize} The main Sequelize instance */
@@ -47,6 +48,7 @@ seq.connect = function(done) {
         '',
         {
           host: '127.0.0.1',
+          port: '5432',
           dialect: 'postgres',
         }
       );
@@ -54,7 +56,7 @@ seq.connect = function(done) {
       seq.Model = seq.instance.define('stubModel', seq.Schema);
 
       seq.instance.sync()
-        .success(done)
+        .success(done.bind(null, null))
         .error(done);
     });
   });
@@ -68,5 +70,5 @@ seq.connect = function(done) {
  */
 seq.nukedb = function(done) {
   // perform drop db
-  seq.Model.destroy().success(done).error(done);
+  seq.Model.destroy({name: '%'}).success(done.bind(null, null)).error(done);
 };

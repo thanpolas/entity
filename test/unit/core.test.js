@@ -18,42 +18,50 @@ core.init = function() {
 
   var drivers = [
     {
+      name: 'Mongoose',
       Entity: Entity.Mongoose,
       majNum: '2',
-      stub: mongStub
+      stub: mongStub,
+      factory: function() {
+        return new Entity.Mongoose(mongStub.Model);
+      },
     },
     {
+      name: 'Sequelize',
       Entity: Entity.Sequelize,
       majNum: '3',
-      stub: seqStub
+      stub: seqStub,
+      factory: function() {
+        return new Entity.Sequelize(seqStub.Model);
+      },
     },
   ];
 
-  suite('E.', function() {
-    // the spiral of death
-    setup(function(done) {
-      mongStub.connect(function(err) {
-        if (err) {return done(err);}
-        mongStub.nukedb(function(err){
+
+
+  // Test CRUD interface
+  function factoryCrud() {return new Entity.CrudIface();}
+  testEntity.surface({factory: factoryCrud}, 1);
+  testEntity.iface({factory: factoryCrud}, 1);
+
+  // Then all drivers
+  drivers.forEach(function(driver) {
+    suite(driver.majNum + '. ' + driver.name, function() {
+      setup(function(done) {
+        driver.stub.connect(function(err) {
           if (err) {return done(err);}
-          seqStub.connect(function(err) {
-            if (err) {return done(err);}
-            seqStub.nukedb(done);
-          });
+          driver.stub.nukedb(done);
         });
       });
+      teardown(function(done) {
+        done();
+      });
+
+
+      testEntity.surface(driver, driver.majNum);
+      testDrivers.crud(driver, driver.majNum);
+
     });
-
-    // Test CRUD interface
-    testEntity.surface(Entity.CrudIface, 1);
-    testEntity.iface(Entity.CrudIface, 1);
-
-    // Then all drivers
-    drivers.forEach(function(driver) {
-      testEntity.surface(driver.Entity, driver.stub.Model, driver.majNum);
-      testDrivers.crud(driver.Entity, driver.stub.Model, driver.majNum);
-    });
-
   });
 };
 

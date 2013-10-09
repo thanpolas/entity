@@ -14,10 +14,10 @@ var tests = module.exports = {};
 /**
  * Surface test the entity API.
  *
- * @param {Entity} Entity DI for the entity implementation.
+ * @param {Object} driver The driver object as defined in core.test.js
  * @param {string} majNum The Major number.
  */
-tests.surface = function(Entity, majNum) {
+tests.surface = function(driver, majNum) {
   suite(majNum + '. Entity Base', function() {
 
     setup(function() {});
@@ -31,7 +31,7 @@ tests.surface = function(Entity, majNum) {
     suite(majNum + '.1 API Surface', function() {
       var ent;
       setup(function() {
-        ent = new Entity();
+        ent = driver.factory();
       });
       test(majNum + '.1.1 Primitive Methods', function(){
         assert.isFunction(ent.create, 'Entity should have a "create" method');
@@ -62,14 +62,14 @@ tests.surface = function(Entity, majNum) {
 /**
  * Raw Interface test, the primitives.
  *
- * @param {Entity} Entity DI for the entity implementation.
+ * @param {Object} driver The driver object as defined in core.test.js
  * @param {string} majNum The Major number.
  */
-tests.iface = function(Entity, majNum) {
+tests.iface = function(driver, majNum) {
   suite(majNum + '.2 Raw Interface', function() {
     var ent;
     setup(function() {
-      ent = new Entity();
+      ent = driver.factory();
     });
     test(majNum + '.2.1 Primitive methods are not implemented', function(){
       var spyCreate = sinon.spy();
