@@ -93,9 +93,7 @@ Entity.prototype._read = function(optQuery, done) {
   }
 
   this.Model.findAll(findOpts)
-    .success(function(res) {
-      done(null, res);
-    })
+    .success(__.partial(done, null))
     .error(done);
 };
 
@@ -113,14 +111,17 @@ Entity.prototype._readLimit = function(query, skip, limit, done) {
     query = this._getQuery(query);
   }
 
-  this.Model.findAll({
-    where: query,
+  var findOpts = {
     offset: skip,
     limit: limit,
-  })
-    .success(function(res) {
-      done(null, res);
-    })
+  };
+
+  if (query) {
+    findOpts.where = query;
+  }
+
+  this.Model.findAll(findOpts)
+    .success(__.partial(done, null))
     .error(done);
 };
 
@@ -135,11 +136,12 @@ Entity.prototype._count = function(query, done) {
   if (!__.isNull(query)) {
     query = this._getQuery(query);
   }
-
-  this.Model.count({where: query})
-    .success(function(c) {
-      done(null, c);
-    })
+  var findOpts = {};
+  if (query) {
+    findOpts.where = query;
+  }
+  this.Model.count(findOpts)
+    .success(__.partial(done, null))
     .error(done);
 };
 

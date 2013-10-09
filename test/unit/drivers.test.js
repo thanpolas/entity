@@ -139,7 +139,7 @@ tests.crud = function(driver, majNum) {
       });
     });
     test(majNum + '.6.1 Count records', function(done) {
-      ent.count(function(err, count) {
+      ent.count(null, function(err, count) {
         assert.equal(count, 2, 'There should be two results');
         done();
       });
