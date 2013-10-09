@@ -43,7 +43,10 @@ util.inherits(Entity, EntityCrud);
  */
 Entity.prototype._create = function(itemData, done) {
   var item = this.Model.build(itemData);
-  this._handleOp(item.save(), done, itemData);
+  // this._handleOp(item.save(), done, itemData);
+  item.save()
+    .success(__.partial(done, null))
+    .error(done);
 };
 
 /**
@@ -148,11 +151,9 @@ Entity.prototype._count = function(query, done) {
 Entity.prototype._update = function(id, itemData, done) {
   var query = this._getQuery(id);
 
-  this._handleOp(
-    this.Model.update(itemData, query),
-    done,
-    itemData
-  );
+  this.Model.update(itemData, query)
+    .success(__.partial(done, null, itemData))
+    .error(done);
 };
 
 /**
