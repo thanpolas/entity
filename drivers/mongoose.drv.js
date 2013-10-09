@@ -4,7 +4,7 @@
 var util = require('util');
 
 var __ = require('lodash');
-var EntityCrud = require('../entity-crud');
+var Driver = require('./base.drv');
 
 /**
  * The Mongoose CRUD implementation.
@@ -12,10 +12,13 @@ var EntityCrud = require('../entity-crud');
  * @param {mongoose.Model} Model the model that this entity relates to.
  * @param {Object=} optUdo Optionally define the current handling user.
  * @constructor
- * @extends {crude.Entity}
+ * @extends {Entity.Driver}
  */
 var Entity = module.exports = function(Model, optUdo) {
-  EntityCrud.call(this, optUdo);
+  Driver.call(this, optUdo);
+
+  /** @type {string} The default 'id' field name */
+  this._idName = '_id';
 
 
   // perform some heuristics on Model identity cause instanceof will not work
@@ -33,7 +36,7 @@ var Entity = module.exports = function(Model, optUdo) {
   /** @type {mongoose.Model} The mongoose model */
   this.Model = Model;
 };
-util.inherits(Entity, EntityCrud);
+util.inherits(Entity, Driver);
 
 /**
  * Create an entity item.
@@ -140,3 +143,14 @@ Entity.prototype._update = function(id, itemData, done) {
   }.bind(this));
 };
 
+/**
+ * Remove an entity item.
+ *
+ * @param {string|Object} id the item id or query for item.
+ * @param {Function(Error=, Object=)} done callback.
+ * @protected
+ */
+Entity.prototype._delete = function(id, done) {
+  var query = this._getQuery(id);
+  this.Model.remove(query).exec().addBack(done);
+};

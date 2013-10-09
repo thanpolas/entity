@@ -4,7 +4,7 @@
 var util = require('util');
 
 var __ = require('lodash');
-var EntityCrud = require('../entity-crud');
+var Driver = require('./base.drv');
 
 /**
  * The Sequelize CRUD implementation.
@@ -12,10 +12,10 @@ var EntityCrud = require('../entity-crud');
  * @param {Sequelize.Model} Model The Sequelize model to apply CRUD ops on.
  * @param {Object=} optUdo Optionally define the current handling user.
  * @constructor
- * @extends {crude.Entity}
+ * @extends {Entity.Driver}
  */
 var Entity = module.exports = function(Model, optUdo) {
-  EntityCrud.call(this, optUdo);
+  Driver.call(this, optUdo);
 
   // perform some heuristics on Model identity cause instanceof will not work
   if (
@@ -32,7 +32,7 @@ var Entity = module.exports = function(Model, optUdo) {
   /** @type {Sequelize.Model} The sequelize Model */
   this.Model = Model;
 };
-util.inherits(Entity, EntityCrud);
+util.inherits(Entity, Driver);
 
 /**
  * Create an entity item.
@@ -164,7 +164,7 @@ Entity.prototype._update = function(id, itemData, done) {
 /**
  * Remove an entity item.
  *
- * @param {string} id the item id.
+ * @param {string|Object} id the item id or query for item.
  * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
@@ -185,14 +185,4 @@ Entity.prototype._handleOp = function(op, done, optItemData) {
   op
     .success(done.bind(null, null, optItemData))
     .error(done);
-};
-
-/**
- * Helper to return the query properly formated based on type of id.
- *
- * @param {string|Object} id the item id or query for item.
- * @private
- */
-Entity.prototype._getQuery = function(id) {
-  return (__.isObject(id)) ? id : {id:id};
 };

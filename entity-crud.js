@@ -25,6 +25,9 @@ var EntityCrud = module.exports = function(optUdo) {
   /** @type {?Object} The current user or null for anonymous */
   this.udo = optUdo || null;
 
+  /** @type {string} The default 'id' field name */
+  this._idName = 'id';
+
   // Create primitive middlewares
   midd.make(this, 'create', this._create.bind(this));
   midd.make(this, 'read', this._read.bind(this));
