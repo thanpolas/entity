@@ -50,7 +50,7 @@ core.init = function() {
 
   // Then all drivers
   drivers.forEach(function(driver) {
-    suite(driver.majNum + '. ' + driver.name, function() {
+    suite(driver.majNum + '. ' + driver.name + ' driver', function() {
       setup(function(done) {
         driver.stub.connect(function(err) {
           if (err) {return done(err);}
