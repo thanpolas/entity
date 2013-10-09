@@ -19,6 +19,7 @@ var Entity = module.exports = function(Model, optUdo) {
 
   // perform some heuristics on Model identity cause instanceof will not work
   if (
+    !Model ||
     !Model.name ||
     !Model.tableName ||
     !Model.options ||
