@@ -87,9 +87,12 @@ Entity.prototype._read = function(optQuery, done) {
     query = this._getQuery(optQuery);
   }
 
-  this.Model.findAll({
-    where: query,
-  })
+  var findOpts = {};
+  if (query) {
+    findOpts.where = query;
+  }
+
+  this.Model.findAll(findOpts)
     .success(function(res) {
       done(null, res);
     })
