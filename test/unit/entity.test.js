@@ -70,38 +70,14 @@ tests.iface = function(driver, majNum) {
       ent = driver.factory();
     });
     test(majNum + '.2.1 Primitive methods are not implemented', function(){
-      var spyCreate = sinon.spy();
-      var spyRead = sinon.spy();
-      var spyReadOne = sinon.spy();
-      var spyReadLimit = sinon.spy();
-      var spyUpdate = sinon.spy();
-      var spyDelete = sinon.spy();
-      var spyCount = sinon.spy();
 
-      ent.create().done(spyCreate);
-      ent.read().done(spyRead);
-      ent.readOne().done(spyReadOne);
-      ent.readLimit().done(spyReadLimit);
-      ent.update().done(spyUpdate);
-      ent.delete().done(spyDelete);
-      ent.count().done(spyCount);
-
-      assert.instanceOf(spyCreate.args[0][0], Error, 'first arg should be instanceOf Error');
-      assert.instanceOf(spyRead.args[0][0], Error, 'first arg should be instanceOf Error');
-      assert.instanceOf(spyReadOne.args[0][0], Error, 'first arg should be instanceOf Error');
-      assert.instanceOf(spyReadLimit.args[0][0], Error, 'first arg should be instanceOf Error');
-      assert.instanceOf(spyUpdate.args[0][0], Error, 'first arg should be instanceOf Error');
-      assert.instanceOf(spyDelete.args[0][0], Error, 'first arg should be instanceOf Error');
-      assert.instanceOf(spyCount.args[0][0], Error, 'first arg should be instanceOf Error');
-
-      var message = 'Not Implemented';
-      assert.equal(spyCreate.args[0][0].message, message, 'Error Message of "create" should be "Not Implemented"');
-      assert.equal(spyRead.args[0][0].message, message, 'Error Message of "read" should be "Not Implemented"');
-      assert.equal(spyReadOne.args[0][0].message, message, 'Error Message of "readOne" should be "Not Implemented"');
-      assert.equal(spyReadLimit.args[0][0].message, message, 'Error Message of "readLimit" should be "Not Implemented"');
-      assert.equal(spyUpdate.args[0][0].message, message, 'Error Message of "update" should be "Not Implemented"');
-      assert.equal(spyDelete.args[0][0].message, message, 'Error Message of "delete" should be "Not Implemented"');
-      assert.equal(spyCount.args[0][0].message, message, 'Error Message of "count" should be "Not Implemented"');
+      assert.throws(ent.create, Error, 'Not Implemented');
+      assert.throws(ent.read, Error, 'Not Implemented');
+      assert.throws(ent.readOne, Error, 'Not Implemented');
+      assert.throws(ent.readLimit, Error, 'Not Implemented');
+      assert.throws(ent.update, Error, 'Not Implemented');
+      assert.throws(ent.delete, Error, 'Not Implemented');
+      assert.throws(ent.count, Error, 'Not Implemented');
     });
   });
 };
