@@ -26,7 +26,7 @@ var Entity = module.exports = function(Model, optUdo) {
     !Model.DAO
 
     ) {
-    throw new TypeError('Model provided not a Mongoose.Model instance');
+    throw new TypeError('Model provided not a Sequelize instance');
   }
 
   /** @type {Sequelize.Model} The sequelize Model */
