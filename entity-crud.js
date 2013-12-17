@@ -19,8 +19,7 @@ var Entity = require('./entity');
  * @constructor
  * @extends {Entity}
  */
-var EntityCrud = module.exports = function(optUdo) {
-  Entity.call(this);
+var EntityCrud = module.exports = Entity.extend(function(optUdo) {
 
   /** @type {?Object} The current user or null for anonymous */
   this.udo = optUdo || null;
@@ -36,8 +35,7 @@ var EntityCrud = module.exports = function(optUdo) {
   midd.make(this, 'update', this._update.bind(this));
   midd.make(this, 'delete', this._delete.bind(this));
   midd.make(this, 'count', this._count.bind(this));
-};
-util.inherits(EntityCrud, Entity);
+});
 
 /**
  * Set the current user data object
