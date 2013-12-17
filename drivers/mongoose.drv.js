@@ -17,10 +17,6 @@ var Driver = require('./base.drv');
 var Entity = module.exports = function(Model, optUdo) {
   Driver.call(this, optUdo);
 
-  /** @type {string} The default 'id' field name */
-  this._idName = '_id';
-
-
   // perform some heuristics on Model identity cause instanceof will not work
   if (
     !Model ||

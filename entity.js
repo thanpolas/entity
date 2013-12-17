@@ -44,15 +44,15 @@ Entity.extend = function(cTor, optCtor) {
   /** @constructor */
   function TempCtor() {}
   TempCtor.prototype = parentCtor.prototype;
-  cTor.prototype = new TempCtor();
+  childCtor.prototype = new TempCtor();
 
   // override constructor
-  cTor.prototype.constructor = function() {
+  childCtor.prototype.constructor = function() {
     parentCtor.apply(this, arguments);
-    cTor.apply(this, arguments);
+    childCtor.apply(this, arguments);
   };
 
   childCtor.extend = parentCtor.extend.bind(null, childCtor);
 
-  return cTor;
+  return childCtor;
 };

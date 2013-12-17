@@ -1,9 +1,6 @@
 /**
  * @fileOverview Provide a common interface for drivers.
  */
-
-var util = require('util');
-
 var __ = require('lodash');
 var EntityCrud = require('../entity-crud');
 
@@ -14,10 +11,10 @@ var EntityCrud = require('../entity-crud');
  * @constructor
  * @extends {crude.Entity}
  */
-var Entity = module.exports = function(optUdo) {
-  EntityCrud.call(this, optUdo);
-};
-util.inherits(Entity, EntityCrud);
+var Entity = module.exports = EntityCrud.extend(function(optUdo) {
+  /** @type {string} The default 'id' field name */
+  this._idName = '_id';
+});
 
 /**
  * Helper to return the query properly formated based on type of id.
