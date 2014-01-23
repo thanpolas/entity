@@ -19,7 +19,7 @@ var fix = require('../fixture/data.fix');
  */
 module.exports = function(driver, majNum) {
 
-  suite(majNum + '.7 Instance integridy', function() {
+  suite(majNum + '.7 Instance integrity', function() {
     test(majNum + '.7.1 Will throw error if not proper Model provided', function() {
       function factory() {
         // an Object literal is an invalid Model
