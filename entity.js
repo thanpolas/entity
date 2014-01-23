@@ -17,5 +17,16 @@ var util = require('util');
 var Entity = module.exports = function() {
   EventEmitter.call(this);
 
+  /** @type {mschema?} Cached version of Entity's schema */
+  this._schema = null;
 };
 util.inherits(Entity, EventEmitter);
+
+/**
+ * A normalized format for fetching the Entity's schema.
+ *
+ * @return {Object}
+ */
+Entity.prototype.getSchema = function() {
+  throw new Error('Not Implemented');
+};

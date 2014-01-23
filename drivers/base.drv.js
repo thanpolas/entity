@@ -29,12 +29,3 @@ Entity.prototype._getQuery = function(id) {
   var q = {};
   return (__.isObject(id)) ? id : (q[this._idName] = id, q);
 };
-
-/**
- * A normalized format for fetching schemas.
- *
- * @return {Object}
- */
-Entity.prototype.getSchema = function() {
-  throw new Error('Not Implemented');
-};

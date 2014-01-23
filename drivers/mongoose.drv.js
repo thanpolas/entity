@@ -5,6 +5,7 @@ var util = require('util');
 
 var __ = require('lodash');
 var Driver = require('./base.drv');
+var helpers = require('../entity-helpers');
 
 /**
  * The Mongoose CRUD implementation.
@@ -153,4 +154,30 @@ Entity.prototype._update = function(id, itemData, done) {
 Entity.prototype._delete = function(id, done) {
   var query = this._getQuery(id);
   this.Model.remove(query).exec().addBack(done);
+};
+
+/**
+ * Get the normalized schema of this Entity.
+ *
+ * @return {mschema} An mschema struct.
+ */
+Entity.prototype.getSchema = function() {
+  if (this._schema) {
+    return this._schema;
+  }
+  var mongooseSchema = this.Model.schema.paths;
+  this._schema = [];
+
+  __.forIn(mongooseSchema, function(mongSchemaItem, path) {
+    var schemaItem = {
+      // TODO this helper needs a second arg, opt to check  for expandedPaths key.
+      canShow: helpers.canShow(mongSchemaItem),
+      name: helpers.getName(path, this.opts),
+      path: path,
+    };
+
+    this._schema.push(schemaItem);
+  }, this);
+
+  return this._schema;
 };

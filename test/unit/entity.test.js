@@ -33,6 +33,7 @@ tests.surface = function(driver, majNum) {
       ent = driver.factory();
     });
     test(majNum + '.1.1 Primitive Methods', function(){
+      assert.isFunction(ent.getSchema, 'Entity should have a "getSchema" method');
       assert.isFunction(ent.create, 'Entity should have a "create" method');
       assert.isFunction(ent.read, 'Entity should have a "read" method');
       assert.isFunction(ent.readOne, 'Entity should have a "readOne" method');

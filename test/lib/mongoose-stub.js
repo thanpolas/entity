@@ -14,7 +14,7 @@ var _init = false;
  */
 mong.Schema = {
   name: {type: String, trim: true, required: true},
-  isActive: {type: Boolean, required: true, default: true},
+  _isActive: {type: Boolean, required: true, default: true},
 };
 
 /** @type {?Mongoose.Model} */
