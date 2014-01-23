@@ -4,6 +4,7 @@
 var util = require('util');
 
 var __ = require('lodash');
+
 var Driver = require('./base.drv');
 
 /**
@@ -185,4 +186,53 @@ Entity.prototype._handleOp = function(op, done, optItemData) {
   op
     .success(done.bind(null, null, optItemData))
     .error(done);
+};
+
+/**
+ * Get the normalized schema of this Entity.
+ *
+ * @return {mschema} An mschema struct.
+ */
+Entity.prototype.getSchema = function() {
+  if (this._schema) {
+    return this._schema;
+  }
+  var seqSchema = this.Model.rawAttributes;
+  this._schema = [];
+
+  __.forIn(seqSchema, function(seqSchemaItem, path) {
+    var schemaItem = {
+      canShow: this._canShow(path),
+      name: path,
+      path: path,
+    };
+
+    this._schema.push(schemaItem);
+  }, this);
+
+  return this._schema;
+};
+
+/**
+ * Determine if this schema item should be publicly displayed.
+ *
+ * @param {string} path A single schema path (a key).
+ * @return {boolean} true to show.
+ * @private
+ */
+Entity.prototype._canShow = function(path) {
+  // check for private vars (starting with underscore)
+  if ('_' === path.charAt(0)) {
+    return false;
+  }
+
+  // check for known Sequelize variables
+  if ([
+    'createdAt',
+    'updatedAt',
+  ].indexOf(path) > -1) {
+    return false;
+  }
+
+  return true;
 };

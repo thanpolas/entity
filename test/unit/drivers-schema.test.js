@@ -30,8 +30,7 @@ module.exports = function(driver, majNum) {
         ent.create(fix.two, done);
       });
     });
-
-    test(majNum + '9.1 Look for expected keys in Schema', function() {
+    test(majNum + '.9.1 Look for expected keys in Schema', function() {
       var foundName = false;
       var foundisActive = false;
 
@@ -58,5 +57,6 @@ module.exports = function(driver, majNum) {
         });
       });
     }
+
   });
 };

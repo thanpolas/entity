@@ -5,7 +5,6 @@ var util = require('util');
 
 var __ = require('lodash');
 var Driver = require('./base.drv');
-var helpers = require('../entity-helpers');
 
 /**
  * The Mongoose CRUD implementation.
@@ -171,8 +170,8 @@ Entity.prototype.getSchema = function() {
   __.forIn(mongooseSchema, function(mongSchemaItem, path) {
     var schemaItem = {
       // TODO this helper needs a second arg, opt to check  for expandedPaths key.
-      canShow: helpers.canShow(mongSchemaItem),
-      name: helpers.getName(path, this.opts),
+      canShow: this._canShow(mongSchemaItem),
+      name: this._getName(path, this.opts),
       path: path,
     };
 
@@ -180,4 +179,53 @@ Entity.prototype.getSchema = function() {
   }, this);
 
   return this._schema;
+};
+
+/**
+ * Return a proper label for the key.
+ *
+ * @param {string} path The full path name.
+ * @param {Object} optOpts The CRUD-controller options object.
+ * @return {string} The field's name.
+ * @private
+ */
+Entity.prototype._getName = function(path, optOpts) {
+  var opts = optOpts || {};
+
+  var name;
+  if (opts.expandPaths) {
+    name = path;
+  } else {
+    name = path.split('.').pop();
+  }
+  return name;
+};
+
+/**
+ * Determine if this schema item should be publicly displayed.
+ *
+ * @param  {Object} schemaItem A single schema item (a column).
+ * @param {Object=} optOpts The CRUD-controller options object.
+ * @return {boolean} true to show.
+ * @private
+ */
+Entity.prototype._canShow = function(schemaItem, optOpts) {
+  var opts = optOpts || {};
+
+  // check for custom excluded paths
+  if (opts.viewExcludePaths && opts.viewExcludePaths.length) {
+    if (0 <= opts.viewExcludePaths.indexOf(schemaItem.path)) {
+      return false;
+    }
+  }
+
+  // check for private vars (starting with underscore)
+  if ('_' === schemaItem.path.charAt(0)) {
+    if (opts.showId && '_id' === schemaItem.path) {
+      return true;
+    }
+    return false;
+  } else {
+    return true;
+  }
 };
