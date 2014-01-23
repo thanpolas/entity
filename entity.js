@@ -26,7 +26,7 @@ util.inherits(Entity, EventEmitter);
  * @param {Function} cTor The constructor.
  * @param {Function=} optCtor When the arity of the function is 2 this cTor
  *   is the one that was passed by the invoker, thus is the child constructor.
- * @return {Entity} An entity Object.
+ * @return {Entity} An entity cTor.
  * @static
  */
 Entity.extend = function(cTor, optCtor) {

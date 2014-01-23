@@ -27,6 +27,16 @@ tests.surface = function(driver, majNum) {
   // The purpose is to provide a unique string so specific tests are
   // run by using the mocha --grep "1.1.1" option.
 
+  suite(majNum + '.0 constructor and inheritance', function() {
+    test(majNum + '.0.1', function(){
+      var entity = driver.entity.extend(function(arg1){
+        assert.isEqual(arg1, 2, 'Arguments should be passed as is');
+        assert.isEqual(arguments.length, 1, 'There should be only one argument');
+      });
+      entity(2);
+    });
+  });
+
   suite(majNum + '.1 API Surface', function() {
     var ent;
     setup(function() {
