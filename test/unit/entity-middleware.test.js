@@ -36,21 +36,17 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
   });
 
   test('4.11.1 Proper sequence of execution', function() {
-    var stubUseOne = sinon.stub().yields();
-    var stubUseTwo = sinon.stub().yields();
-    var stubBeforeOne = sinon.stub().yields();
-    var stubBeforeTwo = sinon.stub().yields();
-    var stubAfterOne = sinon.stub().yields();
-    var stubAfterTwo = sinon.stub().yields();
-    var stubActual = sinon.stub().yields();
+    var stubBeforeOne = sinon.stub();
+    var stubBeforeTwo = sinon.stub();
+    var stubAfterOne = sinon.stub();
+    var stubAfterTwo = sinon.stub();
+    var stubActual = sinon.stub();
 
     var EntityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
 
       this.create.before(stubBeforeOne);
       this.create.before(stubBeforeTwo);
-      this.create.use(stubUseOne);
-      this.create.use(stubUseTwo);
       this.create.after(stubAfterOne);
       this.create.after(stubAfterTwo);
     });
@@ -62,9 +58,7 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
     entityOne.create();
 
     assert(stubBeforeOne.calledBefore(stubBeforeTwo), 'stubABeforeOne() before stubBeforeTwo()');
-    assert(stubBeforeTwo.calledBefore(stubUseOne), 'stubBeforeTwo() before stubUseOne()');
-    assert(stubUseOne.calledBefore(stubUseTwo), 'stubUseOne() before stubUseTwo()');
-    assert(stubUseTwo.calledBefore(stubActual), 'stubUseTwo() before stubActual()');
+    assert(stubBeforeTwo.calledBefore(stubActual), 'stubBeforeTwo() before stubActual()');
     assert(stubActual.calledBefore(stubAfterOne), 'stubActual() before stubAfterOne()');
     assert(stubAfterOne.calledBefore(stubAfterTwo), 'stubAfterOne() before stubAfterTwo()');
   });

@@ -37,14 +37,21 @@ module.exports = function(driver, majNum) {
     test(majNum + '.1.2 Helper Methods', function(){
       assert.isFunction(ent.setUdo, 'Entity should have a "setUdo" method');
     });
-    test(majNum + '.1.3 CRUD Primitive Methods middleware "use" method', function(){
-      assert.isFunction(ent.create.use, 'Entity should have a "create.use" method');
-      assert.isFunction(ent.read.use, 'Entity should have a "read.use" method');
-      assert.isFunction(ent.readOne.use, 'Entity should have a "readOne.use" method');
-      assert.isFunction(ent.readLimit.use, 'Entity should have a "readLimit.use" method');
-      assert.isFunction(ent.update.use, 'Entity should have a "update.use" method');
-      assert.isFunction(ent.delete.use, 'Entity should have a "delete.use" method');
-      assert.isFunction(ent.count.use, 'Entity should have a "count.use" method');
+    test(majNum + '.1.3 CRUD Primitive Methods middleware "before/after" methods', function(){
+      assert.isFunction(ent.create.before, 'Entity should have a "create.before" method');
+      assert.isFunction(ent.read.before, 'Entity should have a "read.before" method');
+      assert.isFunction(ent.readOne.before, 'Entity should have a "readOne.before" method');
+      assert.isFunction(ent.readLimit.before, 'Entity should have a "readLimit.before" method');
+      assert.isFunction(ent.update.before, 'Entity should have a "update.before" method');
+      assert.isFunction(ent.delete.before, 'Entity should have a "delete.before" method');
+      assert.isFunction(ent.count.before, 'Entity should have a "count.before" method');
+      assert.isFunction(ent.create.after, 'Entity should have a "create.after" method');
+      assert.isFunction(ent.read.after, 'Entity should have a "read.after" method');
+      assert.isFunction(ent.readOne.after, 'Entity should have a "readOne.after" method');
+      assert.isFunction(ent.readLimit.after, 'Entity should have a "readLimit.after" method');
+      assert.isFunction(ent.update.after, 'Entity should have a "update.after" method');
+      assert.isFunction(ent.delete.after, 'Entity should have a "delete.after" method');
+      assert.isFunction(ent.count.after, 'Entity should have a "count.after" method');
     });
   });
 
