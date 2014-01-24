@@ -65,11 +65,6 @@ core.init = function() {
         done();
       });
 
-
-      testEntity.surface(driver, driver.majNum);
-      testCtorInheritance(driver);
-      testEvents(driver);
-      testMidd(driver);
       testDriverUtils(driver, driver.majNum);
       testDriverCreate(driver, driver.majNum);
       testDriverRead(driver, driver.majNum);
