@@ -29,7 +29,7 @@ module.exports = function(driver, majNum) {
         if (err) {return done(err);}
         assert.notInstanceOf(err, Error, 'Should have no error');
         assert.equal(data.name, fix.one.name, 'Name should be the same');
-        assert.equal(data.isActive, fix.one.isActive, 'isActive should be the same');
+        assert.equal(data._isActive, fix.one._isActive, 'isActive should be the same');
         done();
       });
     });

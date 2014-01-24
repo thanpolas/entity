@@ -11,6 +11,7 @@ var testDriverCreate = require('./drivers-create.test');
 var testDriverRead = require('./drivers-read.test');
 var testDriverUpdate = require('./drivers-update.test');
 var testDriverDelete = require('./drivers-delete.test');
+var testDriverSchema = require('./drivers-schema.test');
 
 var core = module.exports = {};
 
@@ -68,7 +69,7 @@ core.init = function() {
       testDriverRead(driver, driver.majNum);
       testDriverUpdate(driver, driver.majNum);
       testDriverDelete(driver, driver.majNum);
-
+      testDriverSchema(driver, driver.majNum);
     });
   });
 };

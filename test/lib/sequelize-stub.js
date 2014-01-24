@@ -2,7 +2,6 @@
  * @fileOverview Stub a Sequelize model.
  */
 var exec = require('child_process').exec;
-var util = require('util');
 
 var Sequelize = require('sequelize');
 
@@ -16,7 +15,7 @@ var _init = false;
  */
 seq.Schema = {
   name: {type: Sequelize.STRING, allowNull: false},
-  isActive: {type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true},
+  _isActive: {type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true},
 };
 
 /** @type {?Sequelize} The main Sequelize instance */
