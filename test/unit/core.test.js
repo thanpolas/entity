@@ -8,6 +8,7 @@ var Entity = require('../..');
 var testEntity = require('./entity.test');
 var testCtorInheritance = require('./entity-ctor-inheritance.test');
 var testEvents = require('./entity-events.test');
+var testMidd = require('./entity-middleware.test');
 var testDriverUtils = require('./drivers.test');
 var testDriverCreate = require('./drivers-create.test');
 var testDriverRead = require('./drivers-read.test');
@@ -68,6 +69,7 @@ core.init = function() {
       testEntity.surface(driver, driver.majNum);
       testCtorInheritance(driver);
       testEvents(driver);
+      testMidd(driver);
       testDriverUtils(driver, driver.majNum);
       testDriverCreate(driver, driver.majNum);
       testDriverRead(driver, driver.majNum);
