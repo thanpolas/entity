@@ -8,6 +8,8 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
+var midd = require('middlewarify');
+
 /**
  * The base Entity Class all entities extend from.
  *
@@ -58,6 +60,17 @@ Entity.extend = function(cTor, optCtor) {
 
   return childCtor;
 };
+
+/**
+ * Apply middleware and "before", "after" handlers to a method.
+ *
+ * @param {string} name The name of the method.
+ * @param {Function} fn The final callback.
+ */
+Entity.prototype.method = function(name, fn) {
+  midd.make(this, name, fn);
+};
+
 
 /*
  * A normalized format for fetching the Entity's schema.
