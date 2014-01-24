@@ -20,19 +20,11 @@ teardown(function() {});
 // The purpose is to provide a unique string so specific tests are
 // run by using the mocha --grep "1.1.1" option.
 
-suite('9.2 CRUD Raw Interface', function() {
+suite('5.2 Entity Schema', function() {
   var ent;
   setup(function() {
     ent = entity();
   });
-  test('9.2.1 CRUD Primitive methods are not implemented', function(){
-
-    assert.throws(ent.create, Error, 'Not Implemented');
-    assert.throws(ent.read, Error, 'Not Implemented');
-    assert.throws(ent.readOne, Error, 'Not Implemented');
-    assert.throws(ent.readLimit, Error, 'Not Implemented');
-    assert.throws(ent.update, Error, 'Not Implemented');
-    assert.throws(ent.delete, Error, 'Not Implemented');
-    assert.throws(ent.count, Error, 'Not Implemented');
+  test('5.2.1 ', function(){
   });
 });
