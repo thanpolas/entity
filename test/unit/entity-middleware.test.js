@@ -2,8 +2,6 @@
  * @fileOverview Testing the Entity Middleware and "before", "after" methods.
  */
 
-var EventEmitter = require('events').EventEmitter;
-
 // var sinon  = require('sinon');
 var chai = require('chai');
 // var sinon = require('sinon');
