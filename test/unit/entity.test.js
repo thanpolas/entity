@@ -21,7 +21,12 @@ teardown(function() {});
 // run by using the mocha --grep "1.1.1" option.
 
 suite('1.1 API Surface', function() {
-  test('1.1.1 Core Methods', function(){
+  test('1.1.1 Core Methods', function() {
     assert.isFunction(entity().getSchema, 'Entity should have a "getSchema" method');
+    assert.isFunction(entity().method, 'Entity should have a "method" method');
+  });
+
+  test('1.1.2 Static Methods', function() {
+    assert.isFunction(entity.extend, 'Entity should have an "extend" static method');
   });
 });
