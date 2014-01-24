@@ -80,6 +80,36 @@ test('2.0.3 multiple inheritance', function() {
   assert.isEqual(one.num, 1, '"one.num" after .incr()');
 });
 
+test('2.0.3.1 multiple inheritance with static arguments', function() {
+  var entityOne = entity.extend(function(num){
+    this.num = num;
+  });
+
+  entityOne.prototype.incr = function() {
+    this.num++;
+  };
+
+  // 9 is a static arg for entityOne ctor.
+  var entityTwo = entityOne.extend(9, function(id) {
+    this.id = id;
+  });
+
+  var one = entityOne(1);
+  var two = entityTwo('two');
+
+  assert.isEqual(two.num, 9, '"two.num" should have a value');
+  assert.isEqual(one.num, 1, '"one.num"');
+  assert.isEqual(two.id, 'two', '"two.id"');
+  assert.notProperty(one, 'id', '"one.id"');
+
+  two.incr();
+
+  assert.isEqual(two.num, 10, '"two.num" after .incr()');
+  assert.isEqual(one.num, 1, '"one.num" after .incr()');
+});
+
+
+
 test('2.0.4 Static methods', function(){
   var entityOne = entity.extend();
   entityOne.staticMethod = function(){};
