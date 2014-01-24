@@ -21,18 +21,18 @@ teardown(function() {});
 
 suite('4.11 Entity Middleware and "before", "after" methods', function() {
   test('4.11.1 surface tests', function() {
-    var EntityOne = Entity.extend(function() {
+    var entityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
     });
 
-    EntityOne.prototype._create = noop;
+    entityOne.prototype._create = noop;
 
-    var entityOne = new EntityOne();
+    var ent = entityOne();
 
-    assert.isFunction(entityOne.create, 'a "create" method should exist');
-    assert.isFunction(entityOne.create.use, 'a "create.use" method should exist');
-    assert.isFunction(entityOne.create.before, 'a "create.before" method should exist');
-    assert.isFunction(entityOne.create.after, 'a "create.after" method should exist');
+    assert.isFunction(ent.create, 'a "create" method should exist');
+    assert.isFunction(ent.create.use, 'a "create.use" method should exist');
+    assert.isFunction(ent.create.before, 'a "create.before" method should exist');
+    assert.isFunction(ent.create.after, 'a "create.after" method should exist');
   });
 
   test('4.11.1 Proper sequence of execution', function() {
@@ -42,7 +42,7 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
     var stubAfterTwo = sinon.stub();
     var stubActual = sinon.stub();
 
-    var EntityOne = Entity.extend(function() {
+    var entityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
 
       this.create.before(stubBeforeOne);
@@ -51,11 +51,9 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
       this.create.after(stubAfterTwo);
     });
 
-    EntityOne.prototype._create = stubActual;
+    entityOne.prototype._create = stubActual;
 
-    var entityOne = new EntityOne();
-
-    entityOne.create();
+    entityOne().create();
 
     assert(stubBeforeOne.calledBefore(stubBeforeTwo), 'stubABeforeOne() before stubBeforeTwo()');
     assert(stubBeforeTwo.calledBefore(stubActual), 'stubBeforeTwo() before stubActual()');
