@@ -31,8 +31,8 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
 
     assert.isFunction(entityOne.create, 'a "create" method should exist');
     assert.isFunction(entityOne.create.use, 'a "create.use" method should exist');
-    assert.isFunction(entityOne.beforeCreate, 'a "beforeCreate" method should exist');
-    assert.isFunction(entityOne.afterCreate, 'a "afterCreate" method should exist');
+    assert.isFunction(entityOne.create.before, 'a "create.before" method should exist');
+    assert.isFunction(entityOne.create.after, 'a "create.after" method should exist');
   });
 
   test('4.11.1 Proper sequence of execution', function() {
@@ -47,12 +47,12 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
     var EntityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
 
-      this.beforeCreate(stubBeforeOne);
-      this.beforeCreate(stubBeforeTwo);
+      this.create.before(stubBeforeOne);
+      this.create.before(stubBeforeTwo);
       this.create.use(stubUseOne);
       this.create.use(stubUseTwo);
-      this.afterCreate(stubAfterOne);
-      this.afterCreate(stubAfterTwo);
+      this.create.after(stubAfterOne);
+      this.create.after(stubAfterTwo);
     });
 
     EntityOne.prototype._create = stubActual;
