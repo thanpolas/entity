@@ -28,7 +28,7 @@ core.init = function() {
     {
       name: 'Mongoose',
       Entity: Entity.Mongoose,
-      majNum: '2',
+      majNum: '10',
       stub: mongStub,
       factory: function() {
         return new Entity.Mongoose(mongStub.Model);
@@ -37,7 +37,7 @@ core.init = function() {
     {
       name: 'Sequelize',
       Entity: Entity.Sequelize,
-      majNum: '3',
+      majNum: '11',
       stub: seqStub,
       factory: function() {
         return new Entity.Sequelize(seqStub.Model);
@@ -48,9 +48,9 @@ core.init = function() {
 
 
   // Test CRUD interface
-  function factoryCrud() {return new Entity.CrudIface();}
-  testEntity.surface({factory: factoryCrud}, 1);
-  testEntity.iface({factory: factoryCrud}, 1);
+  // function factoryCrud() {return new Entity.CrudIface();}
+  // testEntity.surface({factory: factoryCrud}, 1);
+  // testEntity.iface({factory: factoryCrud}, 1);
 
   // Then all drivers
   drivers.forEach(function(driver) {
