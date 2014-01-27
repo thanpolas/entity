@@ -39,13 +39,33 @@ module.exports = function(driver, majNum) {
       assert.deepPropertyVal(schema, '_isActive.canShow', false);
     });
 
-    if (driver.name === 'Mongoose') {
+
+    switch(driver.name) {
+    case 'Mongoose':
       suite(majNum + '.9.10 Mongoose specific tests', function() {
         test(majNum + '.9.10.1 Expect specific number of keys', function() {
           assert.lengthOf(ent.getSchema(), 4, 'Mongoose schema items');
         });
+        test(majNum + '.9.10.2 Expect special keys to cannot show', function() {
+          var schema = ent.getSchema();
+          assert.deepPropertyVal(schema, '__v.canShow', false);
+          assert.deepPropertyVal(schema, '_id.canShow', false);
+        });
       });
-    }
+      break;
+    case 'Sequelize':
+      suite(majNum + '.9.11 Sequelize specific tests', function() {
+        test(majNum + '.9.11.1 Expect specific number of keys', function() {
+          assert.lengthOf(ent.getSchema(), 4);
+        });
+        test(majNum + '.9.11.2 Expect special keys to cannot show', function() {
+          var schema = ent.getSchema();
+          assert.deepPropertyVal(schema, 'createdAt.canShow', false);
+          assert.deepPropertyVal(schema, 'updatedAt.canShow', false);
+        });
+      });
 
+      break;
+    }
   });
 };
