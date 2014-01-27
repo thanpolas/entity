@@ -31,23 +31,12 @@ module.exports = function(driver, majNum) {
       });
     });
     test(majNum + '.9.1 Look for expected keys in Schema', function() {
-      var foundName = false;
-      var foundisActive = false;
-
       var schema = ent.getSchema();
-      schema.forEach(function(schemaItem){
-        if (schemaItem.name === 'name') {
-          foundName = true;
-          assert.ok(schemaItem.canShow, '"name" should have "canShow" true');
-        }
-        if (schemaItem.name === '_isActive') {
-          foundisActive = true;
-          assert.notOk(schemaItem.canShow, '"_isActive" should have "canShow" false');
-        }
-      });
 
-      assert.ok(foundName, '"name" was included in schema');
-      assert.ok(foundisActive, '"_isActive" was included in schema');
+      assert.property(schema, 'name');
+      assert.property(schema, '_isActive');
+      assert.deepPropertyVal(schema, 'name.canShow', true);
+      assert.deepPropertyVal(schema, '_isActive.canShow', false);
     });
 
     if (driver.name === 'Mongoose') {
