@@ -64,7 +64,6 @@ module.exports = function(driver, majNum) {
           assert.deepPropertyVal(schema, 'updatedAt.canShow', false);
         });
       });
-
       break;
     }
   });
