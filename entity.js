@@ -30,42 +30,49 @@ util.inherits(Entity, EventEmitter);
  * @param {Function} cTor The constructor.
  * @param {Function=} optCtor When the arity of the function is 2 this cTor
  *   is the one that was passed by the invoker, thus is the child constructor.
- * @return {Entity} An entity cTor.
+ * @return {Entity} An entity Instance.
  * @static
  */
 Entity.extend = function(cTor, optCtor) {
-  var parentCtor;
-  var childCtor;
+  var ParentCtor;
+  var ChildCtor;
 
   if (arguments.length === 2) {
-    childCtor = optCtor;
-    parentCtor = cTor;
+    ChildCtor = optCtor;
+    ParentCtor = cTor;
   } else {
-    childCtor = cTor;
-    parentCtor = Entity;
+    ChildCtor = cTor;
+    ParentCtor = Entity;
   }
 
-  if (typeof childCtor !== 'function') {
+  if (typeof ChildCtor !== 'function') {
     throw new TypeError('Child needs a constructor');
   }
-  if (typeof parentCtor !== 'function') {
+  if (typeof ParentCtor !== 'function') {
     throw new TypeError('Parent needs a constructor');
   }
 
   /** @constructor */
   function TempCtor() {}
-  TempCtor.prototype = parentCtor.prototype;
-  childCtor.prototype = new TempCtor();
+  TempCtor.prototype = ParentCtor.prototype;
+  ChildCtor.prototype = new TempCtor();
 
   // override constructor
-  childCtor.prototype.constructor = function() {
-    parentCtor.apply(this, arguments);
-    childCtor.apply(this, arguments);
+  ChildCtor.prototype.constructor = function() {
+    ParentCtor.apply(this, arguments);
+    ChildCtor.apply(this, arguments);
   };
 
-  childCtor.extend = parentCtor.extend.bind(null, childCtor);
+  // create singleton
+  var singleton = new ChildCtor();
 
-  return childCtor;
+  // partially apply extend to singleton instance
+  singleton.extend = ParentCtor.extend.bind(null, ChildCtor);
+
+  // reference prototype
+  singleton.prototype = ChildCtor.prototype;
+
+  return singleton;
 };
 
 /**
