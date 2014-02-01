@@ -144,9 +144,11 @@ suite('5.2 Entity Schema', function() {
     test('5.2.2.2 Adding schema items to extended entity does not affect parent', function() {
       ent.addSchema(schema1);
       var childEnt = ent.extend();
+
       childEnt.addSchema('age', 'number');
       var schema = ent.getSchema();
       var childSchema = childEnt.getSchema();
+
       assert.property(childSchema, 'age');
       assert.notProperty(schema, 'age');
     });

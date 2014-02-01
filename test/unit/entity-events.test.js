@@ -23,6 +23,6 @@ teardown(function() {});
 
 suite('3.10 Events', function() {
   test('3.10.1 Entity is an instance of "events.EventEmitter"', function() {
-    assert.instanceOf(entity(), EventEmitter);
+    assert.instanceOf(entity, EventEmitter);
   });
 });

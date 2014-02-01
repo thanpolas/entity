@@ -21,18 +21,14 @@ teardown(function() {});
 // run by using the mocha --grep "1.1.1" option.
 
 suite('9.2 CRUD Raw Interface', function() {
-  var ent;
-  setup(function() {
-    ent = entity();
-  });
   test('9.2.1 CRUD Primitive methods are not implemented', function(){
 
-    assert.throws(ent.create, Error, 'Not Implemented');
-    assert.throws(ent.read, Error, 'Not Implemented');
-    assert.throws(ent.readOne, Error, 'Not Implemented');
-    assert.throws(ent.readLimit, Error, 'Not Implemented');
-    assert.throws(ent.update, Error, 'Not Implemented');
-    assert.throws(ent.delete, Error, 'Not Implemented');
-    assert.throws(ent.count, Error, 'Not Implemented');
+    assert.throws(entity.create, Error, 'Not Implemented');
+    assert.throws(entity.read, Error, 'Not Implemented');
+    assert.throws(entity.readOne, Error, 'Not Implemented');
+    assert.throws(entity.readLimit, Error, 'Not Implemented');
+    assert.throws(entity.update, Error, 'Not Implemented');
+    assert.throws(entity.delete, Error, 'Not Implemented');
+    assert.throws(entity.count, Error, 'Not Implemented');
   });
 });

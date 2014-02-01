@@ -4,7 +4,7 @@
 
 var mongStub = require('../lib/mongoose-stub');
 var seqStub = require('../lib/sequelize-stub');
-var Entity = require('../..');
+var entity = require('../..');
 var testDriverUtils = require('./drivers.test');
 var testDriverCreate = require('./drivers-create.test');
 var testDriverRead = require('./drivers-read.test');
@@ -23,20 +23,20 @@ core.init = function() {
   var drivers = [
     {
       name: 'Mongoose',
-      Entity: Entity.Mongoose,
+      Entity: entity.Mongoose,
       majNum: '10',
       stub: mongStub,
       factory: function() {
-        return new Entity.Mongoose(mongStub.Model);
+        return entity.Mongoose(mongStub.Model);
       },
     },
     {
       name: 'Sequelize',
-      Entity: Entity.Sequelize,
+      Entity: entity.Sequelize,
       majNum: '11',
       stub: seqStub,
       factory: function() {
-        return new Entity.Sequelize(seqStub.Model);
+        return entity.Sequelize(seqStub.Model);
       },
     },
   ];
