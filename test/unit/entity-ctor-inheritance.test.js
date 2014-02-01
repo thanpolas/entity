@@ -56,3 +56,43 @@ test('2.0.5 using instance prototype methods are inherited', function() {
   assert.isFunction(entityTwo.add);
   assert.equal(2, entityTwo.add(1,1));
 });
+
+test('2.0.6 ctor "this" defined properties are inherited', function() {
+  var entityOne = entity.extend(function(){
+    this.a = 1;
+  });
+
+  var entityTwo = entityOne.extend();
+  assert.property(entityTwo, 'a');
+  assert.equal(entityTwo.a, 1);
+});
+
+test('2.0.7 ctor "this" defined properties have no side-effects', function() {
+  var entityOne = entity.extend(function(){
+    this.a = 1;
+    this.obj = {
+      b: 2,
+    };
+  });
+  entityOne.a = 3;
+  entityOne.obj.b = 6;
+
+  var entityTwo = entityOne.extend();
+  assert.property(entityTwo, 'a');
+  assert.property(entityTwo, 'obj');
+  assert.equal(entityTwo.a, 1);
+  assert.equal(entityTwo.obj.b, 2);
+
+  entityTwo.a = 5;
+  entityTwo.obj.b = 9;
+  assert.equal(entityOne.a, 3);
+  assert.equal(entityOne.obj.b, 6);
+});
+
+test('2.0.8 static methods are not inherited', function(){
+  var entityOne = entity.extend();
+  entityOne.astaticfn = function(){};
+
+  var entityTwo = entityOne.extend();
+  assert.notProperty(entityTwo, 'astaticfn');
+});
