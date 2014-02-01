@@ -15,27 +15,24 @@ var Entity = require('./entity');
 /**
  * The CRUD Entity Class.
  *
- * @param {Object=} optUdo Optionally define the current handling user.
  * @constructor
  * @extends {Entity}
  */
-var EntityCrud = module.exports = Entity.extend(function(optUdo) {
-
+var EntityCrud = function() {
   /** @type {?Object} The current user or null for anonymous */
-  this.udo = optUdo || null;
+  this.udo = null;
 
   /** @type {string} The default 'id' field name */
   this._idName = 'id';
-
   // Create primitive middlewares
-  midd.make(this, 'create', this._create.bind(this));
-  midd.make(this, 'read', this._read.bind(this));
-  midd.make(this, 'readOne', this._readOne.bind(this));
-  midd.make(this, 'readLimit', this._readLimit.bind(this));
-  midd.make(this, 'update', this._update.bind(this));
-  midd.make(this, 'delete', this._delete.bind(this));
-  midd.make(this, 'count', this._count.bind(this));
-});
+  midd.make(this, 'create', this._create.bind(this), {beforeAfter: true});
+  midd.make(this, 'read', this._read.bind(this), {beforeAfter: true});
+  midd.make(this, 'readOne', this._readOne.bind(this), {beforeAfter: true});
+  midd.make(this, 'readLimit', this._readLimit.bind(this), {beforeAfter: true});
+  midd.make(this, 'update', this._update.bind(this), {beforeAfter: true});
+  midd.make(this, 'delete', this._delete.bind(this), {beforeAfter: true});
+  midd.make(this, 'count', this._count.bind(this), {beforeAfter: true});
+};
 
 /**
  * Set the current user data object
@@ -126,3 +123,4 @@ EntityCrud.prototype._delete = function(id, done) {
   throw new Error('Not Implemented');
 };
 
+module.exports = Entity.extend(EntityCrud);
