@@ -18,7 +18,7 @@ var Entity = require('./entity');
  * @constructor
  * @extends {Entity}
  */
-var EntityCrud = function() {
+var entityCrud = module.exports = Entity.extend(function() {
   /** @type {?Object} The current user or null for anonymous */
   this.udo = null;
 
@@ -32,13 +32,13 @@ var EntityCrud = function() {
   midd.make(this, 'update', this._update.bind(this), {beforeAfter: true});
   midd.make(this, 'delete', this._delete.bind(this), {beforeAfter: true});
   midd.make(this, 'count', this._count.bind(this), {beforeAfter: true});
-};
+});
 
 /**
  * Set the current user data object
  * @param {Object} udo A User Data Object.
  */
-EntityCrud.prototype.setUdo = function(udo) {
+entityCrud.prototype.setUdo = function(udo) {
   this.udo = udo;
 };
 
@@ -49,7 +49,7 @@ EntityCrud.prototype.setUdo = function(udo) {
  * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
-EntityCrud.prototype._create = function(itemData, done) {
+entityCrud.prototype._create = function(itemData, done) {
   throw new Error('Not Implemented');
 };
 
@@ -60,7 +60,7 @@ EntityCrud.prototype._create = function(itemData, done) {
  * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
-EntityCrud.prototype._readOne = function(id, done) {
+entityCrud.prototype._readOne = function(id, done) {
   throw new Error('Not Implemented');
 };
 
@@ -72,7 +72,7 @@ EntityCrud.prototype._readOne = function(id, done) {
  * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
-EntityCrud.prototype._read = function(optQuery, done) {
+entityCrud.prototype._read = function(optQuery, done) {
   throw new Error('Not Implemented');
 };
 
@@ -85,7 +85,7 @@ EntityCrud.prototype._read = function(optQuery, done) {
  * @param {Function(Error=, Array.<Object>=)} done callback.
  * @protected
  */
-EntityCrud.prototype._readLimit = function(query, skip, limit, done) {
+entityCrud.prototype._readLimit = function(query, skip, limit, done) {
   throw new Error('Not Implemented');
 };
 
@@ -96,7 +96,7 @@ EntityCrud.prototype._readLimit = function(query, skip, limit, done) {
  * @param {Function(Error=, number=)} done callback.
  * @protected
  */
-EntityCrud.prototype._count = function(query, done) {
+entityCrud.prototype._count = function(query, done) {
   throw new Error('Not Implemented');
 };
 
@@ -108,7 +108,7 @@ EntityCrud.prototype._count = function(query, done) {
  * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
-EntityCrud.prototype._update = function(id, itemData, done) {
+entityCrud.prototype._update = function(id, itemData, done) {
   throw new Error('Not Implemented');
 };
 
@@ -119,8 +119,7 @@ EntityCrud.prototype._update = function(id, itemData, done) {
  * @param {Function(Error=, Object=)} done callback.
  * @protected
  */
-EntityCrud.prototype._delete = function(id, done) {
+entityCrud.prototype._delete = function(id, done) {
   throw new Error('Not Implemented');
 };
 
-module.exports = Entity.extend(EntityCrud);
