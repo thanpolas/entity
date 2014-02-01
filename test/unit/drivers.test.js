@@ -36,6 +36,7 @@ module.exports = function(driver, majNum) {
     });
     test(majNum + '.1.2 Helper Methods', function(){
       assert.isFunction(ent.setUdo, 'Entity should have a "setUdo" method');
+      assert.isFunction(ent.setModel, 'Entity should have a "setModel" method');
     });
     test(majNum + '.1.3 CRUD Primitive Methods middleware "before/after" methods', function(){
       assert.isFunction(ent.create.before, 'Entity should have a "create.before" method');
@@ -59,7 +60,8 @@ module.exports = function(driver, majNum) {
     test(majNum + '.7.1 Will throw error if not proper Model provided', function() {
       function factory() {
         // an Object literal is an invalid Model
-        return new driver.Entity({});
+        var ent = driver.entity.extend();
+        ent.setModel();
       }
 
       assert.throws(factory, TypeError);

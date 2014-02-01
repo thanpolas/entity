@@ -23,7 +23,7 @@ core.init = function() {
   var drivers = [
     {
       name: 'Mongoose',
-      Entity: entity.Mongoose,
+      entity: entity.mongoose,
       majNum: '10',
       stub: mongStub,
       factory: function() {
@@ -34,7 +34,7 @@ core.init = function() {
     },
     {
       name: 'Sequelize',
-      Entity: entity.Sequelize,
+      entity: entity.sequelize,
       majNum: '11',
       stub: seqStub,
       factory: function() {
