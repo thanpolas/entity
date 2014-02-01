@@ -2,8 +2,8 @@
  * @fileOverview bootstrap file.
  */
 
-var Entity = module.exports = require('./entity');
+var entity = module.exports = require('./entity');
 
-Entity.CrudIface = require('./entity-crud');
-Entity.Mongoose = require('./drivers/mongoose.drv');
-Entity.Sequelize = require('./drivers/sequelize.drv');
+entity.CrudIface = require('./entity-crud');
+entity.Mongoose = require('./adaptors/mongoose.adp');
+entity.Sequelize = require('./adaptors/sequelize.adp');
