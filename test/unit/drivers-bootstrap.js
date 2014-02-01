@@ -27,7 +27,9 @@ core.init = function() {
       majNum: '10',
       stub: mongStub,
       factory: function() {
-        return entity.Mongoose(mongStub.Model);
+        var entMong = entity.mongoose.extend();
+        entMong.setModel(mongStub.Model);
+        return entMong;
       },
     },
     {
@@ -36,7 +38,9 @@ core.init = function() {
       majNum: '11',
       stub: seqStub,
       factory: function() {
-        return entity.Sequelize(seqStub.Model);
+        var entSeq = entity.sequelize.extend();
+        entSeq.setModel(seqStub.Model);
+        return entSeq;
       },
     },
   ];

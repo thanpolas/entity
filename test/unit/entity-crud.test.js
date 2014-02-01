@@ -30,5 +30,6 @@ suite('9.2 CRUD Raw Interface', function() {
     assert.throws(entity.update, Error, 'Not Implemented');
     assert.throws(entity.delete, Error, 'Not Implemented');
     assert.throws(entity.count, Error, 'Not Implemented');
+    assert.throws(entity.setModel, Error, 'Not Implemented');
   });
 });
