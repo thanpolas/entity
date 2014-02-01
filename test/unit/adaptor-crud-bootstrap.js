@@ -5,12 +5,12 @@
 var mongStub = require('../lib/mongoose-stub');
 var seqStub = require('../lib/sequelize-stub');
 var entity = require('../..');
-var testDriverUtils = require('./drivers.test');
-var testDriverCreate = require('./drivers-create.test');
-var testDriverRead = require('./drivers-read.test');
-var testDriverUpdate = require('./drivers-update.test');
-var testDriverDelete = require('./drivers-delete.test');
-var testDriverSchema = require('./drivers-schema.test');
+var testAdaptorUtils = require('./adaptor-crud-main.test');
+var testAdaptorCreate = require('./adaptor-crud-create.test');
+var testAdaptorRead = require('./adaptor-crud-read.test');
+var testAdaptorUpdate = require('./adaptor-crud-update.test');
+var testAdaptorDelete = require('./adaptor-crud-delete.test');
+var testAdaptorSchema = require('./adaptor-crud-schema.test');
 
 var core = module.exports = {};
 
@@ -65,12 +65,12 @@ core.init = function() {
         done();
       });
 
-      testDriverUtils(driver, driver.majNum);
-      testDriverCreate(driver, driver.majNum);
-      testDriverRead(driver, driver.majNum);
-      testDriverUpdate(driver, driver.majNum);
-      testDriverDelete(driver, driver.majNum);
-      testDriverSchema(driver, driver.majNum);
+      testAdaptorUtils(driver, driver.majNum);
+      testAdaptorCreate(driver, driver.majNum);
+      testAdaptorRead(driver, driver.majNum);
+      testAdaptorUpdate(driver, driver.majNum);
+      testAdaptorDelete(driver, driver.majNum);
+      testAdaptorSchema(driver, driver.majNum);
     });
   });
 };
