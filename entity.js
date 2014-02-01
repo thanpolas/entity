@@ -19,7 +19,7 @@ var midd = require('middlewarify');
 var Entity = module.exports = function() {
   EventEmitter.call(this);
 
-  /** @type {mschema?} Cached version of Entity's schema */
+  /** @type {?mschema} Cached version of Entity's schema */
   this._schema = null;
 };
 util.inherits(Entity, EventEmitter);
@@ -43,6 +43,13 @@ Entity.extend = function(cTor, optCtor) {
   } else {
     childCtor = cTor;
     parentCtor = Entity;
+  }
+
+  if (typeof childCtor !== 'function') {
+    throw new TypeError('Child needs a constructor');
+  }
+  if (typeof parentCtor !== 'function') {
+    throw new TypeError('Parent needs a constructor');
   }
 
   /** @constructor */

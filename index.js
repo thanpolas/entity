@@ -2,8 +2,12 @@
  * @fileOverview bootstrap file.
  */
 
-var entity = module.exports = require('./entity');
+// protect the core
+var entity = module.exports = {};
 
-entity.CrudIface = require('./entity-crud');
-entity.Mongoose = require('./adaptors/mongoose.adp');
-entity.Sequelize = require('./adaptors/sequelize.adp');
+entity.constructor = require('./entity');
+entity.extend = entity.constructor.extend;
+
+entity.crudIface = require('./entity-crud');
+entity.mongoose = require('./adaptors/mongoose.adp');
+entity.sequelize = require('./adaptors/sequelize.adp');
