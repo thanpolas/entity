@@ -46,7 +46,7 @@ test('2.0.6 ctor "this" defined properties are inherited', function() {
     this.a = 1;
   });
 
-  var entityTwo = EntityOne.extend().getInstance;
+  var entityTwo = EntityOne.extend().getInstance();
   assert.property(entityTwo, 'a');
   assert.equal(entityTwo.a, 1);
 });
