@@ -5,7 +5,7 @@ var __ = require('lodash');
 var Promise = require('bluebird');
 
 var AdaptorBase = require('./base.adp');
-var helper = require('./helper');
+var helper = require('../lib/helper');
 
 /**
  * The Mongoose CRUD implementation.
@@ -51,9 +51,18 @@ Entity.prototype._create = function(itemData, done) {
   var hasCb = arguments.length === 2;
   return new Promise(function(resolve, reject) {
     var item = new this.Model(itemData);
-    item.save(helper.callbackify(hasCb, done, {
-      resolve: resolve,
-      reject: reject,
+
+    var save = Promise.promisify(item.save, item);
+    save().spread(function() {
+      if (hasCb) {
+        done.apply(null, [null].concat(arguments));
+      }
+      resolve(arguments);
+    }.catch(function(err) {
+      if (hasCb) {
+        done(err);
+      }
+      reject(err);
     }));
   });
 };
