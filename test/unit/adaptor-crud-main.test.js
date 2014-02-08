@@ -62,101 +62,48 @@ module.exports = function(adaptor, majNum) {
       ent = adaptor.Entity.extend().getInstance();
     });
 
-    test(majNum + '.7.1 Will throw error if no proper Model provided', function() {
-      function invoke() {
-        ent.setModel();
-      }
-
-      assert.throws(invoke, TypeError);
+    test(majNum + '.7.1 Will throw error if no proper Model provided', function(done) {
+      ent.setModel().then(null, function(err) {
+        assert.instanceOf(err, Error);
+      }).then(done, done);
     });
 
-    suite(majNum + '.7.2 Using callbacks', function() {
-      test(majNum + '.7.2.1 Will throw error if CREATE with no Model set', function() {
-        function invoke() {
-          ent.create(fix.one, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-      test(majNum + '.7.2.2 Will throw error if READ with no Model set', function() {
-        function invoke() {
-          ent.read(fix.one.id, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-      test(majNum + '.7.2.3 Will throw error if UPDATE with no Model set', function() {
-        function invoke() {
-          ent.update(fix.one.id, {name: 'new val'}, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-      test(majNum + '.7.2.4 Will throw error if DELETE with no Model set', function() {
-        function invoke() {
-          ent.delete(fix.one.id, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-      test(majNum + '.7.2.5 Will throw error if READ-ONE with no Model set', function() {
-        function invoke() {
-          ent.readOne(fix.one.id, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-      test(majNum + '.7.2.6 Will throw error if READ-LIMIT with no Model set', function() {
-        function invoke() {
-          ent.readLimit(null, 0, 1, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-      test(majNum + '.7.2.7 Will throw error if COUNT with no Model set', function() {
-        function invoke() {
-          ent.count(null, noop);
-        }
-        assert.throws(invoke, Error);
-      });
-    });
     suite(majNum + '.7.3 Using Promises', function() {
       // to force promises usage, just don't include a noop
-      test(majNum + '.7.3.1 Will throw error if CREATE with no Model set', function() {
-        function invoke() {
-          ent.create(fix.one);
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.1 Will throw error if CREATE with no Model set', function(done) {
+        ent.create(fix.one).then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
-      test(majNum + '.7.3.2 Will throw error if READ with no Model set', function() {
-        function invoke() {
-          ent.read(fix.one.id);
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.2 Will throw error if READ with no Model set', function(done) {
+        ent.read(fix.one.id).then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
-      test(majNum + '.7.3.3 Will throw error if UPDATE with no Model set', function() {
-        function invoke() {
-          ent.update(fix.one.id, {name: 'new val'});
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.3 Will throw error if UPDATE with no Model set', function(done) {
+        ent.update(fix.one.id, {name: 'new val'}).then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
-      test(majNum + '.7.3.4 Will throw error if DELETE with no Model set', function() {
-        function invoke() {
-          ent.delete(fix.one.id);
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.4 Will throw error if DELETE with no Model set', function(done) {
+        ent.delete(fix.one.id).then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
-      test(majNum + '.7.3.5 Will throw error if READ-ONE with no Model set', function() {
-        function invoke() {
-          ent.readOne(fix.one.id);
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.5 Will throw error if READ-ONE with no Model set', function(done) {
+        ent.readOne(fix.one.id).then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
-      test(majNum + '.7.3.6 Will throw error if READ-LIMIT with no Model set', function() {
-        function invoke() {
-          ent.readLimit(null, 0, 1);
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.6 Will throw error if READ-LIMIT with no Model set', function(done) {
+        ent.readLimit(null, 0, 1).then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
-      test(majNum + '.7.3.7 Will throw error if COUNT with no Model set', function() {
-        function invoke() {
-          ent.count();
-        }
-        assert.throws(invoke, Error);
+      test(majNum + '.7.3.7 Will throw error if COUNT with no Model set', function(done) {
+        ent.count().then(null, function(err) {
+          assert.instanceOf(err, Error);
+        }).then(done, done);
       });
     });
 
