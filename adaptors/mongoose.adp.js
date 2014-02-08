@@ -43,10 +43,10 @@ Entity.prototype.setModel = function(Model) {
  * Create an entity item.
  *
  * @param {Object} itemData The data to use for creating.
- * @param {Function(Error=, mongoose.Document=)=} done use a callback.
+ * @param {Function(Error=, mongoose.Document=)=} maybeCb Optionaly use callback.
  * @override
  */
-Entity.prototype._create = function(itemData, done) {
+Entity.prototype._create = function(itemData, maybeCb) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var hasCb = arguments.length === 2;
   return new Promise(function(resolve, reject) {
@@ -55,12 +55,12 @@ Entity.prototype._create = function(itemData, done) {
     var save = Promise.promisify(item.save, item);
     save().spread(function() {
       if (hasCb) {
-        done.apply(null, [null].concat(arguments));
+        maybeCb.apply(null, [null].concat(arguments));
       }
       resolve(arguments);
     }.catch(function(err) {
       if (hasCb) {
-        done(err);
+        maybeCb(err);
       }
       reject(err);
     }));
