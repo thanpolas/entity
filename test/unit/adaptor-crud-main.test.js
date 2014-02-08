@@ -62,10 +62,8 @@ module.exports = function(adaptor, majNum) {
       ent = adaptor.Entity.extend().getInstance();
     });
 
-    test(majNum + '.7.1 Will throw error if no proper Model provided', function(done) {
-      ent.setModel().then(null, function(err) {
-        assert.instanceOf(err, Error);
-      }).then(done, done);
+    test(majNum + '.7.1 Will throw error if no proper Model provided', function() {
+      assert.throws(ent.setModel);
     });
 
     suite(majNum + '.7.3 Using Promises', function() {
