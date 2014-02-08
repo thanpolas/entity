@@ -1,5 +1,5 @@
 /**
- * @fileOverview Testing the drivers implementation.
+ * @fileOverview Testing the adaptors implementation.
  */
 
 // var sinon  = require('sinon');
@@ -14,15 +14,15 @@ var fix = require('../fixture/data.fix');
 /**
  * Test CRUD READ methods.
  *
- * @param {Object} driver The driver object as defined in core.test.js
+ * @param {Object} adaptor The adaptor object as defined in core.test.js
  * @param {string} majNum The Major number.
  */
-module.exports = function(driver, majNum) {
+module.exports = function(adaptor, majNum) {
 
   suite(majNum + '.9 Schema exporting', function() {
     var ent, id;
     setup(function(done) {
-      ent = driver.factory().getInstance();
+      ent = adaptor.factory().getInstance();
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -41,7 +41,7 @@ module.exports = function(driver, majNum) {
     });
 
 
-    switch(driver.name) {
+    switch(adaptor.name) {
     case 'Mongoose':
       suite(majNum + '.9.10 Mongoose specific tests', function() {
         test(majNum + '.9.10.1 Expect specific number of keys', function() {

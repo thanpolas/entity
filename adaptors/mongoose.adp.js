@@ -1,6 +1,7 @@
 /**
  * @fileOverview The Mongoose CRUD implementation.
  */
+var util = require('util');
 var __ = require('lodash');
 var Promise = require('bluebird');
 
@@ -52,12 +53,12 @@ MongooseAdapter.prototype.setModel = function(Model) {
 
 MongooseAdapter.prototype._defineMethods = function() {
   this._create = Promise.promisify(this.Model.prototype.save);
-  this._mongFindOne = Promise.promisify(this.Model.prototype.findOne);
-  this._mongFindById = Promise.promisify(this.Model.prototype.findById);
-  this._mongFind = Promise.promisify(this.Model.prototype.find);
-  this._mongCount = Promise.promisify(this.Model.prototype.count);
+  this._mongFindOne = Promise.promisify(this.Model.findOne);
+  this._mongFindById = Promise.promisify(this.Model.findById);
+  this._mongFind = Promise.promisify(this.Model.find);
+  this._mongCount = Promise.promisify(this.Model.count);
   this._mongSave = Promise.promisify(this.Model.prototype.save);
-  this._mongRemove = Promise.promisify(this.Model.prototype.remove);
+  this._mongRemove = Promise.promisify(this.Model.remove);
 };
 
 /**

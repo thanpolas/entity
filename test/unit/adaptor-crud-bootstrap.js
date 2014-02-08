@@ -23,7 +23,7 @@ core.init = function() {
   var adaptors = [
     {
       name: 'Mongoose',
-      entity: Entity.Mongoose,
+      Entity: Entity.Mongoose,
       majNum: '10',
       stub: mongStub,
       factory: function() {
