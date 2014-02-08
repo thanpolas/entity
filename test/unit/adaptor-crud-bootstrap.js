@@ -32,17 +32,17 @@ core.init = function() {
         return entMong;
       },
     },
-    {
-      name: 'Sequelize',
-      entity: Entity.Sequelize,
-      majNum: '11',
-      stub: seqStub,
-      factory: function() {
-        var entSeq = Entity.Sequelize.extend().getInstance();
-        entSeq.setModel(seqStub.Model);
-        return entSeq;
-      },
-    },
+    // {
+    //   name: 'Sequelize',
+    //   entity: Entity.Sequelize,
+    //   majNum: '11',
+    //   stub: seqStub,
+    //   factory: function() {
+    //     var entSeq = Entity.Sequelize.extend().getInstance();
+    //     entSeq.setModel(seqStub.Model);
+    //     return entSeq;
+    //   },
+    // },
   ];
 
 
