@@ -5,7 +5,7 @@ var util = require('util');
 
 var __ = require('lodash');
 
-var Driver = require('./base.drv');
+var Driver = require('./base.adp');
 
 /**
  * The Sequelize CRUD implementation.

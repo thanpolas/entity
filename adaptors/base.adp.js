@@ -2,7 +2,7 @@
  * @fileOverview Provide a common interface for drivers.
  */
 var __ = require('lodash');
-var EntityCrud = require('../entity-crud');
+var EntityCrud = require('../lib/entity-crud');
 
 /**
  * Provide a common interface for drivers.
