@@ -5,7 +5,8 @@ var __ = require('lodash');
 var Promise = require('bluebird');
 
 var AdaptorBase = require('./base.adp');
-var helper = require('../lib/helper');
+
+function noop() {}
 
 /**
  * The Mongoose CRUD implementation.
@@ -13,11 +14,19 @@ var helper = require('../lib/helper');
  * @param {?Object} optUdo Optionally define the current handling user.
  * @param {mongoose.Model} Model the model that this entity relates to.
  * @constructor
- * @extends {Entity.Driver}
+ * @extends {MongooseAdapter.AdaptorBase}
  */
-var Entity = module.exports = AdaptorBase.extend(function(/* optUdo */) {
+var MongooseAdapter = module.exports = AdaptorBase.extend(function(/* optUdo */) {
   /** @type {?mongoose.Model} The mongoose model */
   this.Model = null;
+
+  // stub internal methods, all should be private to instance
+  this._mongFindOne = noop;
+  this._mongFindById = noop;
+  this._mongFind = noop;
+  this._mongCount = noop;
+  this._mongSave = noop;
+  this._mongRemove = noop;
 });
 
 /**
@@ -25,7 +34,7 @@ var Entity = module.exports = AdaptorBase.extend(function(/* optUdo */) {
  *
  * @param {mongoose.Model} Model The mongoose model.
  */
-Entity.prototype.setModel = function(Model) {
+MongooseAdapter.prototype.setModel = function(Model) {
   // perform some heuristics on Model identity cause instanceof will not work
   if (
     !Model ||
@@ -37,41 +46,46 @@ Entity.prototype.setModel = function(Model) {
     throw new TypeError('Model provided not a Mongoose.Model instance');
   }
   this.Model = Model;
+
+  this._defineMethods();
+};
+
+MongooseAdapter.prototype._defineMethods = function() {
+  this._create = Promise.promisify(this.Model.prototype.save);
+  this._mongFindOne = Promise.promisify(this.Model.prototype.findOne);
+  this._mongFindById = Promise.promisify(this.Model.prototype.findById);
+  this._mongFind = Promise.promisify(this.Model.prototype.find);
+  this._mongCount = Promise.promisify(this.Model.prototype.count);
+  this._mongSave = Promise.promisify(this.Model.prototype.save);
+  this._mongRemove = Promise.promisify(this.Model.prototype.remove);
 };
 
 /**
  * Create an entity item.
  *
  * @param {Object} itemData The data to use for creating.
- * @param {Function(Error=, mongoose.Document=)=} maybeCb Optionaly use callback.
+ * @return {Promise(mongoose.Document)} A promise with the mongoose doc.
  * @override
  */
-Entity.prototype._create = function(itemData, maybeCb) {
-  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  return new Promise(function(resolve, reject) {
-    var item = new this.Model(itemData);
-    item.save( helper.callbackify(resolve, reject, maybeCb) );
-  });
+MongooseAdapter.prototype._create = function() {
+  throw new Error('No Mongoose.Model defined, use setModel()');
 };
 
 /**
  * Read one entity item.
  *
  * @param {string|Object} id the item id or an Object to query against.
- * @param {Function(Error=, mongoose.Document=)} done callback.
+ * @return {Promise(mongoose.Document)} A promise with the mongoose doc.
  * @override
  */
-Entity.prototype._readOne = function(id, done) {
+MongooseAdapter.prototype._readOne = function(id) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  var query;
-  if (__.isObject(id)) {
-    query = this.Model.findOne.bind(this.Model);
-  } else {
-    query = this.Model.findById.bind(this.Model);
-  }
-  query(id, function(err) {
 
-  });
+  if (__.isObject(id)) {
+    return this._mongFindOne(id);
+  } else {
+    return this._mongFindById(id);
+  }
 };
 
 /**
@@ -79,19 +93,13 @@ Entity.prototype._readOne = function(id, done) {
  * Do practice common sense!
  *
  * @param {Object=} optQuery Limit the results.
- * @param {Function(Error=, mongoose.Document=)} done callback.
+ * @return {Promise(mongoose.Document)} A promise with the mongoose doc.
  * @override
  */
-Entity.prototype._read = function(optQuery, done) {
+MongooseAdapter.prototype._read = function(optQuery) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  var query = {};
-  if (__.isFunction(optQuery)) {
-    done = optQuery;
-  } else if (__.isObject(optQuery)) {
-    query = optQuery;
-  }
 
-  this.Model.find(query).exec(done);
+  return this._mongFind(optQuery || {});
 };
 
 /**
@@ -100,27 +108,35 @@ Entity.prototype._read = function(optQuery, done) {
  * @param {?Object} query Narrow down the set, set to null for all.
  * @param {number} skip starting position.
  * @param {number} limit how many records to fetch.
- * @param {Function(Error=, Array.<mongoose.Document>=)} done callback.
+ * @return {Promise(mongoose.Document)} A promise with the mongoose doc.
  * @override
  */
-Entity.prototype._readLimit = function(query, skip, limit, done) {
+MongooseAdapter.prototype._readLimit = function(query, skip, limit) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  this.Model.find(query)
-    .skip(skip)
-    .limit(limit)
-    .exec(done);
+
+  return new Promise(function(resolve, reject) {
+    this.Model.find(query)
+      .skip(skip)
+      .limit(limit)
+      .exec(function(err, result) {
+        // there's no escaping that
+        if (err) {
+          return reject(err);
+        }
+        resolve(result);
+      });
+  }.bind(this));
 };
 
 /**
  * Get the count of items.
  *
  * @param {?Object} query Narrow down the set, null for all.
- * @param {Function(Error=, number=)} done callback.
+ * @return {Promise(number)} A promise with the result.
  * @override
  */
-Entity.prototype._count = function(query, done) {
+MongooseAdapter.prototype._count = function() {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  this.Model.count(query).exec(done);
 };
 
 /**
@@ -128,29 +144,23 @@ Entity.prototype._count = function(query, done) {
  *
  * @param {string|Object} id the item id or query for item.
  * @param {Object} itemData The data to use for creating.
- * @param {Function(Error=, mongoose.Document=)} done callback.
+ * @return {Promise(mongoose.Document)} A promise with the mongoose doc.
  * @override
  */
-Entity.prototype._update = function(id, itemData, done) {
+MongooseAdapter.prototype._update = function(id, itemData) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  var query;
-  if (__.isObject(id)) {
-    query = this.Model.findOne.bind(this.Model);
-  } else {
-    query = this.Model.findById.bind(this.Model);
-  }
 
-  query(id, function(err, doc){
-    if (err) { return done(err); }
-    if (!__.isObject(doc)) {
-      return done(new Error('record not found'));
-    }
-    __.forOwn(itemData, function(value, key) {
-      doc[key] = value;
-    }, this);
+  return new Promise(function(resolve, reject) {
+    return this.readOne(id).then(function(doc) {
+      if (!__.isObject(doc)) {
+        return reject(new Error('record not found'));
+      }
+      __.forOwn(itemData, function(value, key) {
+        doc[key] = value;
+      }, this);
 
-    doc.save(done);
-
+      return this._mongSave();
+    }.bind(this), reject);
   }.bind(this));
 };
 
@@ -158,22 +168,24 @@ Entity.prototype._update = function(id, itemData, done) {
  * Remove an entity item.
  *
  * @param {string|Object} id the item id or query for item.
- * @param {Function(Error=, Object=)} done callback.
+ * @return {Promise(Object=)} A promise.
  * @protected
  */
-Entity.prototype._delete = function(id, done) {
+MongooseAdapter.prototype._delete = function(id) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
+
   var query = this._getQuery(id);
-  this.Model.remove(query).exec().addBack(done);
+  return this._mongRemove(query);
 };
 
 /**
- * Get the normalized schema of this Entity.
+ * Get the normalized schema of this MongooseAdapter.
  *
  * @return {mschema} An mschema struct.
  */
-Entity.prototype.getSchema = function() {
+MongooseAdapter.prototype.getSchema = function() {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
+
   if (this._schema) {
     return this._schema;
   }
@@ -202,7 +214,7 @@ Entity.prototype.getSchema = function() {
  * @return {string} The field's name.
  * @private
  */
-Entity.prototype._getName = function(path, optOpts) {
+MongooseAdapter.prototype._getName = function(path, optOpts) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var opts = optOpts || {};
 
@@ -223,7 +235,7 @@ Entity.prototype._getName = function(path, optOpts) {
  * @return {boolean} true to show.
  * @private
  */
-Entity.prototype._canShow = function(schemaItem, optOpts) {
+MongooseAdapter.prototype._canShow = function(schemaItem, optOpts) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var opts = optOpts || {};
 
