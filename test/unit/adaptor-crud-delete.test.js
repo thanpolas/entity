@@ -28,28 +28,6 @@ module.exports = function(adaptor, majNum) {
         done();
       });
     });
-    suite(majNum + '.8.1 Using callbacks', function() {
-      test(majNum + '.8.1.1 Delete a record using the id', function(done) {
-        ent.delete(id, function(err) {
-          if (err) {return done(err);}
-          ent.count(null, function(err, count) {
-            if (err) {return done(err);}
-            assert.equal(count, 0, 'no records should exist');
-            done();
-          });
-        });
-      });
-      test(majNum + '.8.1.2 Delete a record using custom query', function(done) {
-        ent.delete({name: fix.one.name}, function(err) {
-          if (err) {return done(err);}
-          ent.readOne(id, function(err, res) {
-            if (err) {return done(err);}
-            assert.isNull(res, 'no record should exist');
-            done();
-          });
-        });
-      });
-    });
     suite(majNum + '.8.2 Using Promises', function() {
       test(majNum + '.8.2.1 Delete a record using the id', function(done) {
         ent.delete(id).then(function() {

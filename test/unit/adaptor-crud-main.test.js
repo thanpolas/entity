@@ -173,12 +173,6 @@ module.exports = function(adaptor, majNum) {
         ent.create(fix.two, done);
       });
     });
-    test(majNum + '.6.1 Count records with callback', function(done) {
-      ent.count(null, function(err, count) {
-        assert.equal(count, 2, 'There should be two results');
-        done();
-      });
-    });
     test(majNum + '.6.2 Count records with promise', function(done) {
       ent.count().then(function(count) {
         assert.equal(count, 2, 'There should be two results');
