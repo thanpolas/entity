@@ -1,22 +1,30 @@
 /**
  * @fileOverview The Mongoose CRUD implementation.
  */
-var util = require('util');
-
 var __ = require('lodash');
-var Driver = require('./base.drv');
+var Promise = require('bluebird');
+
+var AdaptorBase = require('./base.adp');
 
 /**
  * The Mongoose CRUD implementation.
  *
+ * @param {?Object} optUdo Optionally define the current handling user.
  * @param {mongoose.Model} Model the model that this entity relates to.
- * @param {Object=} optUdo Optionally define the current handling user.
  * @constructor
  * @extends {Entity.Driver}
  */
-var Entity = module.exports = function(Model, optUdo) {
-  Driver.call(this, optUdo);
+var Entity = module.exports = AdaptorBase.extend(function(/* optUdo */) {
+  /** @type {?mongoose.Model} The mongoose model */
+  this.Model = null;
+});
 
+/**
+ * Set the Mongoose Model.
+ *
+ * @param {mongoose.Model} Model The mongoose model.
+ */
+Entity.prototype.setModel = function(Model) {
   // perform some heuristics on Model identity cause instanceof will not work
   if (
     !Model ||
@@ -24,26 +32,38 @@ var Entity = module.exports = function(Model, optUdo) {
     !Model.db ||
     !Model.model ||
     !Model.schema
-
-    ) {
+  ) {
     throw new TypeError('Model provided not a Mongoose.Model instance');
   }
-
-  /** @type {mongoose.Model} The mongoose model */
   this.Model = Model;
 };
-util.inherits(Entity, Driver);
 
 /**
  * Create an entity item.
  *
  * @param {Object} itemData The data to use for creating.
- * @param {Function(Error=, mongoose.Document=)} done callback.
+ * @param {Function(Error=, mongoose.Document=)=} done use a callback.
  * @override
  */
 Entity.prototype._create = function(itemData, done) {
-  var item = new this.Model(itemData);
-  item.save(done);
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
+  var hasCb = arguments.length === 2;
+  return new Promise(function(resolve, reject) {
+    var item = new this.Model(itemData);
+    item.save(function(err) {
+      if (err) {
+        if (hasCb) {
+          done(err);
+          return reject(err);
+        }
+      }
+      var args = Array.prototype.slice.call(arguments, 1);
+      if (hasCb) {
+        done.apply(null, arguments);
+      }
+      resolve(args);
+    });
+  });
 };
 
 /**
@@ -54,13 +74,16 @@ Entity.prototype._create = function(itemData, done) {
  * @override
  */
 Entity.prototype._readOne = function(id, done) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var query;
   if (__.isObject(id)) {
     query = this.Model.findOne.bind(this.Model);
   } else {
     query = this.Model.findById.bind(this.Model);
   }
-  query(id, done);
+  query(id, function(err) {
+
+  });
 };
 
 /**
@@ -72,6 +95,7 @@ Entity.prototype._readOne = function(id, done) {
  * @override
  */
 Entity.prototype._read = function(optQuery, done) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var query = {};
   if (__.isFunction(optQuery)) {
     done = optQuery;
@@ -92,6 +116,7 @@ Entity.prototype._read = function(optQuery, done) {
  * @override
  */
 Entity.prototype._readLimit = function(query, skip, limit, done) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   this.Model.find(query)
     .skip(skip)
     .limit(limit)
@@ -106,6 +131,7 @@ Entity.prototype._readLimit = function(query, skip, limit, done) {
  * @override
  */
 Entity.prototype._count = function(query, done) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   this.Model.count(query).exec(done);
 };
 
@@ -118,6 +144,7 @@ Entity.prototype._count = function(query, done) {
  * @override
  */
 Entity.prototype._update = function(id, itemData, done) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var query;
   if (__.isObject(id)) {
     query = this.Model.findOne.bind(this.Model);
@@ -147,6 +174,7 @@ Entity.prototype._update = function(id, itemData, done) {
  * @protected
  */
 Entity.prototype._delete = function(id, done) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var query = this._getQuery(id);
   this.Model.remove(query).exec().addBack(done);
 };
@@ -157,6 +185,7 @@ Entity.prototype._delete = function(id, done) {
  * @return {mschema} An mschema struct.
  */
 Entity.prototype.getSchema = function() {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   if (this._schema) {
     return this._schema;
   }
@@ -186,6 +215,7 @@ Entity.prototype.getSchema = function() {
  * @private
  */
 Entity.prototype._getName = function(path, optOpts) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var opts = optOpts || {};
 
   var name;
@@ -206,6 +236,7 @@ Entity.prototype._getName = function(path, optOpts) {
  * @private
  */
 Entity.prototype._canShow = function(schemaItem, optOpts) {
+  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var opts = optOpts || {};
 
   // check for custom excluded paths

@@ -7,11 +7,11 @@ var EntityCrud = require('../entity-crud');
 /**
  * Provide a common interface for drivers.
  *
- * @param {Object=} optUdo Optionally define the current handling user.
+ * @param {Object=} optUdo Optionally define the current handling user
  * @constructor
  * @extends {crude.Entity}
  */
-var Entity = module.exports = EntityCrud.extend(function(optUdo) {
+var AdaptorBase = module.exports = EntityCrud.extend(function(/* optUdo */) {
   /** @type {string} The default 'id' field name */
   this._idName = '_id';
 });
@@ -22,7 +22,16 @@ var Entity = module.exports = EntityCrud.extend(function(optUdo) {
  * @param {string|Object} id the item id or query for item.
  * @protected
  */
-Entity.prototype._getQuery = function(id) {
+AdaptorBase.prototype._getQuery = function(id) {
   var q = {};
   return (__.isObject(id)) ? id : (q[this._idName] = id, q);
+};
+
+/**
+ * Dependency Injection.
+ *
+ * @param {*} The ORM.
+ */
+AdaptorBase.prototype.setModel = function(/* model */) {
+  throw new Error('Not Implemented');
 };
