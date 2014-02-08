@@ -1,5 +1,5 @@
 /**
- * @fileOverview Testing the drivers implementation.
+ * @fileOverview Testing the adaptors implementation.
  */
 
 // var sinon  = require('sinon');
@@ -9,21 +9,21 @@ var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
 
-// var noop = function(){};
+var noop = function(){};
 
 /**
  * Test CRUD utility methods.
  *
- * @param {Object} driver The driver object as defined in core.test.js
+ * @param {Object} adaptor The adaptor object as defined in core.test.js
  * @param {string} majNum The Major number.
  */
-module.exports = function(driver, majNum) {
+module.exports = function(adaptor, majNum) {
 
 
   suite(majNum + '.1 CRUD API Surface', function() {
     var ent;
     setup(function() {
-      ent = driver.factory();
+      ent = adaptor.factory();
     });
     test(majNum + '.1.1 CRUD Primitive Methods', function(){
       assert.isFunction(ent.create, 'Entity should have a "create" method');
@@ -57,21 +57,115 @@ module.exports = function(driver, majNum) {
   });
 
   suite(majNum + '.7 Instance integrity', function() {
-    test(majNum + '.7.1 Will throw error if not proper Model provided', function() {
-      function factory() {
-        // an Object literal is an invalid Model
-        var ent = driver.entity.extend();
+    var ent;
+    setup(function() {
+      ent = adaptor.Entity.extend().getInstance();
+    });
+
+    test(majNum + '.7.1 Will throw error if no proper Model provided', function() {
+      function invoke() {
         ent.setModel();
       }
 
-      assert.throws(factory, TypeError);
+      assert.throws(invoke, TypeError);
     });
+
+    suite(majNum + '.7.2 Using callbacks', function() {
+      test(majNum + '.7.2.1 Will throw error if CREATE with no Model set', function() {
+        function invoke() {
+          ent.create(fix.one, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.2.2 Will throw error if READ with no Model set', function() {
+        function invoke() {
+          ent.read(fix.one.id, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.2.3 Will throw error if UPDATE with no Model set', function() {
+        function invoke() {
+          ent.update(fix.one.id, {name: 'new val'}, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.2.4 Will throw error if DELETE with no Model set', function() {
+        function invoke() {
+          ent.delete(fix.one.id, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.2.5 Will throw error if READ-ONE with no Model set', function() {
+        function invoke() {
+          ent.readOne(fix.one.id, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.2.6 Will throw error if READ-LIMIT with no Model set', function() {
+        function invoke() {
+          ent.readLimit(null, 0, 1, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.2.7 Will throw error if COUNT with no Model set', function() {
+        function invoke() {
+          ent.count(null, noop);
+        }
+        assert.throws(invoke, Error);
+      });
+    });
+    suite(majNum + '.7.3 Using Promises', function() {
+      // to force promises usage, just don't include a noop
+      test(majNum + '.7.3.1 Will throw error if CREATE with no Model set', function() {
+        function invoke() {
+          ent.create(fix.one);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.3.2 Will throw error if READ with no Model set', function() {
+        function invoke() {
+          ent.read(fix.one.id);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.3.3 Will throw error if UPDATE with no Model set', function() {
+        function invoke() {
+          ent.update(fix.one.id, {name: 'new val'});
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.3.4 Will throw error if DELETE with no Model set', function() {
+        function invoke() {
+          ent.delete(fix.one.id);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.3.5 Will throw error if READ-ONE with no Model set', function() {
+        function invoke() {
+          ent.readOne(fix.one.id);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.3.6 Will throw error if READ-LIMIT with no Model set', function() {
+        function invoke() {
+          ent.readLimit(null, 0, 1);
+        }
+        assert.throws(invoke, Error);
+      });
+      test(majNum + '.7.3.7 Will throw error if COUNT with no Model set', function() {
+        function invoke() {
+          ent.count();
+        }
+        assert.throws(invoke, Error);
+      });
+    });
+
   });
 
   suite(majNum + '.6 Count records', function() {
     var ent, id;
     setup(function(done) {
-      ent = driver.factory();
+      ent = adaptor.factory();
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -79,11 +173,16 @@ module.exports = function(driver, majNum) {
         ent.create(fix.two, done);
       });
     });
-    test(majNum + '.6.1 Count records', function(done) {
+    test(majNum + '.6.1 Count records with callback', function(done) {
       ent.count(null, function(err, count) {
         assert.equal(count, 2, 'There should be two results');
         done();
       });
+    });
+    test(majNum + '.6.2 Count records with promise', function(done) {
+      ent.count().then(function(count) {
+        assert.equal(count, 2, 'There should be two results');
+      }).then(done, done);
     });
   });
 };

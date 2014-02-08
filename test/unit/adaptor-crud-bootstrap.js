@@ -4,7 +4,7 @@
 
 var mongStub = require('../lib/mongoose-stub');
 var seqStub = require('../lib/sequelize-stub');
-var entity = require('../..');
+var Entity = require('../..');
 var testAdaptorUtils = require('./adaptor-crud-main.test');
 var testAdaptorCreate = require('./adaptor-crud-create.test');
 var testAdaptorRead = require('./adaptor-crud-read.test');
@@ -20,25 +20,25 @@ var core = module.exports = {};
  */
 core.init = function() {
 
-  var drivers = [
+  var adaptors = [
     {
       name: 'Mongoose',
-      entity: entity.mongoose,
+      entity: Entity.Mongoose,
       majNum: '10',
       stub: mongStub,
       factory: function() {
-        var entMong = entity.mongoose.extend();
+        var entMong = Entity.Mongoose.extend().getInstance();
         entMong.setModel(mongStub.Model);
         return entMong;
       },
     },
     {
       name: 'Sequelize',
-      entity: entity.sequelize,
+      entity: Entity.Sequelize,
       majNum: '11',
       stub: seqStub,
       factory: function() {
-        var entSeq = entity.sequelize.extend();
+        var entSeq = Entity.Sequelize.extend().getInstance();
         entSeq.setModel(seqStub.Model);
         return entSeq;
       },
@@ -53,24 +53,24 @@ core.init = function() {
   // testEntity.iface({factory: factoryCrud}, 1);
 
   // Then all drivers
-  drivers.forEach(function(driver) {
-    suite(driver.majNum + '. ' + driver.name + ' driver', function() {
+  adaptors.forEach(function(adaptor) {
+    suite(adaptor.majNum + '. ' + adaptor.name + ' adaptor', function() {
       setup(function(done) {
-        driver.stub.connect(function(err) {
+        adaptor.stub.connect(function(err) {
           if (err) {return done(err);}
-          driver.stub.nukedb(done);
+          adaptor.stub.nukedb(done);
         });
       });
       teardown(function(done) {
         done();
       });
 
-      testAdaptorUtils(driver, driver.majNum);
-      testAdaptorCreate(driver, driver.majNum);
-      testAdaptorRead(driver, driver.majNum);
-      testAdaptorUpdate(driver, driver.majNum);
-      testAdaptorDelete(driver, driver.majNum);
-      testAdaptorSchema(driver, driver.majNum);
+      testAdaptorUtils(adaptor, adaptor.majNum);
+      testAdaptorCreate(adaptor, adaptor.majNum);
+      testAdaptorRead(adaptor, adaptor.majNum);
+      testAdaptorUpdate(adaptor, adaptor.majNum);
+      testAdaptorDelete(adaptor, adaptor.majNum);
+      testAdaptorSchema(adaptor, adaptor.majNum);
     });
   });
 };

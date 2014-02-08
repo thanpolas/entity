@@ -21,13 +21,13 @@ teardown(function() {});
 
 suite('4.11 Entity Middleware and "before", "after" methods', function() {
   test('4.11.1 surface tests', function() {
-    var entityOne = Entity.extend(function() {
+    var EntityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
     });
 
-    entityOne.prototype._create = noop;
+    EntityOne.prototype._create = noop;
 
-    var ent = entityOne();
+    var ent = EntityOne.getInstance();
 
     assert.isFunction(ent.create, 'a "create" method should exist');
     assert.isFunction(ent.create.use, 'a "create.use" method should exist');
@@ -42,7 +42,7 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
     var stubAfterTwo = sinon.stub();
     var stubActual = sinon.stub();
 
-    var entityOne = Entity.extend(function() {
+    var EntityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
 
       this.create.before(stubBeforeOne);
@@ -51,9 +51,9 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
       this.create.after(stubAfterTwo);
     });
 
-    entityOne.prototype._create = stubActual;
+    EntityOne.prototype._create = stubActual;
 
-    entityOne().create();
+    EntityOne.getInstance().create();
 
     assert(stubBeforeOne.calledBefore(stubBeforeTwo), 'stubABeforeOne() before stubBeforeTwo()');
     assert(stubBeforeTwo.calledBefore(stubActual), 'stubBeforeTwo() before stubActual()');

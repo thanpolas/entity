@@ -11,7 +11,7 @@ var assert = chai.assert;
 
 // var noop = function(){};
 
-var entity = require('../../');
+var Entity = require('../../');
 
 setup(function() {});
 teardown(function() {});
@@ -22,7 +22,7 @@ teardown(function() {});
 // run by using the mocha --grep "1.1.1" option.
 
 suite('3.10 Events', function() {
-  test('3.10.1 Entity is an instance of "events.EventEmitter"', function() {
-    assert.instanceOf(entity, EventEmitter);
+  test('3.10.1 Entities are an instance of "events.EventEmitter"', function() {
+    assert.instanceOf(Entity.extend().getInstance(), EventEmitter);
   });
 });

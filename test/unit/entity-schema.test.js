@@ -30,9 +30,10 @@ var schema1 = {
 };
 
 suite('5.2 Entity Schema', function() {
-  var ent;
+  var Ent, ent;
   setup(function() {
-    ent = entity.extend();
+    Ent = entity.extend();
+    ent = new Ent();
   });
   suite('5.2.1 Entity Schema Add / Get / Rem', function() {
     test('5.2.1.1 Entity.addSchema() using an object', function() {
@@ -136,14 +137,14 @@ suite('5.2 Entity Schema', function() {
   suite('5.2.2 Entity Schema inheritance behavior', function() {
     test('5.2.2.1 Extended entity with schema defined inherits', function() {
       ent.addSchema(schema1);
-      var childEnt = ent.extend();
+      var childEnt = Ent.extend().getInstance();
       var schema = childEnt.getSchema();
       assert.property(schema, 'firstName');
       assert.property(schema, 'lastName');
     });
     test('5.2.2.2 Adding schema items to extended entity does not affect parent', function() {
       ent.addSchema(schema1);
-      var childEnt = ent.extend();
+      var childEnt = Ent.extend().getInstance();
 
       childEnt.addSchema('age', 'number');
       var schema = ent.getSchema();

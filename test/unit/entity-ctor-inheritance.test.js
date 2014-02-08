@@ -9,7 +9,7 @@ var assert = chai.assert;
 
 // var noop = function(){};
 
-var entity = require('../../');
+var Entity = require('../../');
 
 setup(function() {});
 teardown(function() {});
@@ -21,63 +21,48 @@ teardown(function() {});
 
 suite('2.0 constructor and inheritance', function() {
   test('2.0.1 Extending with a constructor', function(done) {
-    entity.extend(function() {
-      done();
-    });
+    Entity.extend(done).getInstance();
   });
   test('2.0.1.1 Can extend without a ctor', function(){
-    assert.doesNotThrow(entity.extend);
+    assert.doesNotThrow(Entity.extend);
   });
-  test('2.0.2 extend() returns a singleton instance with a ctor that is instanceof', function() {
-    var entityChild = entity.extend();
-    assert.instanceOf(entityChild, entity.constructor);
+  test('2.0.2 extend() returns a ctor that its instance is instanceof Entity', function() {
+    var entityChild = Entity.extend().getInstance();
+    assert.instanceOf(entityChild, Entity);
   });
 });
 
-test('2.0.3 extend() singleton has a reference to the ctor prototype', function() {
-  var entityOne = entity.extend();
-  assert.property(entityOne, 'prototype');
-  assert.deepStrictEqual(entityOne.prototype, entityOne.constructor.prototype);
-});
+test('2.0.5 prototype methods are inherited', function() {
+  var EntityOne = Entity.extend();
+  EntityOne.prototype.add = function(a, b) { return a + b; };
 
-test('2.0.4 using instance prototype methods are immediately available', function() {
-  var entityOne = entity.extend();
-  entityOne.prototype.add = function(a, b) { return a + b; };
-
-  assert.isFunction(entityOne.add);
-  assert.equal(2, entityOne.add(1,1));
-});
-
-test('2.0.5 using instance prototype methods are inherited', function() {
-  var entityOne = entity.extend();
-  entityOne.prototype.add = function(a, b) { return a + b; };
-
-  var entityTwo = entityOne.extend();
+  var entityTwo = EntityOne.extend().getInstance();
   assert.isFunction(entityTwo.add);
   assert.equal(2, entityTwo.add(1,1));
 });
 
 test('2.0.6 ctor "this" defined properties are inherited', function() {
-  var entityOne = entity.extend(function(){
+  var EntityOne = Entity.extend(function(){
     this.a = 1;
   });
 
-  var entityTwo = entityOne.extend();
+  var entityTwo = EntityOne.extend().getInstance;
   assert.property(entityTwo, 'a');
   assert.equal(entityTwo.a, 1);
 });
 
 test('2.0.7 ctor "this" defined properties have no side-effects', function() {
-  var entityOne = entity.extend(function(){
+  var EntityOne = Entity.extend(function(){
     this.a = 1;
     this.obj = {
       b: 2,
     };
   });
+  var entityOne = EntityOne.getInstance();
   entityOne.a = 3;
   entityOne.obj.b = 6;
 
-  var entityTwo = entityOne.extend();
+  var entityTwo = EntityOne.extend().getInstance();
   assert.property(entityTwo, 'a');
   assert.property(entityTwo, 'obj');
   assert.equal(entityTwo.a, 1);
@@ -90,9 +75,9 @@ test('2.0.7 ctor "this" defined properties have no side-effects', function() {
 });
 
 test('2.0.8 static methods are not inherited', function(){
-  var entityOne = entity.extend();
-  entityOne.astaticfn = function(){};
+  var EntityOne = Entity.extend();
+  EntityOne.astaticfn = function(){};
 
-  var entityTwo = entityOne.extend();
+  var entityTwo = EntityOne.extend().getInstance();
   assert.notProperty(entityTwo, 'astaticfn');
 });

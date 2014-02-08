@@ -22,7 +22,7 @@ module.exports = function(driver, majNum) {
   suite(majNum + '.9 Schema exporting', function() {
     var ent, id;
     setup(function(done) {
-      ent = driver.factory();
+      ent = driver.factory().getInstance();
       ent.create(fix.one, function(err, obj) {
         if (err) {return done(err);}
         id = obj.id;
@@ -30,6 +30,7 @@ module.exports = function(driver, majNum) {
         ent.create(fix.two, done);
       });
     });
+
     test(majNum + '.9.1 Look for expected keys in Schema', function() {
       var schema = ent.getSchema();
 
