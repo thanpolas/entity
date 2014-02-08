@@ -48,22 +48,9 @@ Entity.prototype.setModel = function(Model) {
  */
 Entity.prototype._create = function(itemData, maybeCb) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-  var hasCb = arguments.length === 2;
   return new Promise(function(resolve, reject) {
     var item = new this.Model(itemData);
-
-    var save = Promise.promisify(item.save, item);
-    save().spread(function() {
-      if (hasCb) {
-        maybeCb.apply(null, [null].concat(arguments));
-      }
-      resolve(arguments);
-    }.catch(function(err) {
-      if (hasCb) {
-        maybeCb(err);
-      }
-      reject(err);
-    }));
+    item.save( helper.callbackify(resolve, reject, maybeCb) );
   });
 };
 
