@@ -1,7 +1,6 @@
 /**
  * @fileOverview The Mongoose CRUD implementation.
  */
-var util = require('util');
 var __ = require('lodash');
 var Promise = require('bluebird');
 
@@ -49,6 +48,7 @@ MongooseAdapter.prototype.setModel = function(Model) {
   this.Model = Model;
 
   this._defineMethods();
+  this._readSchema();
 };
 
 MongooseAdapter.prototype._defineMethods = function() {
@@ -197,18 +197,13 @@ MongooseAdapter.prototype._delete = function(id) {
 };
 
 /**
- * Get the normalized schema of this MongooseAdapter.
+ * Get and store the normalized schema of this MongooseAdapter.
  *
  * @return {mschema} An mschema struct.
+ * @private
  */
-MongooseAdapter.prototype.getSchema = function() {
-  if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-
-  if (this._schema) {
-    return this._schema;
-  }
+MongooseAdapter.prototype._readSchema = function() {
   var mongooseSchema = this.Model.schema.paths;
-  this._schema = Object.create(null);
 
   __.forIn(mongooseSchema, function(mongSchemaItem, path) {
     var attribute = this._getName(path, this.opts);
@@ -219,8 +214,6 @@ MongooseAdapter.prototype.getSchema = function() {
       path: path,
     };
   }, this);
-
-  return this._schema;
 };
 
 /**

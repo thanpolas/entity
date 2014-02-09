@@ -3,10 +3,7 @@
  */
 
 // protect the core
-var entity = module.exports = {};
-
-entity.constructor = require('./lib/entity');
-entity.extend = entity.constructor.extend;
+var entity = module.exports = require('./lib/entity');
 
 entity.CrudIface = require('./lib/entity-crud');
 entity.Mongoose = require('./adaptors/mongoose.adp');
