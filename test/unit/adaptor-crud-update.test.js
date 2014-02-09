@@ -22,12 +22,10 @@ module.exports = function(adaptor, majNum) {
   suite(majNum + '.4 Update records', function() {
     var ent, id;
     setup(function(done) {
-      ent = adaptor.factory().getInstance();
-      ent.create(fix.one, function(err, obj) {
-        if (err) {return done(err);}
+      ent = adaptor.factory();
+      ent.create(fix.one).then(function(obj) {
         id = obj.id;
-        done();
-      });
+      }).then(done, done);
     });
     suite(majNum + '.4.2 Using Promises', function() {
       test(majNum + '.4.2.1 Update a record using the id', function(done) {

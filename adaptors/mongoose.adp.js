@@ -164,9 +164,8 @@ MongooseAdapter.prototype._count = function(query) {
  */
 MongooseAdapter.prototype._update = function(id, itemData) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
-
   return new Promise(function(resolve, reject) {
-    return this.readOne(id).then(function(doc) {
+    this.readOne(id).then(function(doc) {
       if (!__.isObject(doc)) {
         return reject(new Error('record not found'));
       }
@@ -174,7 +173,11 @@ MongooseAdapter.prototype._update = function(id, itemData) {
         doc[key] = value;
       }, this);
 
-      return this._mongSave();
+      doc.save(function(err, document) {
+        if (err) { return reject(err); }
+        resolve(document);
+      });
+
     }.bind(this), reject);
   }.bind(this));
 };
