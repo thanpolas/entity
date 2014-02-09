@@ -18,13 +18,13 @@ teardown(function() {});
 
 suite('9.2 CRUD Raw Interface', function() {
   test('9.2.1 CRUD Primitive methods are not implemented', function(){
-    assert.throws(entity.create, Error, 'Not Implemented');
-    assert.throws(entity.read, Error, 'Not Implemented');
-    assert.throws(entity.readOne, Error, 'Not Implemented');
-    assert.throws(entity.readLimit, Error, 'Not Implemented');
-    assert.throws(entity.update, Error, 'Not Implemented');
-    assert.throws(entity.delete, Error, 'Not Implemented');
-    assert.throws(entity.count, Error, 'Not Implemented');
-    assert.throws(entity.setModel, Error, 'Not Implemented');
+    assert.throws(entity.create, Error, 'Not Implemented', 'method: create');
+    assert.throws(entity.read, Error, 'Not Implemented', 'method: read');
+    assert.throws(entity.readOne, Error, 'Not Implemented', 'method: readOne');
+    assert.throws(entity.readLimit, Error, 'Not Implemented', 'method: readLimit');
+    assert.throws(entity.update, Error, 'Not Implemented', 'method: update');
+    assert.throws(entity.delete, Error, 'Not Implemented', 'method: delete');
+    assert.throws(entity.count, Error, 'Not Implemented', 'method: count');
+    assert.throws(entity.setModel, Error, 'Not Implemented', 'method: setModel');
   });
 });

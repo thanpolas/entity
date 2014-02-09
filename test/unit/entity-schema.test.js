@@ -65,9 +65,9 @@ suite('5.2 Entity Schema', function() {
       assert.property(schema, 'firstName');
       assert.property(schema, 'lastName');
       assert.property(schema, 'age');
-      assert.deepPropertyVal(schema, 'firstName.type', 'string');
-      assert.deepPropertyVal(schema, 'lastName.type', 'string');
-      assert.deepPropertyVal(schema, 'age.type', 'number');
+      assert.equal(schema.firstName, 'string');
+      assert.equal(schema.lastName, 'string');
+      assert.equal(schema.age, 'number');
     });
 
 
@@ -135,12 +135,12 @@ suite('5.2 Entity Schema', function() {
 
 
   suite('5.2.2 Entity Schema inheritance behavior', function() {
-    test('5.2.2.1 Extended entity with schema defined inherits', function() {
+    test('5.2.2.1 Extended entity with schema defined does not inherits', function() {
       ent.addSchema(schema1);
       var childEnt = Ent.extend().getInstance();
       var schema = childEnt.getSchema();
-      assert.property(schema, 'firstName');
-      assert.property(schema, 'lastName');
+      assert.notProperty(schema, 'firstName');
+      assert.notProperty(schema, 'lastName');
     });
     test('5.2.2.2 Adding schema items to extended entity does not affect parent', function() {
       ent.addSchema(schema1);
