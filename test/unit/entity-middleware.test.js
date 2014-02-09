@@ -28,36 +28,35 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
     EntityOne.prototype._create = noop;
 
     var ent = EntityOne.getInstance();
-
     assert.isFunction(ent.create, 'a "create" method should exist');
-    assert.isFunction(ent.create.use, 'a "create.use" method should exist');
+    assert.notProperty(ent.create, 'use', 'a "create.use" method should not exist');
     assert.isFunction(ent.create.before, 'a "create.before" method should exist');
     assert.isFunction(ent.create.after, 'a "create.after" method should exist');
   });
 
-  test('4.11.1 Proper sequence of execution', function() {
-    var stubBeforeOne = sinon.stub();
-    var stubBeforeTwo = sinon.stub();
-    var stubAfterOne = sinon.stub();
-    var stubAfterTwo = sinon.stub();
-    var stubActual = sinon.stub();
+  test('4.11.2 Proper sequence of execution', function(done) {
+    var spyBeforeOne = sinon.spy();
+    var spyBeforeTwo = sinon.spy();
+    var spyAfterOne = sinon.spy();
+    var spyAfterTwo = sinon.spy();
+    var spyActual = sinon.spy();
 
     var EntityOne = Entity.extend(function() {
       this.method('create', this._create.bind(this));
 
-      this.create.before(stubBeforeOne);
-      this.create.before(stubBeforeTwo);
-      this.create.after(stubAfterOne);
-      this.create.after(stubAfterTwo);
+      this.create.before(spyBeforeOne);
+      this.create.before(spyBeforeTwo);
+      this.create.after(spyAfterOne);
+      this.create.after(spyAfterTwo);
     });
 
-    EntityOne.prototype._create = stubActual;
+    EntityOne.prototype._create = spyActual;
 
-    EntityOne.getInstance().create();
-
-    assert(stubBeforeOne.calledBefore(stubBeforeTwo), 'stubABeforeOne() before stubBeforeTwo()');
-    assert(stubBeforeTwo.calledBefore(stubActual), 'stubBeforeTwo() before stubActual()');
-    assert(stubActual.calledBefore(stubAfterOne), 'stubActual() before stubAfterOne()');
-    assert(stubAfterOne.calledBefore(stubAfterTwo), 'stubAfterOne() before stubAfterTwo()');
+    EntityOne.getInstance().create().then(function(){
+      assert(spyBeforeOne.calledBefore(spyBeforeTwo), 'spyABeforeOne() before spyBeforeTwo()');
+      assert(spyBeforeTwo.calledBefore(spyActual), 'spyBeforeTwo() before spyActual()');
+      assert(spyActual.calledBefore(spyAfterOne), 'spyActual() before spyAfterOne()');
+      assert(spyAfterOne.calledBefore(spyAfterTwo), 'spyAfterOne() before spyAfterTwo()');
+    }).then(done, done);
   });
 });

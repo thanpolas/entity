@@ -94,9 +94,9 @@ suite('5.2 Entity Schema', function() {
 
       assert.property(schema, 'firstName');
       assert.property(schema, 'lastName');
-      assert.deepPropertyVal(schema, 'firstName.type', 'string');
-      assert.deepPropertyVal(schema, 'lastName.type', 'string');
-      assert.deepPropertyVal(schema, 'age.type', 'number');
+      assert.equal(schema.firstName, 'string');
+      assert.equal(schema.lastName, 'string');
+      assert.equal(schema.age, 'number');
     });
 
 
