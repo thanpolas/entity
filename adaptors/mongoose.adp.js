@@ -52,10 +52,10 @@ MongooseAdapter.prototype.setModel = function(Model) {
 };
 
 MongooseAdapter.prototype._defineMethods = function() {
-  this._mongFindOne = Promise.promisify(this.Model.findOne);
-  this._mongFindById = Promise.promisify(this.Model.findById);
-  this._mongFind = Promise.promisify(this.Model.find);
-  this._mongRemove = Promise.promisify(this.Model.remove);
+  this._mongFindOne = Promise.promisify(this.Model.findOne, this.Model);
+  this._mongFindById = Promise.promisify(this.Model.findById, this.Model);
+  this._mongFind = Promise.promisify(this.Model.find, this.Model);
+  this._mongRemove = Promise.promisify(this.Model.remove, this.Model);
 };
 
 /**

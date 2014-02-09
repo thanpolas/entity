@@ -9,8 +9,6 @@ var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
 
-var noop = function(){};
-
 /**
  * Test CRUD utility methods.
  *

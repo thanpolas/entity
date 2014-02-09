@@ -22,12 +22,11 @@ module.exports = function(adaptor, majNum) {
   suite(majNum + '.5 Read records', function() {
     var ent, id;
     setup(function(done) {
-      ent = adaptor.factory().getInstance();
-      ent.create(fix.one, function(err, obj) {
-        if (err) {return done(err);}
+      ent = adaptor.factory();
+      ent.create(fix.one).then(function(obj) {
         id = obj.id;
-        ent.create(fix.two, done);
-      });
+        ent.create(fix.two).then(done.bind(null, null), done);
+      }).then(null, done);
     });
     suite(majNum + '.5.2 using ', function() {
       test(majNum + '.5.2.1 Read one record using the id', function(done) {
