@@ -7,7 +7,7 @@ var chai = require('chai');
 // var sinon = require('sinon');
 var assert = chai.assert;
 
-var entity = require('../../');
+var entity = require('../../').CrudIface.getInstance();
 
 setup(function() {});
 teardown(function() {});
@@ -17,14 +17,14 @@ teardown(function() {});
 // run by using the mocha --grep "1.1.1" option.
 
 suite('9.2 CRUD Raw Interface', function() {
-  test('9.2.1 CRUD Primitive methods are not implemented', function(){
-    assert.throws(entity.create, Error, 'Not Implemented', 'method: create');
-    assert.throws(entity.read, Error, 'Not Implemented', 'method: read');
-    assert.throws(entity.readOne, Error, 'Not Implemented', 'method: readOne');
-    assert.throws(entity.readLimit, Error, 'Not Implemented', 'method: readLimit');
-    assert.throws(entity.update, Error, 'Not Implemented', 'method: update');
-    assert.throws(entity.delete, Error, 'Not Implemented', 'method: delete');
-    assert.throws(entity.count, Error, 'Not Implemented', 'method: count');
-    assert.throws(entity.setModel, Error, 'Not Implemented', 'method: setModel');
+  test('9.2.1 CRUD Primitive methods', function(){
+    assert.isFunction(entity.create, 'method: create');
+    assert.isFunction(entity.read, 'method: read');
+    assert.isFunction(entity.readOne, 'method: readOne');
+    assert.isFunction(entity.readLimit, 'method: readLimit');
+    assert.isFunction(entity.update, 'method: update');
+    assert.isFunction(entity.delete, 'method: delete');
+    assert.isFunction(entity.count, 'method: count');
+    assert.isFunction(entity.setModel, 'method: setModel');
   });
 });
