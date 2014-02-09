@@ -1,8 +1,8 @@
 # Entity
 
-A Node.js for the MVCe pattern.
+An Entity is a business unit. Entities are supersets of models, resources and contain the bussiness logic. They are persistent storage agnostic and provide a normalized API with which your consuming services can perform business logic actions.
 
-Entities are the middlemen between your controllers and models. They describe the business logic of your application and are persistent storage agnostic.
+![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=331&amp;h=289)
 
 [![Build Status](https://travis-ci.org/thanpolas/entity.png)](https://travis-ci.org/thanpolas/entity)
 
