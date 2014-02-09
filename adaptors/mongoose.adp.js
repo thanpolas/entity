@@ -208,17 +208,16 @@ MongooseAdapter.prototype.getSchema = function() {
     return this._schema;
   }
   var mongooseSchema = this.Model.schema.paths;
-  this._schema = [];
+  this._schema = Object.create(null);
 
   __.forIn(mongooseSchema, function(mongSchemaItem, path) {
-    var schemaItem = {
+    var attribute = this._getName(path, this.opts);
+    this._schema[attribute] = {
       // TODO this helper needs a second arg, opt to check  for expandedPaths key.
       canShow: this._canShow(mongSchemaItem),
-      name: this._getName(path, this.opts),
+      name: attribute,
       path: path,
     };
-
-    this._schema.push(schemaItem);
   }, this);
 
   return this._schema;

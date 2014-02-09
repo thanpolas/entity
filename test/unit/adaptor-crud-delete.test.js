@@ -22,11 +22,9 @@ module.exports = function(adaptor, majNum) {
     var ent, id;
     setup(function(done) {
       ent = adaptor.factory();
-      ent.create(fix.one, function(err, obj) {
-        if (err) {return done(err);}
+      ent.create(fix.one).then(function(obj) {
         id = obj.id;
-        done();
-      });
+      }).then(done, done);
     });
     suite(majNum + '.8.2 Using Promises', function() {
       test(majNum + '.8.2.1 Delete a record using the id', function(done) {
