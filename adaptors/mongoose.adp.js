@@ -52,12 +52,9 @@ MongooseAdapter.prototype.setModel = function(Model) {
 };
 
 MongooseAdapter.prototype._defineMethods = function() {
-  this._create = Promise.promisify(this.Model.prototype.save);
   this._mongFindOne = Promise.promisify(this.Model.findOne);
   this._mongFindById = Promise.promisify(this.Model.findById);
   this._mongFind = Promise.promisify(this.Model.find);
-  this._mongCount = Promise.promisify(this.Model.count);
-  this._mongSave = Promise.promisify(this.Model.prototype.save);
   this._mongRemove = Promise.promisify(this.Model.remove);
 };
 
@@ -68,8 +65,16 @@ MongooseAdapter.prototype._defineMethods = function() {
  * @return {Promise(mongoose.Document)} A promise with the mongoose doc.
  * @override
  */
-MongooseAdapter.prototype._create = function() {
-  throw new Error('No Mongoose.Model defined, use setModel()');
+MongooseAdapter.prototype._create = function(itemData) {
+  if (!this.Model) {throw new Error('No Mongoose.Model defined, use setModel()');}
+
+  return new Promise(function(resolve, reject) {
+    var item = new this.Model(itemData);
+    item.save(function(err, document) {
+      if (err) { return reject(err); }
+      resolve(document);
+    });
+  }.bind(this));
 };
 
 /**
@@ -136,8 +141,17 @@ MongooseAdapter.prototype._readLimit = function(query, skip, limit) {
  * @return {Promise(number)} A promise with the result.
  * @override
  */
-MongooseAdapter.prototype._count = function() {
+MongooseAdapter.prototype._count = function(query) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
+  return new Promise(function(resolve, reject) {
+    this.Model.count(query, function(err, num) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(num);
+      }
+    });
+  }.bind(this));
 };
 
 /**

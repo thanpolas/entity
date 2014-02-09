@@ -111,12 +111,10 @@ module.exports = function(adaptor, majNum) {
     var ent, id;
     setup(function(done) {
       ent = adaptor.factory();
-      ent.create(fix.one, function(err, obj) {
-        if (err) {return done(err);}
+      ent.create(fix.one).then(function(obj) {
         id = obj.id;
-
-        ent.create(fix.two, done);
-      });
+        ent.create(fix.two).then(done.bind(null, null), done);
+      }).then(null, done);
     });
     test(majNum + '.6.2 Count records with promise', function(done) {
       ent.count().then(function(count) {
