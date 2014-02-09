@@ -18,8 +18,6 @@ function noop() {}
  * @extends {MongooseAdapter.AdaptorBase}
  */
 var MongooseAdapter = module.exports = AdaptorBase.extend(function(/* optUdo */) {
-  /** @type {?mongoose.Model} The mongoose model */
-  this.Model = null;
 
   // Mongoose uses dot notation for paths
   this._schemaOpts.expandPaths = true;
@@ -70,8 +68,6 @@ MongooseAdapter.prototype._defineMethods = function() {
  * @override
  */
 MongooseAdapter.prototype._create = function(itemData) {
-  if (!this.Model) {throw new Error('No Mongoose.Model defined, use setModel()');}
-
   return new Promise(function(resolve, reject) {
     var item = new this.Model(itemData);
     item.save(function(err, document) {

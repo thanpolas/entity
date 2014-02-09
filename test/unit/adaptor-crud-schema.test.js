@@ -54,7 +54,7 @@ module.exports = function(adaptor, majNum) {
     case 'Sequelize':
       suite(majNum + '.9.11 Sequelize specific tests', function() {
         test(majNum + '.9.11.1 Expect specific number of keys', function() {
-          assert.lengthOf(ent.getSchema(), 4);
+          assert.lengthOf(Object.keys(ent.getSchema()), 5);
         });
         test(majNum + '.9.11.2 Expect special keys to cannot show', function() {
           var schema = ent.getSchema();

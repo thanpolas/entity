@@ -1,23 +1,30 @@
 /**
  * @fileOverview The Sequelize CRUD implementation.
  */
-var util = require('util');
 
 var __ = require('lodash');
 
-var Driver = require('./base.adp');
+var AdaptorBase = require('./base.adp');
 
 /**
  * The Sequelize CRUD implementation.
  *
- * @param {Sequelize.Model} Model The Sequelize model to apply CRUD ops on.
  * @param {Object=} optUdo Optionally define the current handling user.
  * @constructor
- * @extends {Entity.Driver}
+ * @extends {Entity.AdaptorBase}
  */
-var Entity = module.exports = function(Model, optUdo) {
-  Driver.call(this, optUdo);
+var SequelizeAdaptor = module.exports = AdaptorBase.extend(function(/* optUdo */) {
+  /** @type {string} The default 'id' field name */
+  this._idName = 'id';
 
+});
+
+/**
+ * Set the Sequelize Model.
+ *
+ * @param {mongoose.Model} Model The mongoose model.
+ */
+SequelizeAdaptor.prototype.setModel = function(Model) {
   // perform some heuristics on Model identity cause instanceof will not work
   if (
     !Model ||
@@ -25,50 +32,42 @@ var Entity = module.exports = function(Model, optUdo) {
     !Model.tableName ||
     !Model.options ||
     !Model.DAO
-
     ) {
     throw new TypeError('Model provided not a Sequelize instance');
   }
 
-  /** @type {Sequelize.Model} The sequelize Model */
   this.Model = Model;
+
+  this._readSchema();
 };
-util.inherits(Entity, Driver);
 
 /**
  * Create an entity item.
  *
  * @param {Object} itemData The data to use for creating.
- * @param {Function(Error=, Object=)} done callback.
+ * @return {Promise(Sequelize.Document)} A promise with the sequelize doc.
  * @override
  */
-Entity.prototype._create = function(itemData, done) {
+SequelizeAdaptor.prototype._create = function(itemData) {
   var item = this.Model.build(itemData);
-  // this._handleOp(item.save(), done, itemData);
-  item.save()
-    .success(__.partial(done, null))
-    .error(done);
+  return item.save();
 };
 
 /**
  * Read one entity item.
  *
  * @param {string|Object} id the item id or an Object to query against.
- * @param {Function(Error=, Object=)} done callback.
+ * @return {Promise(Sequelize.Document)} A promise with the sequelize doc.
  * @override
  */
-Entity.prototype._readOne = function(id, done) {
+SequelizeAdaptor.prototype._readOne = function(id) {
   var query = this._getQuery(id);
 
-  this.Model.find({
+  return this.Model.find({
     where: query,
     offset: 0,
     limit: 1,
-  })
-    .success(function(res) {
-      done(null, res);
-    })
-    .error(done);
+  });
 };
 
 /**
@@ -76,26 +75,16 @@ Entity.prototype._readOne = function(id, done) {
  * Do practice common sense!
  *
  * @param {Object=} optQuery Limit the results.
- * @param {Function(Error=, Object=)} done callback.
+ * @return {Promise(Sequelize.Document)} A promise with the sequelize doc.
  * @override
  */
-Entity.prototype._read = function(optQuery, done) {
-  var query;
-
-  if (__.isFunction(optQuery)) {
-    done = optQuery;
-  } else {
-    query = this._getQuery(optQuery);
-  }
-
+SequelizeAdaptor.prototype._read = function(optQuery) {
   var findOpts = {};
-  if (query) {
-    findOpts.where = query;
+  if (optQuery) {
+    findOpts.where = this._getQuery(optQuery);
   }
 
-  this.Model.findAll(findOpts)
-    .success(__.partial(done, null))
-    .error(done);
+  return this.Model.findAll(findOpts);
 };
 
 /**
@@ -104,10 +93,10 @@ Entity.prototype._read = function(optQuery, done) {
  * @param {?Object} query Narrow down the set, set to null for all.
  * @param {number} skip starting position.
  * @param {number} limit how many records to fetch.
- * @param {Function(Error=, Array.<Object>=)} done callback.
+ * @return {Promise(Sequelize.Document)} A promise with the sequelize doc.
  * @override
  */
-Entity.prototype._readLimit = function(query, skip, limit, done) {
+SequelizeAdaptor.prototype._readLimit = function(query, skip, limit) {
   if (!__.isNull(query)) {
     query = this._getQuery(query);
   }
@@ -121,29 +110,22 @@ Entity.prototype._readLimit = function(query, skip, limit, done) {
     findOpts.where = query;
   }
 
-  this.Model.findAll(findOpts)
-    .success(__.partial(done, null))
-    .error(done);
+  return this.Model.findAll(findOpts);
 };
 
 /**
  * Get the count of items.
  *
- * @param {?Object} query Narrow down the set, null for all.
- * @param {Function(Error=, number=)} done callback.
+ * @param {Object=} query optionally narrow down the set.
+ * @return {Promise(number)} A promise with the result.
  * @override
  */
-Entity.prototype._count = function(query, done) {
-  if (!__.isNull(query)) {
-    query = this._getQuery(query);
-  }
+SequelizeAdaptor.prototype._count = function(query) {
   var findOpts = {};
   if (query) {
-    findOpts.where = query;
+    findOpts.where = this._getQuery(query);
   }
-  this.Model.count(findOpts)
-    .success(__.partial(done, null))
-    .error(done);
+  return this.Model.count(findOpts);
 };
 
 /**
@@ -151,88 +133,102 @@ Entity.prototype._count = function(query, done) {
  *
  * @param {string|Object} id the item id or query for item.
  * @param {Object} itemData The data to use for creating.
- * @param {Function(Error=, Object)} done callback.
+ * @return {Promise()} A promise.
  * @override
  */
-Entity.prototype._update = function(id, itemData, done) {
+SequelizeAdaptor.prototype._update = function(id, itemData) {
   var query = this._getQuery(id);
 
-  this.Model.update(itemData, query)
-    .success(__.partial(done, null, itemData))
-    .error(done);
+  return this.Model.update(itemData, query);
 };
 
 /**
  * Remove an entity item.
  *
  * @param {string|Object} id the item id or query for item.
- * @param {Function(Error=, Object=)} done callback.
+ * @return {Promise()} A promise.
  * @protected
  */
-Entity.prototype._delete = function(id, done) {
+SequelizeAdaptor.prototype._delete = function(id) {
   var query = this._getQuery(id);
-  this._handleOp(this.Model.destroy(query), done);
+  return this.Model.destroy(query);
 };
 
 /**
- * Helper for handling Sequelize type outcomes.
- *
- * @param {Object} op a promise object.
- * @param {Function} done the callback.
- * @param {Object=} optItemData Data passed to the op.
- * @private
- */
-Entity.prototype._handleOp = function(op, done, optItemData) {
-  op
-    .success(done.bind(null, null, optItemData))
-    .error(done);
-};
-
-/**
- * Get the normalized schema of this Entity.
+ * Read the Sequelize schema and normalize it.
  *
  * @return {mschema} An mschema struct.
+ * @private
  */
-Entity.prototype.getSchema = function() {
-  if (this._schema) {
-    return this._schema;
-  }
+SequelizeAdaptor.prototype._readSchema = function() {
   var seqSchema = this.Model.rawAttributes;
   this._schema = [];
 
   __.forIn(seqSchema, function(seqSchemaItem, path) {
-    var schemaItem = {
-      canShow: this._canShow(path),
-      name: path,
-      path: path,
+    var seqType = seqSchemaItem.type.toString();
+
+    var schemaItem = {};
+    schemaItem[path] = {
+      type: this._determineType(seqType),
     };
 
-    this._schema.push(schemaItem);
-  }, this);
+    if (this._isSequelizeSpecialAttribute(path)) {
+      schemaItem[path].canShow = false;
+    }
 
-  return this._schema;
+    this.addSchema(schemaItem);
+  }, this);
 };
 
 /**
- * Determine if this schema item should be publicly displayed.
+ * Map Sequelize types to mschema.
  *
- * @param {string} path A single schema path (a key).
- * @return {boolean} true to show.
- * @private
+ * @param {string} seqType The sequelize type.
+ * @return {string} an mschema type.
  */
-Entity.prototype._canShow = function(path) {
-  // check for private vars (starting with underscore)
-  if ('_' === path.charAt(0)) {
-    return false;
+SequelizeAdaptor.prototype._determineType = function(seqType) {
+  var type = 'any';
+  switch(seqType) {
+  case 'STRING':
+  case 'BLOB':
+  case 'TEXT':
+  case 'DATE':
+  case 'DATETIME':
+  case 'NOW':
+  case 'TIMESTAMP WITH TIME ZONE':
+    type = 'string';
+    break;
+  case 'BIGINT':
+  case 'FLOAT':
+  case 'INTEGER':
+    type = 'number';
+    break;
+  case 'BOOLEAN':
+    type = 'boolean';
+    break;
+  default:
+    if (seqType.indexOf('VARCHAR') >= 0) {
+      type = 'string';
+    } else if (seqType.indexOf('ENUM') >= 0) {
+      type = 'string';
+    } else if (seqType.indexOf('TINYINT') >= 0) {
+      type = 'number';
+    }
   }
 
-  // check for known Sequelize variables
-  if ([
+  return type;
+};
+
+/**
+ * Checks if attribute name is a special Sequelize one, determines
+ * visibility --> canShow.
+ *
+ * @param {string} path The attribute name.
+ * @return {boolean} yes/no.
+ */
+SequelizeAdaptor.prototype._isSequelizeSpecialAttribute = function(path) {
+  return [
     'createdAt',
     'updatedAt',
-  ].indexOf(path) > -1) {
-    return false;
-  }
-
-  return true;
+  ].indexOf(path) >= 0;
 };
