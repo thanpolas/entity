@@ -21,17 +21,17 @@ var core = module.exports = {};
 core.init = function() {
 
   var adaptors = [
-    // {
-    //   name: 'Mongoose',
-    //   Entity: Entity.Mongoose,
-    //   majNum: '10',
-    //   stub: mongStub,
-    //   factory: function() {
-    //     var entMong = Entity.Mongoose.extend().getInstance();
-    //     entMong.setModel(mongStub.Model);
-    //     return entMong;
-    //   },
-    // },
+    {
+      name: 'Mongoose',
+      Entity: Entity.Mongoose,
+      majNum: '10',
+      stub: mongStub,
+      factory: function() {
+        var entMong = Entity.Mongoose.extend().getInstance();
+        entMong.setModel(mongStub.Model);
+        return entMong;
+      },
+    },
     {
       name: 'Sequelize',
       Entity: Entity.Sequelize,
