@@ -1,12 +1,12 @@
 # Entity
 
-An Entity is a business unit. Entities are supersets of models, resources and contain the bussiness logic. They are persistent storage agnostic and provide a normalized API with which your consuming services can perform business logic actions.
+An Entity is a business unit. Entities are supersets of models, resources and contain the business logic. They are persistent storage agnostic and provide a normalized API with which your consuming services can perform business logic actions.
 
 ![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=663&amp;h=578)
 
 [![Build Status](https://travis-ci.org/thanpolas/entity.png)](https://travis-ci.org/thanpolas/entity)
 
-The Entity Object on itself is nothing but an extention of `EventEmitter`. It can be easily extented to create the Interfaces and base classes from where your business logic entities can inherit.
+The Entity Object on itself is nothing but an extension of `EventEmitter`. It can be easily extended to create the Interfaces and base classes from where your business logic entities can inherit.
 
 Currently the CRUD interface has been implemented and two ORM packages are supported in the form of Adaptors, [Mongoose][] and [Sequelize][].
 
@@ -53,9 +53,9 @@ The `getInstance()` method will return a singleton instance. This means that you
 var entityChild = require('../entities/child.ent').getInstance();
 ```
 
-While the use of singletons has been fairly criticized, it is our view that in modern day web applications, the *instance* role has moved up to the node process. Your web application will naturally run on multiple cores (instances) and thus each instance is a single unit in the whole that comprises your web service. Entities need to emit and listen to local events, Publish and Subscribe messages using a PubSub service and generally have bindings to other services (RPC, AWS, whatnot).
+While the use of singletons has been fairly criticized, it is our view that in modern day web applications, the *instance* role has moved up to the node process. Your web application will naturally run on multiple cores (instances) and thus each instance is a single unit in the whole that comprises your web service. Entities need to emit and listen to local events, PubSub, create Jobs, send email and generally have bindings to other services (RPC, AWS, whatnot).
 
-Those event, pubsub and any other bindings have a lifetime equal to the runtime of the core the application is running on. This requires for a single entity to exist and manage all those bindings, applying the business logic and performing the required high level operations.
+Those events, PubSub etc have a lifetime equal to the runtime of the core the application is running on. This requires for a single entity to exist and manage all those bindings, applying the business logic and performing the required high level operations.
 
 
 ## Entity CRUD Interface
@@ -256,6 +256,110 @@ entity.create.before(function(data){
 });
 ```
 
+### Setting up a CRUD Entity
+
+The two currently available adaptors are available through these properties of the *entity* module
+
+* `entity.Mongoose` For the [Mongoose ORM][mongoose]
+* `entity.Sequelize` For the [Sequelize ORM][mongoose]
+
+All adaptors expose the `setModel()` method. Before that method is successfully invoked all CRUD operations will fail, the Model required is an instantiated model of each respective ORM.
+
+#### Initializing Mongoose
+
+**models/user.model.js**
+
+```js
+var mongoose = require('mongoose');
+
+var userModel = module.exports = {};
+userModel.schema = new mongoose.Schema({
+  name: {type: String, trim: true, required: true},
+  _isActive: {type: Boolean, required: true, default: true},
+});
+
+// This module now exposes the Mongoose
+// User model on the "Model" property
+userModel.Model = mongoose.model('user', userModel.schema);
+```
+
+**entities/user.ent.js**
+
+```js
+var EntityMongoose = require('entity').Mongoose;
+var UserModel = require('../models/user.model');
+
+var UserEntity = module.exports = Entity.Mongoose.extend(function(){
+  // pass the Mongoose User Model
+  this.setModel(UserModel.Model);
+});
+```
+
+#### Initializing Sequelize
+
+**models/user.model.js**
+
+```js
+var Sequelize = require('sequelize');
+
+// typically you have this in another module
+var seqInstance = new Sequelize(
+  'database',
+  'postgres',
+  '',
+  {
+    host: '127.0.0.1',
+    port: '5432',
+    dialect: 'postgres',
+    logging: false,
+  }
+);
+
+var userModel = module.exports = {};
+
+// This module now exposes the Sequelize
+// User model on the "Model" property
+userModel.Model = seqInstance.define('user', {
+  name: {type: Sequelize.STRING, allowNull: false},
+  _isActive: {type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true},
+});
+```
+
+**entities/user.ent.js**
+
+```js
+var EntitySequelize = require('entity').Sequelize;
+var UserModel = require('../models/user.model');
+
+var UserEntity = module.exports = Entity.Sequelize.extend(function(){
+  // pass the Sequelize User Model
+  this.setModel(UserModel.Model);
+});
+```
+
+That was it, from here on, irrespective of adaptor and ORM, you can instantiate a new entity or use the singleton to perform CRUD operations.
+
+**controllers/user.ctrl.js**
+
+```js
+var BaseController = require('./base-controller.js');
+var userEnt = require('../entities/user.ent').getInstance();
+
+// The BaseController uses Inher for inheritance
+var UserCtrl = module.exports = BaseController.extend();
+
+UserCtrl.prototype.createNew = function(req, res) {
+  // pass the submited parameters
+  // validation happens on the model.
+  userEnt.create(req.body)
+    .then(function(udo){
+      // send the User Data Object
+      res.json(udo);
+    }, function(error) {
+      res.json(501, error);
+    });
+};
+```
 
 
 ## Authors
