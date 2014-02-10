@@ -66,21 +66,19 @@ The current implementation offers a normalized CRUD Interface with a selected se
 
 The CRUD Interface offers the following primitive operations:
 
-  * `create()`
-  * `read()`
-  * `readOne()`
-  * `readLimit()`
-  * `update()`
-  * `delete()`
-  * `count()`
+  * create(data)
+  * read(query=)
+  * readOne(query)
+  * readLimit(?query, offset, limit)
+  * update(query, updateValues)
+  * delete(query)
+  * count(query=)
 
 These primitives will transparently adapt to the most optimized operations on the ORM of your choosing and guarantee the outcome will always be the same no matter the underlying ORM.
 
 All primitive methods offer Before/After hooks and return a Promise to determine resolution.
 
-#### entity.create()
-
-> entity.create(data)
+#### entity.create(data)
 
 * **data** `Object` The Data Object representing the Entity you wish created.
 * Returns `Object` The newly created item, in the type of the underlying ORM.
@@ -99,9 +97,7 @@ entity.create({name: 'thanasis'})
 [Check out the `entity.create()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-create.test.js)
 
 
-#### entity.read()
-
-> entity.read(query=)
+#### entity.read(query=)
 
 * **query=** `Object|string` *Optional* A query or an id.
 * Returns `Array.<Object>` An array of documents.
@@ -122,9 +118,7 @@ Any additional key/value pairs you add to your query will be added with the `AND
 
 [Check out the `entity.read()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-read.test.js)
 
-#### entity.readOne()
-
-> entity.readOne(query)
+#### entity.readOne(query)
 
 * **query** `Object|string` A query or an id, required.
 * Returns `Object` A single Document.
@@ -141,9 +135,7 @@ entity.read('42').then(function(document) {
 });
 ```
 
-#### entity.readLimit()
-
-> entity.readLimit(?query, offset, limit)
+#### entity.readLimit(?query, offset, limit)
 
 * **query** `Object|string|null` A query or an id, if `null` will fetch all.
 * **offset** `number` Starting position.
@@ -164,9 +156,7 @@ entity.readLimit({networkId: '42'}, 10, 10).then(function(documents) {
 });
 ```
 
-#### entity.update()
-
-> entity.update(query, updateValues)
+#### entity.update(query, updateValues)
 
 * **query** `Object|string` A query or an id, required.
 * **updateValues** `Object` An Object with key/value pairs to update.
@@ -185,9 +175,7 @@ entity.update({networkId: '42'}, {isActive: false}).then(function(documents) {
 ```
 [Check out the `entity.update()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-update.test.js)
 
-#### entity.delete()
-
-> entity.delete(query, updateValues)
+#### entity.delete(query)
 
 * **query** `Object|string` A query or an id, required.
 * Returns nothing.
@@ -206,9 +194,7 @@ entity.delete({networkId: '42'}).then(function() {
 
 [Check out the `entity.delete()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-delete.test.js)
 
-#### entity.count()
-
-> entity.count(query=)
+#### entity.count(query=)
 
 * **query=** `Object|string` *Optional* A query or an id, if omitted all items will be count.
 * Returns `number` The count.
