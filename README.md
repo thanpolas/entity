@@ -66,13 +66,13 @@ The current implementation offers a normalized CRUD Interface with a selected se
 
 The CRUD Interface offers the following primitive operations:
 
-  * create(data)
-  * read(query=)
-  * readOne(query)
-  * readLimit(?query, offset, limit)
-  * update(query, updateValues)
-  * delete(query)
-  * count(query=)
+  * **create**(data)
+  * **read**(query=)
+  * **readOne**(query)
+  * **readLimit**(?query, offset, limit)
+  * **update**(query, updateValues)
+  * **delete**(query)
+  * **count**(query=)
 
 These primitives will transparently adapt to the most optimized operations on the ORM of your choosing and guarantee the outcome will always be the same no matter the underlying ORM.
 
