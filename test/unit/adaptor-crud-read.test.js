@@ -52,6 +52,5 @@ module.exports = function(adaptor, majNum) {
         }).then(done, done);
       });
     });
-
   });
 };

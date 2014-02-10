@@ -41,6 +41,14 @@ module.exports = function(adaptor, majNum) {
           }).then(done, done);
         }).then(null, done);
       });
+      test.only(majNum + '.8.2.3 Delete with no query', function(done) {
+        ent.delete().then(function() {
+          ent.read().then(function(res) {
+            assert.lengthOf(res, 1, 'no records should be deleted');
+          }).then(done, done);
+        }).then(null, done);
+      });
+
     });
   });
 };

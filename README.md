@@ -96,6 +96,9 @@ entity.create({name: 'thanasis'})
   });
 ```
 
+[Check out the `entity.create()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-create.test.js)
+
+
 #### entity.read()
 
 > entity.read(query=)
@@ -116,6 +119,114 @@ entity.read({networkId: '47'}).then(function(documents) {
 ```
 
 Any additional key/value pairs you add to your query will be added with the `AND` operator.
+
+[Check out the `entity.read()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-read.test.js)
+
+#### entity.readOne()
+
+> entity.readOne(query)
+
+* **query** `Object|string` A query or an id, required.
+* Returns `Object` A single Document.
+
+The `readOne()` method guarantees that you will get one and only one item. It is the method intended to be used by single item views. The *query* argument has the same attributes as `read()`.
+
+```js
+entity.read({name: 'thanasis'}).then(function(document) {
+  document.name === 'thanasis'; // true
+});
+
+entity.read('42').then(function(document) {
+  document.id === '42'; // true
+});
+```
+
+#### entity.readLimit()
+
+> entity.readLimit(?query, offset, limit)
+
+* **query** `Object|string|null` A query or an id, if `null` will fetch all.
+* **offset** `number` Starting position.
+* **limit** `number` Number of items to fetch.
+* Returns `Array.<Object>` An array of Documents.
+
+Will fetch the items based on query, limiting the results by the offset and limit defined. The *query* argument shares the same attributes as `read()`, if `null` all the items will be fetched.
+
+```js
+entity.readLimit(null, 0, 10).then(function(documents) {
+  // fetched the first 10 items
+});
+
+entity.readLimit({networkId: '42'}, 10, 10).then(function(documents) {
+  // fetched records whose networkId equels '42
+  // And started from the 10th item,
+  // limiting the total records to 10
+});
+```
+
+#### entity.update()
+
+> entity.update(query, updateValues)
+
+* **query** `Object|string` A query or an id, required.
+* **updateValues** `Object` An Object with key/value pairs to update.
+* Returns `Object=` The updated document of Mongoose ORM is used or nothing if Sequelize.
+
+Will perform an update operation on an item or set of item as defined by the query. The *query* argument can be a single id or an Object with key/value pairs.
+
+```js
+entity.update('99', {name: 'John').then(function(document) {
+  document.name === 'John'; // true only for Mongoose
+});
+
+entity.update({networkId: '42'}, {isActive: false}).then(function(documents) {
+  // deactive all items with network id that equals 42
+});
+```
+[Check out the `entity.update()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-update.test.js)
+
+#### entity.delete()
+
+> entity.delete(query, updateValues)
+
+* **query** `Object|string` A query or an id, required.
+* Returns nothing.
+
+Will perform an delete operation as defined by the query. The *query* argument can be a single id or an Object with key/value pairs.
+
+```js
+entity.delete('99').then(function() {
+  // job done
+});
+
+entity.delete({networkId: '42'}).then(function() {
+  // all gone
+});
+```
+
+[Check out the `entity.delete()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-delete.test.js)
+
+#### entity.count()
+
+> entity.count(query=)
+
+* **query=** `Object|string` *Optional* A query or an id, if omitted all items will be count.
+* Returns `number` The count.
+
+Will perform a count operation as defined by the query. The *query* argument can be a single id or an Object with key/value pairs, if empty it will count all the items.
+
+```js
+entity.count().then(function(count) {
+  typeof count === 'number'; // true, all the items.
+});
+
+entity.count({networkId: '42'}).then(function() {
+  typeof count === 'number'; // true
+});
+```
+
+[Check out the `entity.count()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-main.test.js)
+
 
 
 
