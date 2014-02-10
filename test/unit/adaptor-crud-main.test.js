@@ -33,7 +33,6 @@ module.exports = function(adaptor, majNum) {
       assert.isFunction(ent.count, 'Entity should have a "count" method');
     });
     test(majNum + '.1.2 Helper Methods', function(){
-      assert.isFunction(ent.setUdo, 'Entity should have a "setUdo" method');
       assert.isFunction(ent.setModel, 'Entity should have a "setModel" method');
     });
     test(majNum + '.1.3 CRUD Primitive Methods middleware "before/after" methods', function(){
