@@ -2,7 +2,7 @@
 
 An Entity is a business unit. Entities are supersets of models, resources and contain the bussiness logic. They are persistent storage agnostic and provide a normalized API with which your consuming services can perform business logic actions.
 
-![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=331&amp;h=289)
+![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=663&amp;h=578)
 
 [![Build Status](https://travis-ci.org/thanpolas/entity.png)](https://travis-ci.org/thanpolas/entity)
 
@@ -22,7 +22,7 @@ Entity uses the [Inher][] package for inheritance, it implements the pseudo-clas
 
 ### entity.extend()
 
-The `extend()` method is the basic tool of extending, it accepts a constructor.
+The `extend()` method is the basic tool for extending, it accepts a constructor.
 
 ```js
 var entity = require('entity');
@@ -53,9 +53,9 @@ The `getInstance()` method will return a singleton instance. This means that you
 var entityChild = require('../entities/child.ent').getInstance();
 ```
 
-While the use of singletons has been fairly critisized, it is our view that in modern day web applications, the *instance* role has moved up to the node process. Your web application will naturaly run on multiple cores (instances) and thus each instance is a single unit in the whole that comprizes what is your web service. Entities need to emit and listen to local events, Publish and Subscribe messages using a PubSub service and generaly have bindings to other services (RPC, AWS, whatnot).
+While the use of singletons has been fairly criticized, it is our view that in modern day web applications, the *instance* role has moved up to the node process. Your web application will naturally run on multiple cores (instances) and thus each instance is a single unit in the whole that comprises your web service. Entities need to emit and listen to local events, Publish and Subscribe messages using a PubSub service and generally have bindings to other services (RPC, AWS, whatnot).
 
-Those event, pubsub and any other bindings have a lifetime equal to the runtime of the core the application is running on. This requires for a single entity to exist and manage all those bindings, applying the business logic and performing required high level operations.
+Those event, pubsub and any other bindings have a lifetime equal to the runtime of the core the application is running on. This requires for a single entity to exist and manage all those bindings, applying the business logic and performing the required high level operations.
 
 
 ## Entity CRUD Interface
