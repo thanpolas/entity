@@ -214,6 +214,48 @@ entity.count({networkId: '42'}).then(function() {
 [Check out the `entity.count()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-main.test.js)
 
 
+### Before / After Hooks
+
+Every CRUD operation offers Before/After hooks courtesy of [Middlewarify][]. Each middleware will receive the same exact arguments. To pass control to the next middleware you need to return a promise that conforms to the [Promises/A+ spec](http://promises-aplus.github.io/promises-spec/).
+
+
+```js
+// a middleware with synchronous resolution
+entity.create.before(function(data){
+  if (!data.name) {
+    throw new TypeError('No go my friend');
+  }
+});
+
+// then...
+entity.create({}).then(function(document) {
+  // you'll never get here
+}, function(err) {
+  err instanceof Error; // true
+  err.message === 'No go my friend'; // true
+});
+```
+
+An Asynchronous middleware
+
+```js
+// a middleware with synchronous resolution
+entity.create.before(function(data){
+  return somepackage.promise(function(resolve, reject) {
+    // perform an async op
+    readTheStars(function(err, omen) {
+      if (err) { return reject(err); }
+
+      if (omen === 'thou shall not pass') {
+        reject('Meh');
+      } else {
+        resolve();
+      }
+    });
+  });
+});
+```
+
 
 
 ## Authors
@@ -235,3 +277,4 @@ Licensed under the [MIT License](LICENSE-MIT)
 [Mongoose]: http://mongoosejs.com/
 [Sequelize]: http://sequelizejs.com/
 [Inher]: https://github.com/thanpolas/inher/
+[Middlewarify]: https://github.com/thanpolas/middlewarify/
