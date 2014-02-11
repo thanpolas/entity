@@ -2,7 +2,7 @@
 
 An Entity is a business unit. Entities are supersets of models, resources and contain the business logic. They are persistent storage agnostic and provide a normalized API with which your consuming services can perform business logic actions.
 
-![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=663&amp;h=578)
+![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=331&h=289)
 
 [![Build Status](https://travis-ci.org/thanpolas/entity.png)](https://travis-ci.org/thanpolas/entity)
 
