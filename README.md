@@ -361,10 +361,98 @@ UserCtrl.prototype.createNew = function(req, res) {
 };
 ```
 
+## Entity Schema
 
-## Authors
+Entities offer a schema API. CRUD Adaptors will automatically translate the underlying ORM's schema to a normalized [mschema][] compliant schema.
 
-* [@thanpolas][thanpolas]
+### entity.getSchema()
+
+* Returns `mschema` The normalized schema.
+
+`getSchema()` is synchronous, it will return a key/value dictionary where value will always contain the following properties
+
+* **name** `string` The name of the attribute.
+* **path** `string` The full path of the attribute (used by document stores)
+* **canShow** `boolean` A boolean that determines View visibility.
+* **type** `string` An [mschema][] type, possible types are:
+  * `string`
+  * `number`
+  * `object`
+  * `boolean`
+  * `any`
+
+```js
+var userModel = require('../entities/user.ent').getInstance();
+
+userModel.getSchema();
+```
+
+Outputs:
+
+```json
+{
+  "name": {
+    "name": "name",
+    "path": "name",
+    "canShow": true,
+    "type": "string"
+  },
+  "_isActive": {
+    "name": "_isActive",
+    "path": "_isActive",
+    "canShow": false,
+    "type": "boolean"
+  }
+}
+```
+
+The `path` property will be useful when you use nested Objects in your Schema, something only possible with the Mongoose adaptor. So if the address is an object that contains the attribute `city` here's how that would look like:
+
+```json
+{
+  "address.city": {
+    "name": "city",
+    "path": "address.city",
+    "canShow": true,
+    "type": "string"
+  }
+}
+```
+
+[Check out the CRUD Schema method tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-schema.test.js)
+
+
+#### entity.addSchema(attributeName, type)
+
+* **attributeName** `Object|string` The name of the attribute to add or an Object with key/value pairs.
+* **type** `Object|string` The type or an Object with key/value pairs representing the attributes values.
+* Returns self, can be chained.
+
+The `addSchema()` method allows you to add attributes to the entity's schema. Any of the following combinations are acceptable.
+
+```js
+entity.addSchema('name', 'string');
+entity.addSchema('name', {type: 'string', cahShow: false});
+entity.addSchema({
+  name: 'string'
+});
+entity.addSchema({
+  name: {
+    type: 'string'
+  }
+});
+```
+#### entity.remSchema(attributeName)
+
+* **attributeName** `string` The name of the attribute to remove.
+* Returns self, can be chained.
+
+Remove an attribute from the schema.
+
+```js
+entity.remSchema('name');
+```
+[Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
 ## Release History
 
@@ -373,7 +461,7 @@ UserCtrl.prototype.createNew = function(req, res) {
 
 ## License
 
-Copyright 2013 Thanasis Polychronakis
+Copyright 2014 Thanasis Polychronakis
 
 Licensed under the [MIT License](LICENSE-MIT)
 
@@ -382,3 +470,4 @@ Licensed under the [MIT License](LICENSE-MIT)
 [Sequelize]: http://sequelizejs.com/
 [Inher]: https://github.com/thanpolas/inher/
 [Middlewarify]: https://github.com/thanpolas/middlewarify/
+[mschema]: https://github.com/mschema/mschema/
