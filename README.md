@@ -456,6 +456,8 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.1.1**, *11 Feb 2014*
+  - Added "main" key in package.json
 - **v0.1.0**, *11 Feb 2014*
   - New API, documentation, [Inher][] integration.
 - **v0.0.1**, *08 Oct 2013*
