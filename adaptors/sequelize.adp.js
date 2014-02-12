@@ -3,6 +3,7 @@
  */
 
 var __ = require('lodash');
+var Promise = require('bluebird');
 
 var AdaptorBase = require('./base.adp');
 
@@ -50,7 +51,7 @@ SequelizeAdaptor.prototype.setModel = function(Model) {
  */
 SequelizeAdaptor.prototype._create = function(itemData) {
   var item = this.Model.build(itemData);
-  return item.save();
+  return Promise.cast(item.save());
 };
 
 /**
@@ -63,11 +64,11 @@ SequelizeAdaptor.prototype._create = function(itemData) {
 SequelizeAdaptor.prototype._readOne = function(id) {
   var query = this._getQuery(id);
 
-  return this.Model.find({
+  return Promise.cast(this.Model.find({
     where: query,
     offset: 0,
     limit: 1,
-  });
+  }));
 };
 
 /**
@@ -84,7 +85,7 @@ SequelizeAdaptor.prototype._read = function(optQuery) {
     findOpts.where = this._getQuery(optQuery);
   }
 
-  return this.Model.findAll(findOpts);
+  return Promise.cast(this.Model.findAll(findOpts));
 };
 
 /**
@@ -110,7 +111,7 @@ SequelizeAdaptor.prototype._readLimit = function(query, skip, limit) {
     findOpts.where = query;
   }
 
-  return this.Model.findAll(findOpts);
+  return Promise.cast(this.Model.findAll(findOpts));
 };
 
 /**
@@ -125,7 +126,7 @@ SequelizeAdaptor.prototype._count = function(query) {
   if (query) {
     findOpts.where = this._getQuery(query);
   }
-  return this.Model.count(findOpts);
+  return Promise.cast(this.Model.count(findOpts));
 };
 
 /**
@@ -139,7 +140,7 @@ SequelizeAdaptor.prototype._count = function(query) {
 SequelizeAdaptor.prototype._update = function(id, itemData) {
   var query = this._getQuery(id);
 
-  return this.Model.update(itemData, query);
+  return Promise.cast(this.Model.update(itemData, query));
 };
 
 /**
@@ -151,7 +152,7 @@ SequelizeAdaptor.prototype._update = function(id, itemData) {
  */
 SequelizeAdaptor.prototype._delete = function(id) {
   var query = this._getQuery(id);
-  return this.Model.destroy(query);
+  return Promise.cast(this.Model.destroy(query));
 };
 
 /**
