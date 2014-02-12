@@ -455,7 +455,8 @@ entity.remSchema('name');
 [Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
 ## Release History
-
+- **v0.1.2**, *12 Feb 2014*
+  - Now casting to Bluebird promises all returned Objects from Sequelize adaptor.
 - **v0.1.1**, *11 Feb 2014*
   - Added "main" key in package.json
 - **v0.1.0**, *11 Feb 2014*
