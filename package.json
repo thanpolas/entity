@@ -1,7 +1,7 @@
 {
   "name": "node-entity",
   "description": "The MVCe implementation for Node.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/thanpolas/entity",
   "author": {
     "name": "Thanasis Polychronakis",
