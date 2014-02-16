@@ -34,8 +34,8 @@
     "lodash": "~1.3.1",
     "middlewarify": "~0.3.3",
     "mschema": "~0.5.2",
-    "inher": "~0.1.0",
-    "bluebird": "~1.0.3"
+    "bluebird": "~1.0.3",
+    "cip": "~0.2.0"
   },
   "devDependencies": {
     "sinon": "~1.7.3",
