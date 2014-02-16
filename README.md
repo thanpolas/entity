@@ -18,7 +18,7 @@ npm install node-entity --save
 
 ## Entity Static Methods
 
-Entity uses the [Inher][] package for inheritance, it implements the pseudo-classical inheritance pattern packed in a convenient and easy to use API. Extend will create a new Constructor that can be invoked with the `new` keyword or itself extended using the same static method. All the static methods related to inheritance are from Inher.
+Entity uses the [Cip][] package for inheritance, it implements the pseudo-classical inheritance pattern packed in a convenient and easy to use API. Extend will create a new Constructor that can be invoked with the `new` keyword or itself extended using the same static method. All the static methods related to inheritance are from Cip.
 
 ### entity.extend()
 
@@ -43,7 +43,7 @@ greatGrandChild.a === 1; // true
 greatGrandChild.b === 2; // true
 
 ```
-Read more about [extend() at Inher's documentation](https://github.com/thanpolas/inher#extend-creates-new-children).
+Read more about [extend() at Cip's documentation](https://github.com/thanpolas/cip#extend-creates-new-children).
 
 ### entity.getInstance()
 
@@ -345,7 +345,7 @@ That was it, from here on, irrespective of adaptor and ORM, you can instantiate 
 var BaseController = require('./base-controller.js');
 var userEnt = require('../entities/user.ent').getInstance();
 
-// The BaseController uses Inher for inheritance
+// The BaseController uses the "cip" package for inheritance
 var UserCtrl = module.exports = BaseController.extend();
 
 UserCtrl.prototype.createNew = function(req, res) {
@@ -475,6 +475,6 @@ Licensed under the [MIT License](LICENSE-MIT)
 [thanpolas]: https://github.com/thanpolas "Thanasis Polychronakis"
 [Mongoose]: http://mongoosejs.com/
 [Sequelize]: http://sequelizejs.com/
-[Inher]: https://github.com/thanpolas/inher/
+[Cip]: https://github.com/thanpolas/cip/
 [Middlewarify]: https://github.com/thanpolas/middlewarify/
 [mschema]: https://github.com/mschema/mschema/
