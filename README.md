@@ -43,7 +43,7 @@ greatGrandChild.a === 1; // true
 greatGrandChild.b === 2; // true
 
 ```
-Read more about [extend() at Cip's documentation](https://github.com/thanpolas/cip#extend-creates-new-children).
+Read more about [extend() at Cip's documentation](https://github.com/thanpolas/cip#extend-create-a-new-constructor).
 
 ### entity.getInstance()
 
@@ -261,7 +261,7 @@ entity.create.before(function(data){
 The two currently available adaptors are available through these properties of the *entity* module
 
 * `entity.Mongoose` For the [Mongoose ORM][mongoose]
-* `entity.Sequelize` For the [Sequelize ORM][mongoose]
+* `entity.Sequelize` For the [Sequelize ORM][sequelize]
 
 All adaptors expose the `setModel()` method. Before that method is successfully invoked all CRUD operations will fail, the Model required is an instantiated model of each respective ORM.
 
