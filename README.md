@@ -456,7 +456,7 @@ entity.remSchema('name');
 
 ## Release History
 - **v0.2.0**, *17 Feb 2014*
-  - Upgrade and integrade to [cip][] 0.2.0, replaces Injer.
+  - Upgrade and integrade to [cip][] 0.2.0, replaces Inher.
 - **v0.1.3**, *15 Feb 2014*
 	- Upgrade Middlewarify to 0.3.3.
 - **v0.1.2**, *12 Feb 2014*
@@ -464,7 +464,7 @@ entity.remSchema('name');
 - **v0.1.1**, *11 Feb 2014*
   - Added "main" key in package.json
 - **v0.1.0**, *11 Feb 2014*
-  - New API, documentation, [Inher][] integration.
+  - New API, documentation, Inher integration.
 - **v0.0.1**, *08 Oct 2013*
   - Big Bang
 
