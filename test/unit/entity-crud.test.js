@@ -7,7 +7,7 @@ var chai = require('chai');
 // var sinon = require('sinon');
 var assert = chai.assert;
 
-var entity = require('../../').CrudIface.getInstance();
+var CrudIface = require('../../').CrudIface;
 
 setup(function() {});
 teardown(function() {});
@@ -17,6 +17,7 @@ teardown(function() {});
 // run by using the mocha --grep "1.1.1" option.
 
 suite('9.2 CRUD Raw Interface', function() {
+  var entity = new CrudIface();
   test('9.2.1 CRUD Primitive methods', function(){
     assert.isFunction(entity.create, 'method: create');
     assert.isFunction(entity.read, 'method: read');

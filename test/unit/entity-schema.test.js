@@ -137,14 +137,16 @@ suite('5.2 Entity Schema', function() {
   suite('5.2.2 Entity Schema inheritance behavior', function() {
     test('5.2.2.1 Extended entity with schema defined does not inherits', function() {
       ent.addSchema(schema1);
-      var childEnt = Ent.extend().getInstance();
+      var ChildEnd = Ent.extend();
+      var childEnt = new ChildEnd();
       var schema = childEnt.getSchema();
       assert.notProperty(schema, 'firstName');
       assert.notProperty(schema, 'lastName');
     });
     test('5.2.2.2 Adding schema items to extended entity does not affect parent', function() {
       ent.addSchema(schema1);
-      var childEnt = Ent.extend().getInstance();
+      var ChildEnd = Ent.extend();
+      var childEnt = new ChildEnd();
 
       childEnt.addSchema('age', 'number');
       var schema = ent.getSchema();

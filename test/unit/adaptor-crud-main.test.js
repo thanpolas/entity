@@ -56,11 +56,12 @@ module.exports = function(adaptor, majNum) {
   suite(majNum + '.7 Instance integrity', function() {
     var ent;
     setup(function() {
-      ent = adaptor.Entity.extend().getInstance();
+      var Ent = adaptor.Entity.extend();
+      ent = new Ent();
     });
 
     test(majNum + '.7.1 Will throw error if no proper Model provided', function() {
-      assert.throws(ent.setModel);
+      assert.throws(ent.setModel.bind(ent));
     });
 
     suite(majNum + '.7.3 Using Promises', function() {

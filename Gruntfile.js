@@ -13,6 +13,7 @@ module.exports = function( grunt ) {
   grunt.loadTasks('tasks');
 
   grunt.loadNpmTasks('grunt-release');
+  grunt.loadNpmTasks('grunt-services');
 
   //
   // Grunt configuration:
@@ -42,4 +43,7 @@ module.exports = function( grunt ) {
       }
     },
   });
+
+  grunt.registerTask('start', 'Start all required services', ['startMongo', 'startPostgres']);
+  grunt.registerTask('stop', 'Stop all services', ['stopMongo', 'stopPostgres']);
 };

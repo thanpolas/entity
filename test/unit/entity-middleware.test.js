@@ -27,7 +27,7 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
 
     EntityOne.prototype._create = noop;
 
-    var ent = EntityOne.getInstance();
+    var ent = new EntityOne();
     assert.isFunction(ent.create, 'a "create" method should exist');
     assert.notProperty(ent.create, 'use', 'a "create.use" method should not exist');
     assert.isFunction(ent.create.before, 'a "create.before" method should exist');
@@ -52,7 +52,8 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
 
     EntityOne.prototype._create = spyActual;
 
-    EntityOne.getInstance().create().then(function(){
+    var one = new EntityOne();
+    one.create().then(function(){
       assert(spyBeforeOne.calledBefore(spyBeforeTwo), 'spyABeforeOne() before spyBeforeTwo()');
       assert(spyBeforeTwo.calledBefore(spyActual), 'spyBeforeTwo() before spyActual()');
       assert(spyActual.calledBefore(spyAfterOne), 'spyActual() before spyAfterOne()');

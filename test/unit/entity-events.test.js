@@ -23,6 +23,9 @@ teardown(function() {});
 
 suite('3.10 Events', function() {
   test('3.10.1 Entities are an instance of "events.EventEmitter"', function() {
-    assert.instanceOf(Entity.extend().getInstance(), EventEmitter);
+    var Child = Entity.extend();
+    var instance = new Child();
+
+    assert.instanceOf(instance, EventEmitter);
   });
 });
