@@ -455,6 +455,8 @@ entity.remSchema('name');
 [Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
 ## Release History
+- **v0.2.0**, *17 Feb 2014*
+  - Upgrade and integrade to [cip][] 0.2.0, replaces Injer.
 - **v0.1.3**, *15 Feb 2014*
 	- Upgrade Middlewarify to 0.3.3.
 - **v0.1.2**, *12 Feb 2014*
