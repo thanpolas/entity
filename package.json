@@ -35,8 +35,8 @@
     "middlewarify": "~0.3.3",
     "mschema": "~0.5.2",
     "bluebird": "~1.0.3",
-    "cip": "~0.2.0",
-    "grunt-release": "~0.7.0"
+    "grunt-release": "~0.7.0",
+    "cip": "~0.2.1"
   },
   "devDependencies": {
     "sinon": "~1.7.3",
