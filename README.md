@@ -455,6 +455,8 @@ entity.remSchema('name');
 [Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
 ## Release History
+- **v0.2.2**, *17 Feb 2014*
+  - Upgraded all package dependencies to latest.
 - **v0.2.1**, *17 Feb 2014*
 	- Upgrade to [cip][] 0.2.1
 - **v0.2.0**, *17 Feb 2014*
