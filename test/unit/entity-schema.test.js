@@ -103,6 +103,7 @@ suite('5.2 Entity Schema', function() {
     test('5.2.1.4 Entity.getSchema() default values', function() {
       ent.addSchema(schema1);
       var schema = ent.getSchema();
+      assert.notOk(Array.isArray(schema), 'schema should not be an array');
       assert.isObject(schema);
       assert.deepPropertyVal(schema, 'firstName.name', 'firstName');
       assert.deepPropertyVal(schema, 'firstName.path', 'firstName');
