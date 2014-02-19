@@ -163,7 +163,6 @@ SequelizeAdaptor.prototype._delete = function(id) {
  */
 SequelizeAdaptor.prototype._readSchema = function() {
   var seqSchema = this.Model.rawAttributes;
-  this._schema = [];
 
   __.forIn(seqSchema, function(seqSchemaItem, path) {
     var seqType = seqSchemaItem.type.toString();

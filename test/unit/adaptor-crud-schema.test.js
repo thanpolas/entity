@@ -29,7 +29,12 @@ module.exports = function(adaptor, majNum) {
       }).then(null, done);
     });
 
-    test(majNum + '.9.1 Look for expected keys in Schema', function() {
+    test(majNum + '.9.1 Look for expected getSchema() return value type', function() {
+      var schema = ent.getSchema();
+      assert.notOk(Array.isArray(schema));
+      assert.isObject(schema);
+    });
+    test(majNum + '.9.2 Look for expected keys in Schema', function() {
       var schema = ent.getSchema();
       assert.property(schema, 'name');
       assert.property(schema, '_isActive');
