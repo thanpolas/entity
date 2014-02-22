@@ -206,14 +206,23 @@ MongooseAdapter.prototype._readSchema = function() {
   var mongooseSchema = this.Model.schema.paths;
 
   __.forIn(mongooseSchema, function(mongSchemaItem, path) {
-    var type = mongSchemaItem.options.type.name.toLowerCase();
-    if (!(type in mschema.types)) {
-      if (type === 'objectid') {
-        type = 'string';
-      } else {
-        type = 'any';
+    var typeMongoose = mongSchemaItem.options.type;
+    var type;
+    if (typeof typeMongoose === 'function' && typeMongoose.name) {
+      type = typeMongoose.name.toLowerCase();
+      if (!(type in mschema.types)) {
+        if (type === 'objectid') {
+          type = 'string';
+        } else {
+          type = 'any';
+        }
       }
+    } else if (Array.isArray(typeMongoose)) {
+      type = ['string'];
+    } else {
+      type = 'string';
     }
+
     this.addSchema(path, type);
   }, this);
 };
