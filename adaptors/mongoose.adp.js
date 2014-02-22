@@ -211,7 +211,7 @@ MongooseAdapter.prototype._readSchema = function() {
     if (typeof typeMongoose === 'function' && typeMongoose.name) {
       type = typeMongoose.name.toLowerCase();
       if (!(type in mschema.types)) {
-        if (type === 'objectid') {
+        if (type === 'objectid' || type === 'date') {
           type = 'string';
         } else {
           type = 'any';
