@@ -455,6 +455,8 @@ entity.remSchema('name');
 [Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
 ## Release History
+- **v0.2.4**, *22 Feb 2014*
+  - Better handling of mongoose relation declarations when reading schema.
 - **v0.2.3**, *17 Feb 2014*
   - Fixed bug on Sequelize adaptor that returned wrong type of value with `getSchema()`.
 - **v0.2.2**, *17 Feb 2014*
