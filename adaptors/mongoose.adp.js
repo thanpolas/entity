@@ -105,7 +105,18 @@ MongooseAdapter.prototype._readOne = function(id) {
 MongooseAdapter.prototype._read = function(optQuery) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
 
-  return this._mongFind(optQuery || {});
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    var query = optQuery || {};
+    self.parseQuery(query)
+      .exec(function(err, result) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(result);
+      });
+  });
 };
 
 /**
@@ -257,7 +268,7 @@ MongooseAdapter.prototype.parseQuery = function(query) {
 
   __.forIn(selectors, function(item, key) {
     var pair = __.pairs(item);
-    findMethod = findMethod.where(key)[pair[0]](pair[1]);
+    findMethod = findMethod.where(key)[pair[0][0]](pair[0][1]);
   });
 
   return findMethod;

@@ -455,6 +455,8 @@ entity.remSchema('name');
 [Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
 ## Release History
+- **v0.2.5**, *26 Jun 2014*
+  - Now supports query expression `gt, gte, lt, lte, ne`
 - **v0.2.4**, *22 Feb 2014*
   - Better handling of mongoose relation declarations when reading schema.
 - **v0.2.3**, *17 Feb 2014*
