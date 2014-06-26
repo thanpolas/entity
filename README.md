@@ -116,6 +116,22 @@ entity.read({networkId: '47'}).then(function(documents) {
 
 Any additional key/value pairs you add to your query will be added with the `AND` operator.
 
+##### Query supports expressions
+
+The query for the `read()` method supports any of the `gt, gte, lt, lte, ne` by using an Object literal as the value for the attribute you want to query:
+
+```js
+entity.read({
+  name: 'sam',
+  age: {
+    gt: 8
+  },
+  attr3: {
+    lte: 10
+  }
+});
+```
+
 [Check out the `entity.read()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-read.test.js)
 
 #### entity.readOne(query)
