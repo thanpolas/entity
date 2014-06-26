@@ -120,8 +120,9 @@ MongooseAdapter.prototype._read = function(optQuery) {
 MongooseAdapter.prototype._readLimit = function(query, skip, limit) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
 
+  var self = this;
   return new Promise(function(resolve, reject) {
-    this.Model.find(query)
+    self.parseQuery(query, self.Model.find)
       .skip(skip)
       .limit(limit)
       .exec(function(err, result) {
@@ -131,7 +132,7 @@ MongooseAdapter.prototype._readLimit = function(query, skip, limit) {
         }
         resolve(result);
       });
-  }.bind(this));
+  });
 };
 
 /**
@@ -225,4 +226,39 @@ MongooseAdapter.prototype._readSchema = function() {
 
     this.addSchema(path, type);
   }, this);
+};
+
+/**
+ * Parse an entity type query and translate to mongoose.
+ *
+ * @param {?Object} query The query
+ * @return {Object} The mongoose return value of find().
+ */
+MongooseAdapter.prototype.parseQuery = function(query) {
+  if (!query) {
+    return this.Model.find();
+  }
+
+  if (!__.isObject(query)) {
+    return this.Model.find(query);
+  }
+
+  var selectors = {};
+  var cleanQuery = {};
+  __.forIn(query, function(value, key) {
+    if (__.isObject(value)) {
+      selectors[key] = value;
+    } else {
+      cleanQuery[key] = value;
+    }
+  });
+
+  var findMethod = this.Model.find(cleanQuery);
+
+  __.forIn(selectors, function(item, key) {
+    var pair = __.pairs(item);
+    findMethod = findMethod.where(key)[pair[0]](pair[1]);
+  });
+
+  return findMethod;
 };
