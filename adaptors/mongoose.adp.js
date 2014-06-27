@@ -254,22 +254,62 @@ MongooseAdapter.prototype.parseQuery = function(query) {
     return this.Model.find(query);
   }
 
-  var selectors = {};
-  var cleanQuery = {};
+  var fullQuery = this._separateSelectors(query);
+
+  var findMethod = this.Model.find(fullQuery.cleanQuery);
+
+  return this._buildQuery(findMethod, fullQuery.selectors);
+};
+
+/**
+ * Separates selectors (lt, gt, etc) and clean attribute queries.
+ *
+ * Returns an object with two constant keys "selectors" and "cleanQuery"
+ *
+ * @param {Object} query The raw query.
+ * @return {Object} contains two constant keys "selectors" and "cleanQuery".
+ */
+MongooseAdapter.prototype._separateSelectors = function(query) {
+  var result = {
+    selectors: {},
+    cleanQuery: {},
+  };
   __.forIn(query, function(value, key) {
     if (__.isObject(value)) {
-      selectors[key] = value;
+      result.selectors[key] = value;
     } else {
-      cleanQuery[key] = value;
+      result.cleanQuery[key] = value;
     }
   });
 
-  var findMethod = this.Model.find(cleanQuery);
+  return result;
+};
 
+/**
+ * Transpile a sequelize type extended query with selectors like "lt, lte, gt"
+ * to mongoose type.
+ *
+ * @param {mongoose.Query} findMethod A mongoose query builder instance.
+ * @param {Object} selectors Selectors.
+ * @return {mongoose.Query} The mongoose query builder to perform an .exec() on.
+ * @see http://sequelizejs.com/docs/1.7.8/models#finders
+ * @see https://github.com/sequelize/sequelize/wiki/API-Reference-Model#findalloptions-queryoptions----promisearrayinstance
+ * @see http://mongoosejs.com/docs/queries.html
+ */
+MongooseAdapter.prototype._buildQuery = function(findMethod, selectors) {
   __.forIn(selectors, function(item, key) {
     var pair = __.pairs(item);
-    findMethod = findMethod.where(key)[pair[0][0]](pair[0][1]);
-  });
+    var selector = pair[0][0];
+    var value = pair[0][1];
 
+    switch(selector) {
+    case 'between':
+      findMethod = findMethod.where(key).gt(value[0]).lt(value[1]);
+      break;
+    default:
+      findMethod = findMethod.where(key)[selector](value);
+      break;
+    }
+  });
   return findMethod;
 };
