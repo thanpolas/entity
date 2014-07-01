@@ -9,9 +9,6 @@ module.exports = function( grunt ) {
 
   var pkg = grunt.file.readJSON('package.json');
 
-  // Load local tasks
-  grunt.loadTasks('tasks');
-
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-services');
 
