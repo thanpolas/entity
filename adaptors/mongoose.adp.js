@@ -87,11 +87,21 @@ MongooseAdapter.prototype._create = function(itemData) {
 MongooseAdapter.prototype._readOne = function(id) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
 
+  var prom;
   if (__.isObject(id)) {
-    return this._mongFindOne(id);
+    prom = this._mongFindOne(id);
   } else {
-    return this._mongFindById(id);
+    prom = this._mongFindById(id);
   }
+
+  // intercept "Cast to ID" error types and return null instead
+  return prom.catch(function(err) {
+    if (err.name === 'CastError' && err.type === 'ObjectId') {
+      return null;
+    }
+    throw err;
+  });
+
 };
 
 /**
