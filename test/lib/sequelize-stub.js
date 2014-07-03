@@ -18,11 +18,22 @@ seq.Schema = {
   _isActive: {type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true},
 };
 
+/**
+ * Define the seq schema relation
+ * @type {Object}
+ */
+seq.SchemaRel = {
+  darname: {type: Sequelize.STRING, allowNull: false},
+};
+
 /** @type {?Sequelize} The main Sequelize instance */
 seq.instance = null;
 
 /** @type {?Sequelize.Model} The sequelize model */
 seq.Model = null;
+
+/** @type {?Sequelize.Model} The sequelize model related */
+seq.ModelRel = null;
 
 /**
  * Create a connection with Postgres and init models.
@@ -54,8 +65,10 @@ seq.connect = function(done) {
       );
 
       seq.Model = seq.instance.define('stubModel', seq.Schema);
+      seq.ModelRel = seq.instance.define('stubModelRel', seq.SchemaRel);
+      seq.ModelRel.hasMany(seq.Model);
 
-      seq.nukedb(done);
+      seq.syncDb(done);
     });
   });
 };
@@ -65,7 +78,7 @@ seq.connect = function(done) {
  *
  * @param  {Function} done callback
  */
-seq.nukedb = function(done) {
+seq.syncDb = function(done) {
   seq.instance.sync({force: true})
     .success(done.bind(null, null))
     .error(done);

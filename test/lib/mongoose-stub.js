@@ -17,6 +17,18 @@ mong.Schema = {
   _isActive: {type: Boolean, required: true, default: true},
 };
 
+/**
+ * Define the mong schema related to the original
+ * @type {Object}
+ */
+mong.SchemaRel = {
+  darname: {type: String},
+  schem: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'stubModel',
+  },
+};
+
 /** @type {?Mongoose.Model} */
 mong.Model = null;
 
@@ -26,10 +38,13 @@ mong.Model = null;
  * @private
  */
 mong._initModels = function() {
-  // init schema
+  // init schemas
   mong.schema = new mongoose.Schema(mong.Schema);
-  // init model
+  mong.schemaRel = new mongoose.Schema(mong.SchemaRel);
+
+  // init models
   mong.Model = mongoose.model('stubModel', mong.schema);
+  mong.ModelRel = mongoose.model('stubModelRel', mong.schemaRel);
 };
 
 /**
