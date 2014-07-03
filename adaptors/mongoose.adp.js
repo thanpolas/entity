@@ -60,13 +60,19 @@ MongooseAdapter.prototype._defineMethods = function() {
  * @override
  */
 MongooseAdapter.prototype._create = function(itemData) {
+  var self = this;
   return new Promise(function(resolve, reject) {
-    var item = new this.Model(itemData);
+    var item = new self.Model(itemData);
     item.save(function(err, document) {
       if (err) { return reject(err); }
-      resolve(document);
+
+      if (self._hasEagerLoad) {
+        self._readOne(document._id).then(resolve, reject);
+      } else {
+        resolve(document);
+      }
     });
-  }.bind(this));
+  });
 };
 
 /**
@@ -187,22 +193,23 @@ MongooseAdapter.prototype._count = function(query) {
  */
 MongooseAdapter.prototype._update = function(id, itemData) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
+  var self = this;
   return new Promise(function(resolve, reject) {
-    this.readOne(id).then(function(doc) {
+    self.readOne(id).then(function(doc) {
       if (!__.isObject(doc)) {
         return reject(new Error('record not found'));
       }
       __.forOwn(itemData, function(value, key) {
         doc[key] = value;
-      }, this);
-
-      doc.save(function(err, document) {
-        if (err) { return reject(err); }
-        resolve(document);
       });
 
-    }.bind(this), reject);
-  }.bind(this));
+      doc.save(function(err) {
+        if (err) { return reject(err); }
+        resolve(doc);
+      });
+
+    }, reject);
+  });
 };
 
 /**
