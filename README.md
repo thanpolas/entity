@@ -472,8 +472,10 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.2.8**, *03 Jul 2014*
+  - Introduce eager loading mechanisms.
 - **v0.2.7**, *01 Jul 2014*
-  - Mute mongoose cast to ID errors
+  - Mute mongoose cast to ID errors.
 - **v0.2.6**, *27 Jun 2014*
   - support more complex queries using `between` selector.
 - **v0.2.5**, *26 Jun 2014*

@@ -66,7 +66,7 @@ seq.connect = function(done) {
 
       seq.Model = seq.instance.define('stubModel', seq.Schema);
       seq.ModelRel = seq.instance.define('stubModelRel', seq.SchemaRel);
-      seq.ModelRel.hasMany(seq.Model);
+      seq.Model.hasMany(seq.ModelRel);
 
       seq.nukedb(done);
     });
