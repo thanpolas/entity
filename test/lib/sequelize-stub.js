@@ -68,7 +68,7 @@ seq.connect = function(done) {
       seq.ModelRel = seq.instance.define('stubModelRel', seq.SchemaRel);
       seq.ModelRel.hasMany(seq.Model);
 
-      seq.syncDb(done);
+      seq.nukedb(done);
     });
   });
 };
@@ -78,7 +78,7 @@ seq.connect = function(done) {
  *
  * @param  {Function} done callback
  */
-seq.syncDb = function(done) {
+seq.nukedb = function(done) {
   seq.instance.sync({force: true})
     .success(done.bind(null, null))
     .error(done);
