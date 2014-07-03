@@ -23,11 +23,6 @@ var MongooseAdapter = module.exports = AdaptorBase.extend(function(/* optUdo */)
   this._schemaOpts.expandPaths = true;
 
   // stub internal methods, all should be private to instance
-  this._mongFindOne = noop;
-  this._mongFindById = noop;
-  this._mongFind = noop;
-  this._mongCount = noop;
-  this._mongSave = noop;
   this._mongRemove = noop;
 });
 
@@ -54,9 +49,6 @@ MongooseAdapter.prototype.setModel = function(Model) {
 };
 
 MongooseAdapter.prototype._defineMethods = function() {
-  this._mongFindOne = Promise.promisify(this.Model.findOne, this.Model);
-  this._mongFindById = Promise.promisify(this.Model.findById, this.Model);
-  this._mongFind = Promise.promisify(this.Model.find, this.Model);
   this._mongRemove = Promise.promisify(this.Model.remove, this.Model);
 };
 
@@ -87,21 +79,30 @@ MongooseAdapter.prototype._create = function(itemData) {
 MongooseAdapter.prototype._readOne = function(id) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
 
-  var prom;
-  if (__.isObject(id)) {
-    prom = this._mongFindOne(id);
-  } else {
-    prom = this._mongFindById(id);
-  }
-
-  // intercept "Cast to ID" error types and return null instead
-  return prom.catch(function(err) {
-    if (err.name === 'CastError' && err.type === 'ObjectId') {
-      return null;
+  var self = this;
+  return new Promise(function(resolve, reject) {
+    var query;
+    if (__.isObject(id)) {
+      query = self.Model.findOne(id);
+    } else {
+      query = self.Model.findById(id);
     }
-    throw err;
-  });
 
+    query = self._checkEagerLoad(query);
+
+    // intercept "Cast to ID" error types and return null instead
+    return query.exec(function(err, res) {
+      if (err) {
+        if (err.name === 'CastError' && err.type === 'ObjectId') {
+          resolve(null);
+        } else {
+          reject(err);
+        }
+        return;
+      }
+      resolve(res);
+    });
+  });
 };
 
 /**
@@ -268,6 +269,8 @@ MongooseAdapter.prototype.parseQuery = function(query) {
 
   var findMethod = this.Model.find(fullQuery.cleanQuery);
 
+  findMethod = this._checkEagerLoad(findMethod);
+
   return this._buildQuery(findMethod, fullQuery.selectors);
 };
 
@@ -322,4 +325,22 @@ MongooseAdapter.prototype._buildQuery = function(findMethod, selectors) {
     }
   });
   return findMethod;
+};
+
+/**
+ * Checks if eager loading exists for any attribute and applies it.
+ *
+ * @param {mongoose.Query} query The query object.
+ * @return {mongoose.Query} The query object.
+ * @private
+ */
+MongooseAdapter.prototype._checkEagerLoad = function(query) {
+  if (!this._hasEagerLoad) {
+    return query;
+  }
+  this._eagerLoad.forEach(function(attr) {
+    query = query.populate(attr);
+  });
+
+  return query;
 };

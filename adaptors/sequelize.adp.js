@@ -64,11 +64,15 @@ SequelizeAdaptor.prototype._create = function(itemData) {
 SequelizeAdaptor.prototype._readOne = function(id) {
   var query = this._getQuery(id);
 
-  return Promise.cast(this.Model.find({
+  var findOpts = {
     where: query,
     offset: 0,
     limit: 1,
-  }));
+  };
+
+  findOpts = this._checkEagerLoad(findOpts);
+
+  return Promise.cast(this.Model.find(findOpts));
 };
 
 /**
@@ -84,6 +88,8 @@ SequelizeAdaptor.prototype._read = function(optQuery) {
   if (optQuery) {
     findOpts.where = this._getQuery(optQuery);
   }
+
+  findOpts = this._checkEagerLoad(findOpts);
 
   return Promise.cast(this.Model.findAll(findOpts));
 };
@@ -106,6 +112,8 @@ SequelizeAdaptor.prototype._readLimit = function(query, skip, limit) {
     offset: skip,
     limit: limit,
   };
+
+  findOpts = this._checkEagerLoad(findOpts);
 
   if (query) {
     findOpts.where = query;
@@ -231,4 +239,24 @@ SequelizeAdaptor.prototype._isSequelizeSpecialAttribute = function(path) {
     'createdAt',
     'updatedAt',
   ].indexOf(path) >= 0;
+};
+
+/**
+ * Checks if eager loading exists for any attribute and applies it.
+ *
+ * @param {sequelize.Query} query The query object.
+ * @return {sequelize.Query} The query object.
+ * @private
+ */
+SequelizeAdaptor.prototype._checkEagerLoad = function(query) {
+  if (!this._hasEagerLoad) {
+    return query;
+  }
+
+  query.include = [];
+  this._eagerLoad.forEach(function(attr) {
+    query.include.push(attr);
+  });
+
+  return query;
 };
