@@ -472,6 +472,8 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.2.10**, *04 Jul 2014*
+  - Created sorting mechanism.
 - **v0.2.9**, *03 Jul 2014*
   - optimizations and fixes on eager loading for mongoose.
 - **v0.2.8**, *03 Jul 2014*
