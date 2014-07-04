@@ -90,6 +90,7 @@ SequelizeAdaptor.prototype._read = function(optQuery) {
   }
 
   findOpts = this._checkEagerLoad(findOpts);
+  findOpts = this._checkSorting(findOpts);
 
   return Promise.cast(this.Model.findAll(findOpts));
 };
@@ -271,11 +272,10 @@ SequelizeAdaptor.prototype._checkEagerLoad = function(query) {
  * @private
  */
 SequelizeAdaptor.prototype._checkSorting = function(query) {
-  if (!this._hasOrderBy) {
+  if (!this._hasSortBy) {
     return query;
   }
 
-  query.order = this._orderBy;
-
+  query.order = this._sortBy;
   return query;
 };

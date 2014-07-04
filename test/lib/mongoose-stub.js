@@ -14,6 +14,7 @@ var _init = false;
  */
 mong.Schema = {
   name: {type: String, trim: true, required: true},
+  sortby: {type: Number},
   _isActive: {type: Boolean, required: true, default: true},
 };
 

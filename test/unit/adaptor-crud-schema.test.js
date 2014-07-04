@@ -47,7 +47,7 @@ module.exports = function(adaptor, majNum) {
     case 'Mongoose':
       suite(majNum + '.9.10 Mongoose specific tests', function() {
         test(majNum + '.9.10.1 Expect specific number of keys', function() {
-          assert.lengthOf(Object.keys(ent.getSchema()), 4, 'Mongoose schema items');
+          assert.lengthOf(Object.keys(ent.getSchema()), 5, 'Mongoose schema items');
         });
         test(majNum + '.9.10.2 Expect special keys to cannot show', function() {
           var schema = ent.getSchema();
@@ -59,7 +59,7 @@ module.exports = function(adaptor, majNum) {
     case 'Sequelize':
       suite(majNum + '.9.11 Sequelize specific tests', function() {
         test(majNum + '.9.11.1 Expect specific number of keys', function() {
-          assert.lengthOf(Object.keys(ent.getSchema()), 5);
+          assert.lengthOf(Object.keys(ent.getSchema()), 6);
         });
         test(majNum + '.9.11.2 Expect special keys to cannot show', function() {
           var schema = ent.getSchema();

@@ -15,6 +15,7 @@ var _init = false;
  */
 seq.Schema = {
   name: {type: Sequelize.STRING, allowNull: false},
+  sortby: {type: Sequelize.INTEGER},
   _isActive: {type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true},
 };
 

@@ -362,12 +362,12 @@ MongooseAdapter.prototype._checkEagerLoad = function(query) {
  * @private
  */
 MongooseAdapter.prototype._checkSorting = function(query) {
-  if (!this._hasOrderBy) {
+  if (!this._hasSortBy) {
     return query;
   }
 
-  this._orderBy.forEach(function(sort) {
-    var obj = Object.create(null);
+  this._sortBy.forEach(function(sort) {
+    var obj = {};
     var test = 1;
     if (sort[1] === 'DESC') {
       test = -1;
