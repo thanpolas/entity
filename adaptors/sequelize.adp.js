@@ -114,6 +114,7 @@ SequelizeAdaptor.prototype._readLimit = function(query, skip, limit) {
   };
 
   findOpts = this._checkEagerLoad(findOpts);
+  findOpts = this._checkSorting(findOpts);
 
   if (query) {
     findOpts.where = query;
@@ -257,6 +258,24 @@ SequelizeAdaptor.prototype._checkEagerLoad = function(query) {
   this._eagerLoad.forEach(function(attr) {
     query.include.push(attr);
   });
+
+  return query;
+};
+
+
+/**
+ * Checks for sorting and applies it.
+ *
+ * @param {sequelize.Query} query The query object.
+ * @return {sequelize.Query} The query object.
+ * @private
+ */
+SequelizeAdaptor.prototype._checkSorting = function(query) {
+  if (!this._hasOrderBy) {
+    return query;
+  }
+
+  query.order = this._orderBy;
 
   return query;
 };

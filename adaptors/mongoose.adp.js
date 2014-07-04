@@ -277,6 +277,7 @@ MongooseAdapter.prototype.parseQuery = function(query) {
   var findMethod = this.Model.find(fullQuery.cleanQuery);
 
   findMethod = this._checkEagerLoad(findMethod);
+  findMethod = this._checkSorting(findMethod);
 
   return this._buildQuery(findMethod, fullQuery.selectors);
 };
@@ -331,6 +332,7 @@ MongooseAdapter.prototype._buildQuery = function(findMethod, selectors) {
       break;
     }
   });
+
   return findMethod;
 };
 
@@ -347,6 +349,31 @@ MongooseAdapter.prototype._checkEagerLoad = function(query) {
   }
   this._eagerLoad.forEach(function(attr) {
     query = query.populate(attr);
+  });
+
+  return query;
+};
+
+/**
+ * Checks for sorting and applies it.
+ *
+ * @param {mongoose.Query} query The query object.
+ * @return {mongoose.Query} The query object.
+ * @private
+ */
+MongooseAdapter.prototype._checkSorting = function(query) {
+  if (!this._hasOrderBy) {
+    return query;
+  }
+
+  this._orderBy.forEach(function(sort) {
+    var obj = Object.create(null);
+    var test = 1;
+    if (sort[1] === 'DESC') {
+      test = -1;
+    }
+    obj[sort[0]] = test;
+    query.sort(obj);
   });
 
   return query;
