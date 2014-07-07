@@ -264,22 +264,27 @@ MongooseAdapter.prototype._readSchema = function() {
  * @return {Object} The mongoose return value of find().
  */
 MongooseAdapter.prototype.parseQuery = function(query) {
+
+  var mongQuery = null;
   if (!query) {
-    return this.Model.find();
+    // nothing
+    mongQuery = this.Model.find();
+  } else {
+    if (!__.isObject(query)) {
+      // possibly just an ID
+      mongQuery = this.Model.find(query);
+    } else {
+      // query using object
+      var fullQuery = this._separateSelectors(query);
+      mongQuery = this.Model.find(fullQuery.cleanQuery);
+      mongQuery = this._transpileSelectors(mongQuery, fullQuery.selectors);
+    }
   }
 
-  if (!__.isObject(query)) {
-    return this.Model.find(query);
-  }
+  mongQuery = this._checkEagerLoad(mongQuery);
+  mongQuery = this._checkSorting(mongQuery);
 
-  var fullQuery = this._separateSelectors(query);
-
-  var findMethod = this.Model.find(fullQuery.cleanQuery);
-
-  findMethod = this._checkEagerLoad(findMethod);
-  findMethod = this._checkSorting(findMethod);
-
-  return this._buildQuery(findMethod, fullQuery.selectors);
+  return mongQuery;
 };
 
 /**
@@ -317,7 +322,7 @@ MongooseAdapter.prototype._separateSelectors = function(query) {
  * @see https://github.com/sequelize/sequelize/wiki/API-Reference-Model#findalloptions-queryoptions----promisearrayinstance
  * @see http://mongoosejs.com/docs/queries.html
  */
-MongooseAdapter.prototype._buildQuery = function(findMethod, selectors) {
+MongooseAdapter.prototype._transpileSelectors = function(findMethod, selectors) {
   __.forIn(selectors, function(item, key) {
     var pair = __.pairs(item);
     var selector = pair[0][0];
@@ -375,6 +380,5 @@ MongooseAdapter.prototype._checkSorting = function(query) {
     obj[sort[0]] = test;
     query.sort(obj);
   });
-
   return query;
 };
