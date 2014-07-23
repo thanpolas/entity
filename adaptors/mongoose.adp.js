@@ -150,7 +150,7 @@ MongooseAdapter.prototype._readLimit = function(query, skip, limit) {
 
   var self = this;
   return new Promise(function(resolve, reject) {
-    self.parseQuery(query, self.Model.find)
+    self.parseQuery(query)
       .skip(skip)
       .limit(limit)
       .exec(function(err, result) {
@@ -172,15 +172,17 @@ MongooseAdapter.prototype._readLimit = function(query, skip, limit) {
  */
 MongooseAdapter.prototype._count = function(query) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
+  var self = this;
   return new Promise(function(resolve, reject) {
-    this.Model.count(query, function(err, num) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(num);
-      }
-    });
-  }.bind(this));
+    self.parseQuery(query, true)
+      .exec(function(err, num) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(num);
+        }
+      });
+  });
 };
 
 /**
@@ -260,29 +262,40 @@ MongooseAdapter.prototype._readSchema = function() {
 /**
  * Parse an entity type query and translate to mongoose.
  *
- * @param {?Object} query The query
+ * @param {?Object} query The query.
+ * @param {boolean=} optCount if this is a count operation.
  * @return {Object} The mongoose return value of find().
  */
-MongooseAdapter.prototype.parseQuery = function(query) {
+MongooseAdapter.prototype.parseQuery = function(query, optCount) {
 
   var mongQuery = null;
+  var mongMethod = null;
+
+  if (optCount) {
+    mongMethod = this.Model.count.bind(this.Model);
+  } else {
+    mongMethod = this.Model.find.bind(this.Model);
+  }
+
   if (!query) {
     // nothing
-    mongQuery = this.Model.find();
+    mongQuery = mongMethod();
   } else {
     if (!__.isObject(query)) {
       // possibly just an ID
-      mongQuery = this.Model.find(query);
+      mongQuery = mongMethod(query);
     } else {
       // query using object
       var fullQuery = this._separateSelectors(query);
-      mongQuery = this.Model.find(fullQuery.cleanQuery);
+      mongQuery = mongMethod(fullQuery.cleanQuery);
       mongQuery = this._transpileSelectors(mongQuery, fullQuery.selectors);
     }
   }
 
-  mongQuery = this._checkEagerLoad(mongQuery);
-  mongQuery = this._checkSorting(mongQuery);
+  if (!optCount) {
+    mongQuery = this._checkEagerLoad(mongQuery);
+    mongQuery = this._checkSorting(mongQuery);
+  }
 
   return mongQuery;
 };
