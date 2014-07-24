@@ -48,7 +48,7 @@ module.exports = function(adaptor) {
         .bind(this)
         .then(function(item) {
           this.entity.on('delete', function(query, itemId) {
-            assert.equal(itemId, item.id, 'Delete event should provided the id');
+            assert.equal(itemId, item.id, 'Delete event should provide the id');
             done();
           });
 
