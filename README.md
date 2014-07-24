@@ -76,7 +76,7 @@ The CRUD Interface offers the following primitive operations:
 
 These primitives will transparently adapt to the most optimized operations on the ORM of your choosing and guarantee the outcome will always be the same no matter the underlying ORM.
 
-All primitive methods offer Before/After hooks and return a Promise to determine resolution.
+All primitive methods offer Before/After/Last hooks and return a Promise to determine resolution.
 
 #### entity.create(data)
 
@@ -230,9 +230,9 @@ entity.count({networkId: '42'}).then(function() {
 [Check out the `entity.count()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-main.test.js)
 
 
-### Before / After Hooks
+### Before / After / Last Hooks
 
-Every CRUD operation offers Before/After hooks courtesy of [Middlewarify][]. Each middleware will receive the same exact arguments. To pass control to the next middleware you need to return a promise that conforms to the [Promises/A+ spec](http://promises-aplus.github.io/promises-spec/).
+Every CRUD operation offers Before/After/Last hooks courtesy of [Middlewarify][]. Each middleware will receive the same exact arguments. To pass control to the next middleware you need to return a promise that conforms to the [Promises/A+ spec](http://promises-aplus.github.io/promises-spec/).
 
 
 ```js
@@ -375,6 +375,39 @@ UserCtrl.prototype.createNew = function(req, res) {
       res.json(501, error);
     });
 };
+```
+
+### CRUD Events
+
+The base entity class inherits from Node's [standard EventEmitter][EventEmitter]. The CRUD interface provides 3 convenient events that get triggered after each corresponding operation and all its' middleware have finished invocation.
+
+* `create` Triggers after a create OP finished, arguments:
+    - **data** `Object` The data provided by the user to create the record.
+    - **result** `Object` The result as provided by the underlying ORM.
+* `update` Triggers after an update OP finished, arguments:
+    - **query** `Object|string` The query used to define which record to update.
+* `delete` Triggers after a delete OP finished, arguments:
+    - **query** `Object|string` The query used to define which record to delete.
+    - **id** `string` An attempt to provide the ID of the deleted record.
+
+Example:
+
+```javascript
+var EntitySequelize = require('entity').Sequelize;
+var UserModel = require('../models/user.model');
+
+var UserEntity = module.exports = Entity.Sequelize.extend(function(){
+  // pass the Sequelize User Model
+  this.setModel(UserModel.Model);
+});
+
+/* ... */
+
+var userEntity = UserEntity.getInstance();
+
+userEntity.on('create', function(data, result) {/* ... */});
+userEntity.on('update', function(query) {/* ... */});
+userEntity.on('delete', function(query, id) {/* ... */});
 ```
 
 ## Entity Schema
@@ -522,3 +555,5 @@ Licensed under the [MIT License](LICENSE-MIT)
 [Cip]: https://github.com/thanpolas/cip/
 [Middlewarify]: https://github.com/thanpolas/middlewarify/
 [mschema]: https://github.com/mschema/mschema/
+[EventEmitter]: http://nodejs.org/api/events.html#events_class_events_eventemitter
+
