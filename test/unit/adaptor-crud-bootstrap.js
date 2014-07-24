@@ -11,6 +11,7 @@ var testAdaptorRead = require('./adaptor-crud-read.test');
 var testAdaptorUpdate = require('./adaptor-crud-update.test');
 var testAdaptorDelete = require('./adaptor-crud-delete.test');
 var testAdaptorSchema = require('./adaptor-crud-schema.test');
+var testAdaptorEvents = require('./adaptor-crud-events.test');
 
 var core = module.exports = {};
 
@@ -73,6 +74,7 @@ core.init = function() {
       testAdaptorUpdate(adaptor, adaptor.majNum);
       testAdaptorDelete(adaptor, adaptor.majNum);
       testAdaptorSchema(adaptor, adaptor.majNum);
+      testAdaptorEvents(adaptor);
     });
   });
 };
