@@ -506,8 +506,10 @@ entity.remSchema('name');
 ## Release History
 
 
+- **v0.2.13**, *24 Jul 2014*
+  - Added events on CRUD ops.
 - **v0.2.12**, *23 Jul 2014*
-  - Count operation fix for mongoose adp
+  - Count operation fix for mongoose adp.
 - **v0.2.11**, *07 Jul 2014*
   - Fix mongoose adp query building sequence.
 - **v0.2.10**, *04 Jul 2014*
