@@ -31,7 +31,7 @@ module.exports = function(adaptor, majNum) {
       test(majNum + '.4.2.1 Update a record using the id', function(done) {
         var newVal = 'new value';
         ent.update(id, {name: newVal}).then(function(obj) {
-          if (adaptor.name !== 'Sequelize') {
+          if (adaptor.name === 'Mongoose') {
             assert.equal(obj.name, newVal, 'Name should have been updated on returned object');
           }
           // perform a read

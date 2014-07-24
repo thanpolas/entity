@@ -31,15 +31,20 @@ module.exports = function(adaptor) {
       this.entity.create(fix.one);
     });
     test('Update operation event', function(done) {
+      var self = this;
       this.entity.create(fix.one)
         .bind(this)
         .then(function(item) {
-          this.entity.on('update', function(query, src, result) {
-            assert.equal(result.name, 'new value', 'Name should be the same');
-            assert.equal(result._isActive, fix.one._isActive, 'isActive should be the same');
-            done();
+          this.entity.on('update', function(query, optResult) {
+            if (adaptor.name === 'Mongoose') {
+              assert.equal(optResult.name, 'new value',
+                'Name should have been updated on returned object');
+            }
+            // perform a read
+            self.entity.readOne(item.id).then(function(res) {
+              assert.equal(res.name, 'new value', 'Name should have been updated on read');
+            }).then(done, done);
           });
-
           this.entity.update(item.id, {name: 'new value'});
         });
     });
