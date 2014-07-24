@@ -32,21 +32,21 @@
   },
   "dependencies": {
     "lodash": "~2.4.1",
-    "middlewarify": "~0.3.3",
-    "mschema": "~0.5.2",
-    "bluebird": "~1.0.5",
+    "middlewarify": "^0.3.8",
+    "mschema": "^0.5.3",
+    "bluebird": "~2.2.2",
     "grunt-release": "~0.7.0",
-    "cip": "~0.2.1"
+    "cip": "^0.2.5"
   },
   "devDependencies": {
-    "sinon": "~1.8.2",
-    "mongoose": "~3.8.7",
-    "mocha": "~1.17.1",
-    "chai": "~1.9.0",
-    "pg": "~2.11.1",
-    "grunt": "~0.4.2",
-    "grunt-services": "0.0.1",
-    "sequelize": "~2.0.0-dev6"
+    "sinon": "~1.10.3",
+    "mongoose": "~3.8.13",
+    "mocha": "~1.21.0",
+    "chai": "~1.9.1",
+    "pg": "~3.4.0",
+    "grunt": "~0.4.5",
+    "grunt-services": "0.0.2",
+    "sequelize": "~1.7.9"
   },
   "peerDependencies": {},
   "keywords": [
