@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "lodash": "~2.4.1",
-    "middlewarify": "^0.3.8",
+    "middlewarify": "^0.4.0",
     "mschema": "^0.5.3",
     "bluebird": "~2.2.2",
     "grunt-release": "~0.7.0",
