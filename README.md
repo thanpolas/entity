@@ -505,6 +505,8 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.2.15**, *25 Jul 2014*
+  - Fixed CRUD events returning null and messing with end result.
 - **v0.2.14**, *25 Jul 2014*
   - Upgraded to Middlewarify 0.4.0, enables result alteration by After/Last middleware.
 - **v0.2.13**, *24 Jul 2014*
