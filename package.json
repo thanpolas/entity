@@ -28,7 +28,7 @@
   },
   "main": "./",
   "scripts": {
-    "test": "node_modules/.bin/mocha -u tdd -R spec test/unit"
+    "test": "./node_modules/.bin/grunt jshint && node_modules/.bin/mocha -u tdd -R spec test/unit"
   },
   "dependencies": {
     "lodash": "~2.4.1",
@@ -48,7 +48,8 @@
     "grunt-services": "0.0.2",
     "sequelize": "~1.7.9",
     "grunt-contrib-jshint": "^0.10.0",
-    "load-grunt-tasks": "^0.6.0"
+    "load-grunt-tasks": "^0.6.0",
+    "grunt-cli": "^0.1.13"
   },
   "peerDependencies": {},
   "keywords": [
