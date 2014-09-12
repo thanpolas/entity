@@ -5,12 +5,8 @@
  */
 
 module.exports = function( grunt ) {
-  'use strict';
-
   var pkg = grunt.file.readJSON('package.json');
-
-  grunt.loadNpmTasks('grunt-release');
-  grunt.loadNpmTasks('grunt-services');
+  require('load-grunt-tasks')(grunt);
 
   //
   // Grunt configuration:
@@ -20,9 +16,14 @@ module.exports = function( grunt ) {
     // Project configuration
     // ---------------------
     //
-
     pkg: pkg,
 
+    jshint: {
+      options: {
+        jshintrc: true,
+      },
+      backend: ['lib/**/*.js'],
+    },
 
     release: {
       options: {

@@ -46,7 +46,9 @@
     "pg": "~3.4.0",
     "grunt": "~0.4.5",
     "grunt-services": "0.0.2",
-    "sequelize": "~1.7.9"
+    "sequelize": "~1.7.9",
+    "grunt-contrib-jshint": "^0.10.0",
+    "load-grunt-tasks": "^0.6.0"
   },
   "peerDependencies": {},
   "keywords": [
