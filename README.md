@@ -1,6 +1,6 @@
 # Entity
 
-An Entity is a business unit. Entities are supersets of models, resources and contain the business logic. They are persistent storage agnostic and provide a normalized API with which your consuming services can perform business logic actions.
+An Entity is a high level business unit. Entities are supersets of models and resources. They are persistent storage agnostic and provide a normalized CRUD API with which your consuming services can perform business logic actions.
 
 ![Entity Figure 1](https://docs.google.com/drawings/d/1gCV3jmHVK8jJcH40dmUJ6-iZU9YdKixW9YPQ5kHj-As/pub?w=331&h=289)
 
@@ -8,7 +8,7 @@ An Entity is a business unit. Entities are supersets of models, resources and co
 
 The Entity Object on itself is nothing but an extension of `EventEmitter`. It can be easily extended to create the Interfaces and base classes from where your business logic entities can inherit.
 
-Currently the CRUD interface has been implemented and two ORM packages are supported in the form of Adaptors, [Mongoose][] and [Sequelize][].
+Entities come with a normalized CRUD interface which plugs into [now] two ORM packages, [Mongoose][] and [Sequelize][].
 
 ## Install
 
@@ -18,7 +18,7 @@ npm install node-entity --save
 
 ## Entity Static Methods
 
-Entity uses the [Cip][] package for inheritance, it implements the pseudo-classical inheritance pattern packed in a convenient and easy to use API. Extend will create a new Constructor that can be invoked with the `new` keyword or itself extended using the same static method. All the static methods related to inheritance are from Cip.
+Entity uses the [Cip][] package for inheritance, it implements the pseudo-classical inheritance pattern packed in a convenient and easy to use API.
 
 ### entity.extend()
 
@@ -43,20 +43,26 @@ greatGrandChild.a === 1; // true
 greatGrandChild.b === 2; // true
 
 ```
+
 Read more about [extend() at Cip's documentation](https://github.com/thanpolas/cip#extend-create-a-new-constructor).
 
-### entity.getInstance()
+### entity.extendSingleton()
 
-The `getInstance()` method will return a singleton instance. This means that you will get the same exact instance every time you invoke this static function.
+Use the `extendSingleton()` method to create singleton constructors, use the `getInstance()` method to always get the same exact instance of the entity.
 
 ```js
-var entityChild = require('../entities/child.ent').getInstance();
+var entity = require('entity');
+
+var UserEntity = entity.extendSingleton(function() {});
+
+/* ... */
+
+var userEnt = UserEntity.getInstance();
 ```
 
 While the use of singletons has been fairly criticized, it is our view that in modern day web applications, the *instance* role has moved up to the node process. Your web application will naturally run on multiple cores (instances) and thus each instance is a single unit in the whole that comprises your web service. Entities need to emit and listen to local events, PubSub, create Jobs, send email and generally have bindings to other services (RPC, AWS, whatnot).
 
 Those events, PubSub etc have a lifetime equal to the runtime of the core the application is running on. This requires for a single entity to exist and manage all those bindings, applying the business logic and performing the required high level operations.
-
 
 ## Entity CRUD Interface
 
@@ -89,7 +95,8 @@ The `create()` method will create a new item, you need to provide an Object cont
 entity.create({name: 'thanasis'})
   .then(function(document) {
     document.name === 'thanasis'; // true
-  }, then(function(error) {
+  })
+  .catch(function(error) {
     // deal with error.
   });
 ```
@@ -105,13 +112,15 @@ entity.create({name: 'thanasis'})
 The `read()` method will query for items. If the query argument is omitted, all the items will be returned. If the *query* argument is an Object, it will be passed as is to the underlying ORM. Entity guarantees that key/value type queries will work and will also transport any idiomatic ORM query types.
 
 ```js
-entity.read().then(function(documents) {
-  // All documents
-});
+entity.read()
+  .then(function(documents) {
+    // All documents
+  });
 
-entity.read({networkId: '47'}).then(function(documents) {
-  // All documents whose "networkId" equals 47
-});
+entity.read({networkId: '47'})
+  .then(function(documents) {
+    // All documents whose "networkId" equals 47
+  });
 ```
 
 Any additional key/value pairs you add to your query will be added with the `AND` operator.
@@ -142,13 +151,15 @@ entity.read({
 The `readOne()` method guarantees that you will get one and only one item. It is the method intended to be used by single item views. The *query* argument has the same attributes as `read()`.
 
 ```js
-entity.read({name: 'thanasis'}).then(function(document) {
-  document.name === 'thanasis'; // true
-});
+entity.read({name: 'thanasis'})
+  .then(function(document) {
+    document.name === 'thanasis'; // true
+  });
 
-entity.read('42').then(function(document) {
-  document.id === '42'; // true
-});
+entity.read('42')
+  .then(function(document) {
+    document.id === '42'; // true
+  });
 ```
 
 #### entity.readLimit(?query, offset, limit)
@@ -161,15 +172,17 @@ entity.read('42').then(function(document) {
 Will fetch the items based on query, limiting the results by the offset and limit defined. The *query* argument shares the same attributes as `read()`, if `null` all the items will be fetched.
 
 ```js
-entity.readLimit(null, 0, 10).then(function(documents) {
-  // fetched the first 10 items
-});
+entity.readLimit(null, 0, 10)
+  .then(function(documents) {
+    // fetched the first 10 items
+  });
 
-entity.readLimit({networkId: '42'}, 10, 10).then(function(documents) {
-  // fetched records whose networkId equels '42
-  // And started from the 10th item,
-  // limiting the total records to 10
-});
+entity.readLimit({networkId: '42'}, 10, 10)
+  .then(function(documents) {
+    // fetched records whose networkId equels '42
+    // And started from the 10th item,
+    // limiting the total records to 10
+  });
 ```
 
 #### entity.update(query, updateValues)
@@ -181,13 +194,15 @@ entity.readLimit({networkId: '42'}, 10, 10).then(function(documents) {
 Will perform an update operation on an item or set of item as defined by the query. The *query* argument can be a single id or an Object with key/value pairs.
 
 ```js
-entity.update('99', {name: 'John').then(function(document) {
-  document.name === 'John'; // true only for Mongoose
-});
+entity.update('99', {name: 'John')
+  .then(function(document) {
+    document.name === 'John'; // true only for Mongoose
+  });
 
-entity.update({networkId: '42'}, {isActive: false}).then(function(documents) {
-  // deactive all items with network id that equals 42
-});
+entity.update({networkId: '42'}, {isActive: false})
+  .then(function(documents) {
+    // deactive all items with network id that equals 42
+  });
 ```
 [Check out the `entity.update()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-update.test.js)
 
@@ -199,13 +214,15 @@ entity.update({networkId: '42'}, {isActive: false}).then(function(documents) {
 Will perform an delete operation as defined by the query. The *query* argument can be a single id or an Object with key/value pairs.
 
 ```js
-entity.delete('99').then(function() {
-  // job done
-});
+entity.delete('99')
+  .then(function() {
+    // job done
+  });
 
-entity.delete({networkId: '42'}).then(function() {
-  // all gone
-});
+entity.delete({networkId: '42'})
+  .then(function() {
+    // all gone
+  });
 ```
 
 [Check out the `entity.delete()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-delete.test.js)
@@ -218,13 +235,15 @@ entity.delete({networkId: '42'}).then(function() {
 Will perform a count operation as defined by the query. The *query* argument can be a single id or an Object with key/value pairs, if empty it will count all the items.
 
 ```js
-entity.count().then(function(count) {
-  typeof count === 'number'; // true, all the items.
-});
+entity.count()
+  .then(function(count) {
+    typeof count === 'number'; // true, all the items.
+  });
 
-entity.count({networkId: '42'}).then(function() {
-  typeof count === 'number'; // true
-});
+entity.count({networkId: '42'})
+  .then(function() {
+    typeof count === 'number'; // true
+  });
 ```
 
 [Check out the `entity.count()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-main.test.js)
