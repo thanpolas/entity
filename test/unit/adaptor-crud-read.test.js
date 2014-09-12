@@ -52,6 +52,13 @@ module.exports = function(adaptor, majNum) {
           assert.equal(res[0].name, fix.one.name, 'Name should be the same');
         }).then(done, done);
       });
+
+      test(majNum + '.5.2.5 Read All records with an empty object', function() {
+        return ent.read({}).then(function(res) {
+          assert.equal(res.length, 2, 'There should be two results');
+          assert.equal(res[0].name, fix.one.name, 'Name should be the same');
+        });
+      });
     });
 
     suite(majNum + '.5.3 sorting ', function() {
