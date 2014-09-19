@@ -4,6 +4,7 @@
 var __ = require('lodash');
 var mschema = require('mschema');
 var Promise = require('bluebird');
+var mongoose = require('mongoose');
 
 var AdaptorBase = require('./base.adp');
 
@@ -314,7 +315,7 @@ MongooseAdapter.prototype._separateSelectors = function(query) {
     cleanQuery: {},
   };
   __.forIn(query, function(value, key) {
-    if (__.isObject(value)) {
+    if (__.isObject(value) && !(value instanceof mongoose.Types.ObjectId)) {
       result.selectors[key] = value;
     } else {
       result.cleanQuery[key] = value;
