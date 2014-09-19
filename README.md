@@ -524,6 +524,8 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.3.1**, *19 Sep 2014*
+  - Fixed issue where query selector on mongo adaptor confused ObjectId types with objects.
 - **v0.3.0**, *25 Jul 2014*
   - The Middlewarify 0.4.0 may break some existing installations when value is returned on After/ middleware, thus a minor version bump is warranted.
 - **v0.2.15**, *25 Jul 2014*
