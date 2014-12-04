@@ -274,7 +274,7 @@ entity.create({}).then(function(document) {
 An Asynchronous middleware
 
 ```js
-// a middleware with synchronous resolution
+// a middleware with asynchronous resolution
 entity.create.before(function(data){
   return somepackage.promise(function(resolve, reject) {
     // perform an async op
