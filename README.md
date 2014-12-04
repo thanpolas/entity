@@ -324,7 +324,7 @@ userModel.Model = mongoose.model('user', userModel.schema);
 var EntityMongoose = require('entity').Mongoose;
 var UserModel = require('../models/user.model');
 
-var UserEntity = module.exports = Entity.Mongoose.extend(function(){
+var UserEntity = module.exports = EntityMongoose.extend(function(){
   // pass the Mongoose User Model
   this.setModel(UserModel.Model);
 });
@@ -366,7 +366,7 @@ userModel.Model = seqInstance.define('user', {
 var EntitySequelize = require('entity').Sequelize;
 var UserModel = require('../models/user.model');
 
-var UserEntity = module.exports = Entity.Sequelize.extend(function(){
+var UserEntity = module.exports = EntitySequelize.extend(function(){
   // pass the Sequelize User Model
   this.setModel(UserModel.Model);
 });
