@@ -524,6 +524,8 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.3.2**, *09 Dec 2014*
+  - Upgraded all dependent packages to latest.
 - **v0.3.1**, *19 Sep 2014*
   - Fixed issue where query selector on mongo adaptor confused ObjectId types with objects.
 - **v0.3.0**, *25 Jul 2014*
