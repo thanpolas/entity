@@ -46,7 +46,7 @@
     "pg": "~4.1.0",
     "grunt": "~0.4.5",
     "grunt-services": "0.0.3",
-    "sequelize": "~2.0.0-rc3",
+    "sequelize": "~1.7.9",
     "grunt-contrib-jshint": "^0.10.0",
     "load-grunt-tasks": "^1.0.0",
     "grunt-cli": "^0.1.13"
