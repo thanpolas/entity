@@ -198,7 +198,7 @@ MongooseAdapter.prototype._update = function(id, itemData) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
   var self = this;
   return new Promise(function(resolve, reject) {
-    self.readOne(id).then(function(doc) {
+    self._readOne(id).then(function(doc) {
       if (!__.isObject(doc)) {
         return reject(new Error('record not found'));
       }
