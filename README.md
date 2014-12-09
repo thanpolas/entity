@@ -524,6 +524,8 @@ entity.remSchema('name');
 
 ## Release History
 
+- **v0.3.3**, *09 Dec 2014*
+  - use proper internal method on mongoose adaptor
 - **v0.3.2**, *09 Dec 2014*
   - Upgraded all dependent packages to latest.
 - **v0.3.1**, *19 Sep 2014*
