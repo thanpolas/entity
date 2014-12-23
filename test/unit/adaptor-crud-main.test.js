@@ -2,7 +2,7 @@
  * @fileOverview Testing the adaptors implementation.
  */
 
-// var sinon  = require('sinon');
+var sinon  = require('sinon');
 var chai = require('chai');
 // var sinon = require('sinon');
 var assert = chai.assert;
@@ -118,6 +118,22 @@ module.exports = function(adaptor, majNum) {
       ent.count().then(function(count) {
         assert.equal(count, 2, 'There should be two results');
       }).then(done, done);
+    });
+  });
+
+  suite(majNum + '.7 Middleware Interference', function() {
+    test(majNum + '.7.1 No interference between middleware', function(done) {
+      var spyBeforeOne = sinon.spy();
+
+      var ent = adaptor.factory();
+      ent.method('createApi', this.create);
+      ent.createApi.before(spyBeforeOne);
+
+      ent.create(fix.one)
+        .then(function() {
+          assert(!spyBeforeOne.called, 'Should not invoke createApi middleware');
+        })
+        .then(done, done);
     });
   });
 };
