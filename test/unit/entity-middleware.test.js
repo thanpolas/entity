@@ -60,4 +60,27 @@ suite('4.11 Entity Middleware and "before", "after" methods', function() {
       assert(spyAfterOne.calledBefore(spyAfterTwo), 'spyAfterOne() before spyAfterTwo()');
     }).then(done, done);
   });
+
+  test('4.11.3 No interference between middleware', function(done) {
+    var spyBeforeOne = sinon.spy();
+    var spyActual = sinon.spy();
+
+    var EntityOne = Entity.extend(function() {
+      this.method('create', this._create.bind(this));
+      this.method('createApi', this.create);
+
+      this.createApi.before(spyBeforeOne);
+    });
+
+    EntityOne.prototype._create = spyActual;
+
+    var one = new EntityOne();
+
+    one.create()
+      .then(function() {
+        assert(!spyBeforeOne.called, 'Should not invoke createApi middleware');
+      })
+      .then(done, done);
+
+  });
 });
