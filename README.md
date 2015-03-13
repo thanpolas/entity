@@ -522,6 +522,19 @@ entity.remSchema('name');
 ```
 [Check out the Schema basic methods tests](https://github.com/thanpolas/entity/blob/master/test/unit/entity-schema.test.js)
 
+## Utilities
+
+#### entity.sort(attributeName, order)
+
+* **attributeName** `string` The name of the attribute to sort.
+* **order** `string` The order of sorting. Either 'ASC' or 'DESC'.
+
+Sort attributed.
+
+```js
+this.sort('createdAt', 'DESC');
+```
+
 ## Release History
 
 - **v0.3.3**, *09 Dec 2014*
