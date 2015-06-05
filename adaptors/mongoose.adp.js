@@ -100,7 +100,7 @@ MongooseAdapter.prototype._readOne = function(id) {
     // intercept "Cast to ID" error types and return null instead
     return query.exec(function(err, res) {
       if (err) {
-        if (err.name === 'CastError' && err.type === 'ObjectId') {
+        if (err.name === 'CastError' && err.kind === 'ObjectId') {
           resolve(null);
         } else {
           reject(err);

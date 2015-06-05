@@ -32,7 +32,7 @@ SequelizeAdaptor.prototype.setModel = function(Model) {
     !Model.name ||
     !Model.tableName ||
     !Model.options ||
-    !Model.DAO
+    !Model.sequelize
     ) {
     throw new TypeError('Model provided not a Sequelize instance');
   }
