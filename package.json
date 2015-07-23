@@ -31,26 +31,26 @@
     "test": "./node_modules/.bin/grunt jshint && node_modules/.bin/mocha -u tdd -R spec test/unit"
   },
   "dependencies": {
-    "lodash": "~3.9.3",
-    "middlewarify": "^0.4.0",
+    "lodash": "~3.10.0",
+    "middlewarify": "^1.0.0",
     "mschema": "^0.5.5",
-    "bluebird": "~2.9.27",
-    "grunt-release": "~0.12.0",
+    "bluebird": "~2.9.34",
+    "grunt-release": "~0.13.0",
     "cip": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "~3.0.0",
+    "chai": "~3.2.0",
     "grunt": "~0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-services": "0.1.0",
     "load-grunt-tasks": "^3.2.0",
     "mocha": "~2.2.5",
-    "mongoose": "~4.0.4",
-    "pg": "~4.3.0",
+    "mongoose": "~4.0.8",
+    "pg": "~4.4.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "~1.7.9",
-    "sinon": "~1.14.1"
+    "sequelize": "~3.4.1",
+    "sinon": "~1.15.4"
   },
   "peerDependencies": {},
   "keywords": [
