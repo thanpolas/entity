@@ -537,6 +537,8 @@ this.sort('createdAt', 'DESC');
 
 ## Release History
 
+- **v0.4.1**, *23 Jul 2015*
+  - Upgraded all dependency packages to latest.
 - **v0.4.0**, *05 Jun 2015*
   - Fix for breaking change in mongoose 4.0, error attribute changed, will only work with Mongoose `^4.0.0`.
 - **v0.3.3**, *09 Dec 2014*
