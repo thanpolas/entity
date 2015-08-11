@@ -14,12 +14,11 @@ function noop() {}
 /**
  * The Mongoose CRUD implementation.
  *
- * @param {?Object} optUdo Optionally define the current handling user.
  * @param {mongoose.Model} Model the model that this entity relates to.
  * @constructor
  * @extends {MongooseAdapter.AdaptorBase}
  */
-var MongooseAdapter = module.exports = AdaptorBase.extend(function(/* optUdo */) {
+var MongooseAdapter = module.exports = AdaptorBase.extend(function() {
 
   /** @type {entity.MongooseNormalize} The Mongoose Sanitize Instance. */
   this.mongooseNormalize = new MongooseNormalize();
