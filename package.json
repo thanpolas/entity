@@ -46,7 +46,7 @@
     "grunt-services": "0.1.0",
     "load-grunt-tasks": "^3.2.0",
     "mocha": "~2.2.5",
-    "mongoose": "~4.0.8",
+    "mongoose": "~4.1.2",
     "pg": "~4.4.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "1.7.9",

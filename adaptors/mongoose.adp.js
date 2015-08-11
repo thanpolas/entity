@@ -7,18 +7,28 @@ var Promise = require('bluebird');
 var mongoose = require('mongoose');
 
 var AdaptorBase = require('./base.adp');
+var MongooseNormalize = require('./mongoose-normalize.adp');
 
 function noop() {}
 
 /**
  * The Mongoose CRUD implementation.
  *
- * @param {?Object} optUdo Optionally define the current handling user.
  * @param {mongoose.Model} Model the model that this entity relates to.
  * @constructor
  * @extends {MongooseAdapter.AdaptorBase}
  */
-var MongooseAdapter = module.exports = AdaptorBase.extend(function(/* optUdo */) {
+var MongooseAdapter = module.exports = AdaptorBase.extend(function() {
+
+  /** @type {entity.MongooseNormalize} The Mongoose Sanitize Instance. */
+  this.mongooseNormalize = new MongooseNormalize();
+
+  this.method('normalizeItem',
+    this.mongooseNormalize.normalizeItem.bind(this.mongooseNormalize));
+  this.method('normalizeItems',
+    this.mongooseNormalize.normalizeItems.bind(this.mongooseNormalize));
+  this.method('normalize',
+    this.mongooseNormalize.normalize.bind(this.mongooseNormalize));
 
   // Mongoose uses dot notation for paths
   this._schemaOpts.expandPaths = true;
@@ -226,6 +236,7 @@ MongooseAdapter.prototype._delete = function(id) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
 
   var query = this._getQuery(id);
+
   return this._mongRemove(query);
 };
 

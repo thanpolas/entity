@@ -535,8 +535,64 @@ Sort attributed.
 this.sort('createdAt', 'DESC');
 ```
 
+#### entity.eagerLoad(values)
+
+ * **values** {string|Array|Object} values to eager load, can be a mongoose expression query.
+ * Returns self, can be chained.
+
+Will prepopulate related models on all operations that return item or items.
+
+> Available only for the Mongoose adapter, the arguments of this method will be provided to the [Mongoose populate method](http://mongoosejs.com/docs/populate.html).
+
+```js
+// Load the linked User Data Object when fetching records from this entity.
+this.eagerLoad('user');
+```
+
+#### entity.normalize(var_args)
+
+* **var_args** {...*} Can be any type and any number of values, the normalizer will always keep the last one which is expected to contain the results from an entity operation.
+* Returns Object, Array of Objects or null.
+
+Normalize is a middleware **only available for the Mongoose adaptor** and it's main purpose is to provide a normalized way of data representation. More specifically the normalize method will:
+
+* Return an Object Literal vs a Mongoose.Document type that mongoose returns.
+* Will convert the Mongoose.Document into an object honoring getters: `item.toObject({getters: true})`
+  * Which means that the default defined getter key `id` will be available.
+* Will delete the attributes `_id` and `__v`.
+
+The `normalize()` should be added manually as a middleware on the `after()` hook of every operation!
+
+```js
+// A normal read operation
+entity.read()
+  .then(function(results) {
+    console.log(results);
+    // [{
+    //   _id: '55c9e772856763a729654b99',
+    //   __v: 0,
+    //   name: 'one',
+    // }]
+  });
+
+// Now add the normalize middleware
+entity.read.after(entity.normalize);
+
+entity.read()
+  .then(function(results) {
+    console.log(results);
+    // [{
+    //   id: '55c9e772856763a729654b99',
+    //   name: 'one',
+    // }]
+  });
+```
+
 ## Release History
 
+- **v0.5.0**, *11 Aug 2015*
+  - Added the Mongoose normalization middleware.
+  - Changed the way the query is inferred based on provided arguments, affects delete operation with no arguments, will now delete all records.
 - **v0.4.2**, *23 Jul 2015*
   - Upgraded all dependency packages to latest.
 - **v0.4.0**, *05 Jun 2015*
@@ -594,7 +650,7 @@ this.sort('createdAt', 'DESC');
 
 ## License
 
-Copyright 2014 Thanasis Polychronakis
+Copyright ©2015 Thanasis Polychronakis
 
 Licensed under the [MIT License](LICENSE-MIT)
 
