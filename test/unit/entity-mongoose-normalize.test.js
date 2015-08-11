@@ -6,13 +6,13 @@ var Promise = require('bluebird');
 var chai = require('chai');
 var expect = chai.expect;
 // var sinon = require('sinon');
-var assert = chai.assert;
+// var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
 var Entity = require('../..');
 var mongStub = require('../lib/mongoose-stub');
 
-suite.only('Mongoose Normalization Methods', function() {
+suite('Mongoose Normalization Methods', function() {
   setup(mongStub.connect);
   setup(mongStub.nukedb);
 
