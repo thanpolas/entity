@@ -7,6 +7,7 @@ var Promise = require('bluebird');
 var mongoose = require('mongoose');
 
 var AdaptorBase = require('./base.adp');
+var MongooseNormalize = require('./mongoose-normalize.adp');
 
 function noop() {}
 
@@ -19,6 +20,16 @@ function noop() {}
  * @extends {MongooseAdapter.AdaptorBase}
  */
 var MongooseAdapter = module.exports = AdaptorBase.extend(function(/* optUdo */) {
+
+  /** @type {entity.MongooseNormalize} The Mongoose Sanitize Instance. */
+  this.mongooseNormalize = new MongooseNormalize();
+
+  this.method('normalizeItem',
+    this.mongooseNormalize.normalizeItem.bind(this.mongooseNormalize));
+  this.method('normalizeItems',
+    this.mongooseNormalize.normalizeItems.bind(this.mongooseNormalize));
+  this.method('normalize',
+    this.mongooseNormalize.normalize.bind(this.mongooseNormalize));
 
   // Mongoose uses dot notation for paths
   this._schemaOpts.expandPaths = true;
