@@ -590,8 +590,9 @@ entity.read()
 
 ## Release History
 
-- **v0.4.3**, *11 Aug 2015*
+- **v0.5.0**, *11 Aug 2015*
   - Added the Mongoose normalization middleware.
+  - Changed the way the query is inferred based on provided arguments, affects delete operation with no arguments, will now delete all records.
 - **v0.4.2**, *23 Jul 2015*
   - Upgraded all dependency packages to latest.
 - **v0.4.0**, *05 Jun 2015*
