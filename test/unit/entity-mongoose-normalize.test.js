@@ -6,7 +6,7 @@ var Promise = require('bluebird');
 var chai = require('chai');
 var expect = chai.expect;
 // var sinon = require('sinon');
-// var assert = chai.assert;
+var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
 var Entity = require('../..');
@@ -50,7 +50,7 @@ suite.only('Mongoose Normalization Methods', function() {
         });
     });
 
-    test('Should handle an already normalized object', function() {
+    test('Should handle an already normalized set of items', function() {
       this.entity.read.after(this.entity.normalize);
 
       return this.entity.read()
@@ -64,6 +64,59 @@ suite.only('Mongoose Normalization Methods', function() {
             'sortby',
             '_isActive',
           ]);
+        });
+    });
+
+    test('Should handle empty results', function() {
+      this.entity.read.after(this.entity.normalize);
+
+      return this.entity.read({name: 'none'})
+        .bind(this)
+        .then(function(res) {
+          assert.isArray(res, 'Result should be an array');
+          assert.lengthOf(res, 0, 'Should have zero results');
+        });
+    });
+
+    test('Should normalize single item reads', function() {
+      this.entity.readOne.after(this.entity.normalize);
+
+      return this.entity.readOne({name: fix.one.name})
+        .bind(this)
+        .then(function(res) {
+          expect(res).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+    test('Should handle an already normalized single object', function() {
+      this.entity.readOne.after(this.entity.normalize);
+
+      return this.entity.readOne({name: fix.one.name})
+        .bind(this)
+        .then(function(res) {
+          var sanres = this.entity.mongooseNormalize.normalize(res);
+
+          expect(sanres).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+    test('Should handle no results for single item reads', function() {
+      this.entity.readOne.after(this.entity.normalize);
+
+      return this.entity.readOne({name: 'none'})
+        .bind(this)
+        .then(function(res) {
+          assert.isNull(res, 'Result should be a null');
         });
     });
   });
