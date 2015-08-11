@@ -137,7 +137,6 @@
     "beforeEach": false,
     "after": false,
     "afterEach": false,
-    "teardown": false,
-    "assert": false
+    "teardown": false
   }
 }
