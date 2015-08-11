@@ -236,6 +236,7 @@ MongooseAdapter.prototype._delete = function(id) {
   if (!this.Model) { throw new Error('No Mongoose.Model defined, use setModel()'); }
 
   var query = this._getQuery(id);
+
   return this._mongRemove(query);
 };
 
