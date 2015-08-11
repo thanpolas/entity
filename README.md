@@ -554,7 +554,7 @@ this.eagerLoad('user');
 * **var_args** {...*} Can be any type and any number of values, the normalizer will always keep the last one which is expected to contain the results from an entity operation.
 * Returns Object, Array of Objects or null.
 
-The normalize method **is only available for the Mongoose adaptor** and it's main purpose is to provide a normalized way of data representation. More specifically the normalize method will:
+Normalize is a middleware **only available for the Mongoose adaptor** and it's main purpose is to provide a normalized way of data representation. More specifically the normalize method will:
 
 * Return an Object Literal vs a Mongoose.Document type that mongoose returns.
 * Will convert the Mongoose.Document into an object honoring getters: `item.toObject({getters: true})`
@@ -588,10 +588,10 @@ entity.read()
   });
 ```
 
-
-
 ## Release History
 
+- **v0.4.3**, *11 Aug 2015*
+  - Added the Mongoose normalization middleware.
 - **v0.4.2**, *23 Jul 2015*
   - Upgraded all dependency packages to latest.
 - **v0.4.0**, *05 Jun 2015*
@@ -649,7 +649,7 @@ entity.read()
 
 ## License
 
-Copyright 2014 Thanasis Polychronakis
+Copyright ©2015 Thanasis Polychronakis
 
 Licensed under the [MIT License](LICENSE-MIT)
 
