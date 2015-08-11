@@ -21,20 +21,20 @@ suite.only('Mongoose Normalization Methods', function() {
     this.entity = new EntMong();
     this.entity.setModel(mongStub.Model);
   });
+  setup(function() {
+    return Promise.all([
+      this.entity.create(fix.one),
+      this.entity.create(fix.two),
+    ])
+      .bind(this)
+      .then(function(res) {
+        this.recordOne = res[0];
+        this.recordTwo = res[1];
+      });
+  });
+
 
   suite('Normal Operation', function() {
-    setup(function() {
-      return Promise.all([
-        this.entity.create(fix.one),
-        this.entity.create(fix.two),
-      ])
-        .bind(this)
-        .then(function(res) {
-          this.recordOne = res[0];
-          this.recordTwo = res[1];
-        });
-    });
-
     test('Should normalize results', function() {
       this.entity.read.after(this.entity.normalize);
 
@@ -117,6 +117,73 @@ suite.only('Mongoose Normalization Methods', function() {
         .bind(this)
         .then(function(res) {
           assert.isNull(res, 'Result should be a null');
+        });
+    });
+
+    test('Should normalize create op', function() {
+      this.entity.create.after(this.entity.normalize);
+
+      return this.entity.create(fix.one)
+        .bind(this)
+        .then(function(res) {
+          expect(res).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize update op', function() {
+      this.entity.update.after(this.entity.normalize);
+
+      return this.entity.update({name: fix.one.name}, {name: fix.one.name})
+        .bind(this)
+        .then(function(res) {
+          expect(res).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize read limit', function() {
+      this.entity.readLimit.after(this.entity.normalize);
+
+      return this.entity.readLimit(null, 0, 10)
+        .bind(this)
+        .then(function(res) {
+          expect(res[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+  });
+  suite('Middleware', function() {
+    test('Should return expected result', function() {
+      this.entity.readLimit.after(this.entity.normalize);
+
+      this.entity.readLimit.after(function(query, offset, limit, items) {
+        return items.map(function(item) {
+          item.lol = 1;
+          return item;
+        });
+      });
+
+      return this.entity.readLimit(null, 0, 10)
+        .bind(this)
+        .then(function(res) {
+          expect(res[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+            'lol',
+          ]);
         });
     });
   });
