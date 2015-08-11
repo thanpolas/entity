@@ -36,8 +36,17 @@ var AdaptorBase = module.exports = EntityCrud.extend(function(/* optUdo */) {
  * @protected
  */
 AdaptorBase.prototype._getQuery = function(id) {
-  var q = {};
-  return (__.isObject(id)) ? id : (q[this._idName] = id, q);
+  var query = {};
+
+  if (__.isObject(id)) {
+    return id;
+  }
+
+  if (id) {
+    query[this._idName] = id;
+  }
+
+  return query;
 };
 
 /**
