@@ -1,8 +1,13 @@
 /**
  * @fileOverview Stub a mongoose model.
  */
+var __ = require('lodash');
 
 var mongoose = require('mongoose');
+var Promise = require('bluebird');
+
+var Entity = require('../..');
+var fix = require('../fixture/data.fix');
 
 var mong = module.exports = {};
 
@@ -24,7 +29,7 @@ mong.Schema = {
  */
 mong.SchemaRel = {
   darname: {type: String},
-  schem: {
+  parent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'stubModel',
   },
@@ -110,5 +115,56 @@ mong.connect = function(done) {
   mongoose.connection.on('error', function(err) {
     console.error('Mongoose ERROR:', err);
     throw err;
+  });
+};
+
+/**
+ * Setup and teardown records for testing.
+ *
+ */
+mong.setupRecords = function() {
+  setup(function() {
+    var EntMong = Entity.Mongoose.extend();
+    this.entity = new EntMong();
+    this.entity.setModel(mong.Model);
+
+    var EntRelMong = Entity.Mongoose.extend();
+    this.entityRel = new EntRelMong();
+    this.entityRel.setModel(mong.ModelRel);
+    this.entityRel.eagerLoad('parent');
+  });
+  setup(function() {
+    return Promise.all([
+      this.entity.create(fix.one),
+      this.entity.create(fix.two),
+    ])
+      .bind(this)
+      .then(function(res) {
+        this.recordOne = res[0];
+        this.recordTwo = res[1];
+      });
+  });
+  setup(function() {
+    var fixOne = __.clone(fix.relOne);
+    var fixTwo = __.clone(fix.relTwo);
+    fixOne.parent = this.recordOne._id;
+    fixTwo.parent = this.recordTwo._id;
+
+    return Promise.all([
+      this.entityRel.create(fixOne),
+      this.entityRel.create(fixTwo),
+    ])
+      .bind(this)
+      .then(function(res) {
+        this.recordRelOne = res[0];
+        this.recordRelTwo = res[1];
+      });
+  });
+
+  teardown(function() {
+    return Promise.all([
+      this.entity.delete(),
+      this.entityRel.delete(),
+    ]);
   });
 };

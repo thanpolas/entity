@@ -21,7 +21,7 @@ function noop() {}
 var MongooseAdapter = module.exports = AdaptorBase.extend(function() {
 
   /** @type {entity.MongooseNormalize} The Mongoose Sanitize Instance. */
-  this.mongooseNormalize = new MongooseNormalize();
+  this.mongooseNormalize = new MongooseNormalize(this);
 
   this.method('normalizeItem',
     this.mongooseNormalize.normalizeItem.bind(this.mongooseNormalize));
