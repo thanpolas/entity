@@ -590,6 +590,8 @@ entity.read()
 
 ## Release History
 
+- **v0.5.1**, *21 Aug 2015*
+  - Normalize will now also normalize Eager Loaded collections (relations) - Mongoose adaptor only.
 - **v0.5.0**, *11 Aug 2015*
   - Added the Mongoose normalization middleware.
   - Changed the way the query is inferred based on provided arguments, affects delete operation with no arguments, will now delete all records.
