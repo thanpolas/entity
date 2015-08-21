@@ -171,7 +171,7 @@ suite('Mongoose Normalization Methods', function() {
         });
     });
   });
-  suite.only('Relations', function() {
+  suite('Relations', function() {
     test('Should normalize single item reads', function() {
       this.entityRel.readOne.after(this.entityRel.normalize);
 
