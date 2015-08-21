@@ -8,17 +8,39 @@ var cip = require('cip');
 /**
  * The Mongoose Normalization methods.
  *
+ * @param {entity.adaptors.Mongoose} mongooseAdp The mongoose adaptor instance.
  * @constructor
  */
-var MongooseNormalize = module.exports = cip.extend();
+var MongooseNormalize = module.exports = cip.extend(function(mongooseAdp) {
+  this.mongooseAdp = mongooseAdp;
+});
 
 /**
- * Normalize a single item, the actual normalization payload is here.
+ * Normalize a single item.
  *
  * @param {?Mongoose.Document|Object} item The incoming mongoose document.
  * @return {Object|null} A normalized object.
  */
 MongooseNormalize.prototype.normalizeItem = function(item) {
+  var normalizedItem = this._normalizeActual(item);
+
+  if (this.mongooseAdp._hasEagerLoad) {
+    this.mongooseAdp._eagerLoad.forEach(function(attr) {
+      normalizedItem[attr] = this._normalizeActual(normalizedItem[attr]);
+    }, this);
+  }
+
+  return normalizedItem;
+};
+
+/**
+ * The actual normalization payload.
+ *
+ * @param {?Mongoose.Document|Object} item The incoming mongoose document.
+ * @return {Object|null} A normalized object.
+ * @private
+ */
+MongooseNormalize.prototype._normalizeActual = function(item) {
   // Object validations
   if (!item) {
     return item;
