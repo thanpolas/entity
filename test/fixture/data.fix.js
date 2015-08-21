@@ -15,3 +15,15 @@ fix.two = {
   sortby: 2,
   _isActive: false,
 };
+
+fix.relOne = {
+  darname: 'one',
+};
+
+fix.relTwo = {
+  darname: 'two',
+};
+
+fix.relThree = {
+  darname: 'three',
+};

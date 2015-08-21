@@ -24,7 +24,7 @@ mong.Schema = {
  */
 mong.SchemaRel = {
   darname: {type: String},
-  schem: {
+  parent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'stubModel',
   },
