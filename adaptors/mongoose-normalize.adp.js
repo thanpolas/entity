@@ -45,11 +45,11 @@ MongooseNormalize.prototype._normalizeActual = function(item) {
   if (!item) {
     return item;
   }
-  if (typeof item.toObject !== 'function') {
-    return item;
-  }
 
-  var normalizedItem = item.toObject({getters: true});
+  var normalizedItem = item;
+  if (typeof item.toObject === 'function') {
+    normalizedItem = item.toObject({getters: true});
+  }
 
   delete normalizedItem.__v;
   delete normalizedItem._id;
