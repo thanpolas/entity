@@ -1,6 +1,7 @@
 /**
  * @fileOverview Testing Mongoose normalize methods.
  */
+var __ = require('lodash');
 var Promise = require('bluebird');
 // var sinon  = require('sinon');
 var chai = require('chai');
@@ -9,30 +10,13 @@ var expect = chai.expect;
 var assert = chai.assert;
 
 var fix = require('../fixture/data.fix');
-var Entity = require('../..');
 var mongStub = require('../lib/mongoose-stub');
 
 suite('Mongoose Normalization Methods', function() {
   setup(mongStub.connect);
   setup(mongStub.nukedb);
 
-  setup(function() {
-    var EntMong = Entity.Mongoose.extend();
-    this.entity = new EntMong();
-    this.entity.setModel(mongStub.Model);
-  });
-  setup(function() {
-    return Promise.all([
-      this.entity.create(fix.one),
-      this.entity.create(fix.two),
-    ])
-      .bind(this)
-      .then(function(res) {
-        this.recordOne = res[0];
-        this.recordTwo = res[1];
-      });
-  });
-
+  mongStub.setupRecords();
 
   suite('Normal Operation', function() {
     test('Should normalize results', function() {
@@ -183,6 +167,95 @@ suite('Mongoose Normalization Methods', function() {
             'sortby',
             '_isActive',
             'lol',
+          ]);
+        });
+    });
+  });
+  suite.only('Relations', function() {
+    test('Should normalize single item reads', function() {
+      this.entityRel.readOne.after(this.entityRel.normalize);
+
+      return this.entityRel.readOne({darname: fix.relOne.darname})
+        .bind(this)
+        .then(function(res) {
+          expect(res.parent).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+    test('Should handle an already normalized single object', function() {
+      this.entity.readOne.after(this.entity.normalize);
+
+      return this.entityRel.readOne({darname: fix.relOne.darname})
+        .bind(this)
+        .then(function(res) {
+          var sanres = this.entityRel.mongooseNormalize.normalize(res);
+
+          expect(sanres.parent).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+    test('Should handle no results for single item reads', function() {
+      this.entityRel.readOne.after(this.entityRel.normalize);
+
+      return this.entity.readOne({darname: 'none'})
+        .bind(this)
+        .then(function(res) {
+          assert.isNull(res, 'Result should be a null');
+        });
+    });
+
+    test('Should normalize create op', function() {
+      this.entityRel.create.after(this.entityRel.normalize);
+      var fixThree = __.clone(fix.relThree);
+      fixThree.parent = this.recordTwo._id;
+
+      return this.entityRel.create(fixThree)
+        .bind(this)
+        .then(function(res) {
+          expect(res.parent).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize update op', function() {
+      this.entityRel.update.after(this.entityRel.normalize);
+
+      return this.entityRel.update({darname: fix.relOne.darname},
+        {darname: fix.relOne.darname})
+        .bind(this)
+        .then(function(res) {
+          expect(res.parent).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize read limit', function() {
+      this.entityRel.readLimit.after(this.entityRel.normalize);
+
+      return this.entityRel.readLimit(null, 0, 10)
+        .bind(this)
+        .then(function(res) {
+          expect(res[0].parent).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
           ]);
         });
     });
