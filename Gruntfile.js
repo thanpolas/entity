@@ -22,7 +22,10 @@ module.exports = function( grunt ) {
       options: {
         jshintrc: true,
       },
-      backend: ['lib/**/*.js'],
+      backend: [
+        'lib/**/*.js',
+        'adaptors/**/*.js',
+      ],
     },
 
     release: {
