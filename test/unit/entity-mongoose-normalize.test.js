@@ -188,7 +188,7 @@ suite('Mongoose Normalization Methods', function() {
     });
 
     test('Should handle an already normalized single object', function() {
-      this.entity.readOne.after(this.entity.normalize);
+      this.entityRel.readOne.after(this.entityRel.normalize);
 
       return this.entityRel.readOne({darname: fix.relOne.darname})
         .bind(this)
@@ -207,7 +207,7 @@ suite('Mongoose Normalization Methods', function() {
     test('Should handle no results for single item reads', function() {
       this.entityRel.readOne.after(this.entityRel.normalize);
 
-      return this.entity.readOne({darname: 'none'})
+      return this.entityRel.readOne({darname: 'none'})
         .bind(this)
         .then(function(res) {
           assert.isNull(res, 'Result should be a null');
