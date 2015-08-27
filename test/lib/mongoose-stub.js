@@ -35,6 +35,19 @@ mong.SchemaRel = {
   },
 };
 
+/**
+ * Define the mong schema with multiple relations to the original
+ * @type {Object}
+ */
+mong.SchemaRelMult = {
+  darname: {type: String},
+  parents: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'stubModel',
+  }],
+};
+
+
 /** @type {?Mongoose.Model} */
 mong.Model = null;
 
@@ -47,10 +60,12 @@ mong._initModels = function() {
   // init schemas
   mong.schema = new mongoose.Schema(mong.Schema);
   mong.schemaRel = new mongoose.Schema(mong.SchemaRel);
+  mong.schemaRelMult = new mongoose.Schema(mong.SchemaRelMult);
 
   // init models
   mong.Model = mongoose.model('stubModel', mong.schema);
   mong.ModelRel = mongoose.model('stubModelRel', mong.schemaRel);
+  mong.ModelRelMult = mongoose.model('stubModelRelMult', mong.schemaRelMult);
 };
 
 /**
@@ -132,6 +147,12 @@ mong.setupRecords = function() {
     this.entityRel = new EntRelMong();
     this.entityRel.setModel(mong.ModelRel);
     this.entityRel.eagerLoad('parent');
+
+    var EntRelMultMong = Entity.Mongoose.extend();
+    this.entityRelMult = new EntRelMultMong();
+    this.entityRelMult.setModel(mong.ModelRelMult);
+    this.entityRelMult.eagerLoad('parents');
+
   });
   setup(function() {
     return Promise.all([
@@ -160,7 +181,22 @@ mong.setupRecords = function() {
         this.recordRelTwo = res[1];
       });
   });
+  setup(function() {
+    var fixOne = __.clone(fix.relOne);
+    var fixTwo = __.clone(fix.relTwo);
+    fixOne.parents = [this.recordOne._id, this.recordTwo._id];
+    fixTwo.parents = [this.recordTwo._id];
 
+    return Promise.all([
+      this.entityRelMult.create(fixOne),
+      this.entityRelMult.create(fixTwo),
+    ])
+      .bind(this)
+      .then(function(res) {
+        this.recordRelMultOne = res[0];
+        this.recordRelMultTwo = res[1];
+      });
+  });
   teardown(function() {
     return Promise.all([
       this.entity.delete(),
