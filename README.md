@@ -590,6 +590,8 @@ entity.read()
 
 ## Release History
 
+- **v0.5.2**, *27 Aug 2015*
+  - Fixed normalization of one-to-many relational collections that were eagerloaded.
 - **v0.5.1**, *21 Aug 2015*
   - Normalize will now also normalize Eager Loaded collections (relations) - Mongoose adaptor only.
 - **v0.5.0**, *11 Aug 2015*
