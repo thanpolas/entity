@@ -261,6 +261,20 @@ suite('Mongoose Normalization Methods', function() {
           ]);
         });
     });
+    test('Should normalize read', function() {
+      this.entityRel.read.after(this.entityRel.normalize);
+
+      return this.entityRel.read()
+        .bind(this)
+        .then(function(res) {
+          expect(res[0].parent).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
   });
 
   suite('Relations Multy', function() {
@@ -370,7 +384,5 @@ suite('Mongoose Normalization Methods', function() {
           ]);
         });
     });
-
   });
-
 });
