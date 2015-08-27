@@ -100,7 +100,7 @@ suite('Mongoose Eager Load Methods', function() {
         });
     });
     test('Should eagerload on readOne()', function() {
-      return this.entityRelMult.readOne(this.recordRelOne._id)
+      return this.entityRelMult.readOne(this.recordRelMultOne._id)
         .bind(this)
         .then(function(item) {
           testParent(item);
@@ -108,7 +108,7 @@ suite('Mongoose Eager Load Methods', function() {
     });
     test('Should eagerload on create()', function() {
       var fixThree = __.clone(fix.relThree);
-      fixThree.parent = this.recordTwo._id;
+      fixThree.parents = [this.recordTwo._id];
 
       return this.entityRelMult.create(fixThree)
         .bind(this)
@@ -117,7 +117,8 @@ suite('Mongoose Eager Load Methods', function() {
         });
     });
     test('Should eagerload on update()', function() {
-      return this.entityRelMult.update(this.recordRelOne._id, {darname: fix.relOne.darname})
+      return this.entityRelMult.update(this.recordRelMultOne._id,
+        {darname: fix.relOne.darname})
         .bind(this)
         .then(function(item) {
           testParent(item);
