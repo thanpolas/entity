@@ -171,6 +171,8 @@ suite('Mongoose Normalization Methods', function() {
         });
     });
   });
+
+
   suite('Relations', function() {
     test('Should normalize single item reads', function() {
       this.entityRel.readOne.after(this.entityRel.normalize);
@@ -260,4 +262,115 @@ suite('Mongoose Normalization Methods', function() {
         });
     });
   });
+
+  suite('Relations Multy', function() {
+    test('Should normalize single item reads', function() {
+      this.entityRelMult.readOne.after(this.entityRelMult.normalize);
+
+      return this.entityRelMult.readOne({darname: fix.relOne.darname})
+        .bind(this)
+        .then(function(res) {
+          expect(res.parents).to.be.an('array');
+          expect(res.parents[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+    test('Should handle an already normalized single object', function() {
+      this.entityRelMult.readOne.after(this.entityRelMult.normalize);
+
+      return this.entityRelMult.readOne({darname: fix.relOne.darname})
+        .bind(this)
+        .then(function(res) {
+          var sanres = this.entityRelMult.mongooseNormalize.normalize(res);
+          expect(sanres.parents).to.be.an('array');
+          expect(sanres.parents[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+    test('Should handle no results for single item reads', function() {
+      this.entityRelMult.readOne.after(this.entityRelMult.normalize);
+
+      return this.entityRelMult.readOne({darname: 'none'})
+        .bind(this)
+        .then(function(res) {
+          assert.isNull(res, 'Result should be a null');
+        });
+    });
+
+    test('Should normalize create op', function() {
+      this.entityRelMult.create.after(this.entityRelMult.normalize);
+      var fixThree = __.clone(fix.relThree);
+      fixThree.parents = [this.recordTwo._id];
+
+      return this.entityRelMult.create(fixThree)
+        .bind(this)
+        .then(function(res) {
+          expect(res.parents).to.be.an('array');
+          expect(res.parents[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize update op', function() {
+      this.entityRelMult.update.after(this.entityRelMult.normalize);
+
+      return this.entityRelMult.update({darname: fix.relOne.darname},
+        {darname: fix.relOne.darname})
+        .bind(this)
+        .then(function(res) {
+          expect(res.parents).to.be.an('array');
+          expect(res.parents[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize read limit', function() {
+      this.entityRelMult.readLimit.after(this.entityRelMult.normalize);
+
+      return this.entityRelMult.readLimit(null, 0, 10)
+        .bind(this)
+        .then(function(res) {
+          expect(res[0].parents).to.be.an('array');
+          expect(res[0].parents[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+    test('Should normalize read', function() {
+      this.entityRelMult.read.after(this.entityRelMult.normalize);
+
+      return this.entityRelMult.read()
+        .bind(this)
+        .then(function(res) {
+          expect(res[0].parents).to.be.an('array');
+          expect(res[0].parents[0]).to.have.keys([
+            'id',
+            'name',
+            'sortby',
+            '_isActive',
+          ]);
+        });
+    });
+
+  });
+
 });
