@@ -28,12 +28,26 @@ MongooseNormalize.prototype.normalizeItem = function(item) {
   }
 
   if (this.mongooseAdp._hasEagerLoad) {
-    this.mongooseAdp._eagerLoad.forEach(function(attr) {
-      normalizedItem[attr] = this._normalizeActual(normalizedItem[attr]);
-    }, this);
+    this._handleEagerLoad(normalizedItem);
   }
 
   return normalizedItem;
+};
+
+/**
+ * Handle normalization of relational items.
+ *
+ * @param {object} normalizedItem The normalized item - mutates the relation props.
+ * @private
+ */
+MongooseNormalize.prototype._handleEagerLoad = function(normalizedItem) {
+  this.mongooseAdp._eagerLoad.forEach(function(attr) {
+    if (Array.isArray(normalizedItem[attr])) {
+      normalizedItem[attr] = normalizedItem[attr].map(this._normalizeActual, this);
+    } else {
+      normalizedItem[attr] = this._normalizeActual(normalizedItem[attr]);
+    }
+  }, this);
 };
 
 /**
