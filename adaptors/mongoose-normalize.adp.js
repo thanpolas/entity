@@ -23,6 +23,9 @@ var MongooseNormalize = module.exports = cip.extend(function(mongooseAdp) {
  */
 MongooseNormalize.prototype.normalizeItem = function(item) {
   var normalizedItem = this._normalizeActual(item);
+  if (!normalizedItem) {
+    return normalizedItem;
+  }
 
   if (this.mongooseAdp._hasEagerLoad) {
     this.mongooseAdp._eagerLoad.forEach(function(attr) {
