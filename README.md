@@ -598,6 +598,8 @@ entity.read()
 
 ## Release History
 
+- **v0.5.3**, *07 Sep 2015*
+  - Added the `and` operator for mongoose queries, allows for explicit querying of array attributes.
 - **v0.5.2**, *27 Aug 2015*
   - Fixed normalization of one-to-many relational collections that were eagerloaded.
 - **v0.5.1**, *21 Aug 2015*
