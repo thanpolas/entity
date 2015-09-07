@@ -127,7 +127,7 @@ Any additional key/value pairs you add to your query will be added with the `AND
 
 ##### Query supports expressions
 
-The query for the `read()` method supports any of the `gt, gte, lt, lte, ne` by using an Object literal as the value for the attribute you want to query:
+The query for the `read()` method supports any of the `gt, gte, lt, lte, ne, in` by using an Object literal as the value for the attribute you want to query:
 
 ```js
 entity.read({
@@ -140,6 +140,14 @@ entity.read({
   }
 });
 ```
+
+* `gt` *Greater Than*, expects a numerical value.
+* `gte` *Greater Than Equals*, expects a numerical value.
+* `lt` *Less Than*, expects a numerical value.
+* `lt` *Less Than Equals*, expects a numerical value.
+* `ne` *Not Equal*, expects a numerical value.
+* `in` *Query a Set of items*, expects an array of values: `{age: {in: [10,11,12]}}`, uses **OR** for all the items defined.
+* `and` *Query a Set of items*, expects an array of values: `{age: {and: [10,11,12]}}`, uses **AND** for all the items defined, only applies to mongoose adapter and more specifically to attributes that are of type array (i.e relation references).
 
 [Check out the `entity.read()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-read.test.js)
 
@@ -590,6 +598,8 @@ entity.read()
 
 ## Release History
 
+- **v0.5.3**, *07 Sep 2015*
+  - Added the `and` operator for mongoose queries, allows for explicit querying of array attributes.
 - **v0.5.2**, *27 Aug 2015*
   - Fixed normalization of one-to-many relational collections that were eagerloaded.
 - **v0.5.1**, *21 Aug 2015*

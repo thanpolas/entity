@@ -357,6 +357,17 @@ MongooseAdapter.prototype._transpileSelectors = function(findMethod, selectors) 
     case 'between':
       findMethod = findMethod.where(key).gt(value[0]).lt(value[1]);
       break;
+    case 'and':
+      // Match pattern bellow:
+      // query.and([{attr: val1}, {attr: val2}]);
+      var andPayload = value.map(function(valueItem) {
+        var query = {};
+        query[key] = valueItem;
+
+        return query;
+      });
+      findMethod = findMethod.and(andPayload);
+      break;
     default:
       findMethod = findMethod.where(key)[selector](value);
       break;
