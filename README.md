@@ -147,7 +147,7 @@ entity.read({
 * `lt` *Less Than Equals*, expects a numerical value.
 * `ne` *Not Equal*, expects a numerical value.
 * `in` *Query a Set of items*, expects an array of values: `{age: {in: [10,11,12]}}`, uses **OR** for all the items defined.
-* `and` *Query a Set of items*, expects an array of values: `{age: {and: [10,11,12]}}`, uses **AND** for all the items defined.
+* `and` *Query a Set of items*, expects an array of values: `{age: {and: [10,11,12]}}`, uses **AND** for all the items defined, only applies to mongoose adapter and more specifically to attributes that are of type array (i.e relation references).
 
 [Check out the `entity.read()` tests](https://github.com/thanpolas/entity/blob/master/test/unit/adaptor-crud-read.test.js)
 
