@@ -25,7 +25,7 @@ Entity uses the [Cip][] package for inheritance, it implements the pseudo-classi
 The `extend()` method is the basic tool for extending, it accepts a constructor.
 
 ```js
-var entity = require('entity');
+var entity = require('node-entity');
 
 var EntityChild = entity.extend(function() {
   this.a = 1;
