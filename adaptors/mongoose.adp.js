@@ -9,8 +9,6 @@ var mongoose = require('mongoose');
 var AdaptorBase = require('./base.adp');
 var MongooseNormalize = require('./mongoose-normalize.adp');
 
-function noop() {}
-
 /**
  * The Mongoose CRUD implementation.
  *
@@ -32,9 +30,6 @@ var MongooseAdapter = module.exports = AdaptorBase.extend(function() {
 
   // Mongoose uses dot notation for paths
   this._schemaOpts.expandPaths = true;
-
-  // stub internal methods, all should be private to instance
-  this._mongRemove = noop;
 });
 
 /**
@@ -55,12 +50,7 @@ MongooseAdapter.prototype.setModel = function(Model) {
   }
   this.Model = Model;
 
-  this._defineMethods();
   this._readSchema();
-};
-
-MongooseAdapter.prototype._defineMethods = function() {
-  this._mongRemove = Promise.promisify(this.Model.remove, this.Model);
 };
 
 /**
@@ -237,7 +227,7 @@ MongooseAdapter.prototype._delete = function(id) {
 
   var query = this._getQuery(id);
 
-  return this._mongRemove(query);
+  return Promise.resolve(this.Model.remove(query));
 };
 
 /**
