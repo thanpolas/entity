@@ -258,7 +258,7 @@ MongooseAdapter.prototype._readSchema = function() {
     }
 
     this.addSchema(path, type);
-  }, this);
+  }.bind(this));
 };
 
 /**
@@ -339,7 +339,7 @@ MongooseAdapter.prototype._separateSelectors = function(query) {
  */
 MongooseAdapter.prototype._transpileSelectors = function(findMethod, selectors) {
   __.forIn(selectors, function(item, key) {
-    var pair = __.pairs(item);
+    var pair = __.toPairs(item);
     var selector = pair[0][0];
     var value = pair[0][1];
 
