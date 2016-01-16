@@ -187,7 +187,7 @@ SequelizeAdaptor.prototype._readSchema = function() {
     }
 
     this.addSchema(schemaItem);
-  }, this);
+  }.bind(this));
 };
 
 /**

@@ -598,6 +598,8 @@ entity.read()
 
 ## Release History
 
+- **v0.5.5**, *16 Jan 2016*
+  - Fixed issues caused by upgrading the dependencies.
 - **v0.5.4**, *16 Jan 2016*
   - Upgraded all dependencies to latest.
 - **v0.5.3**, *07 Sep 2015*
