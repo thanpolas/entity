@@ -68,6 +68,17 @@ MongooseNormalize.prototype._normalizeActual = function(item) {
     normalizedItem = item.toObject({getters: true});
   }
 
+  // normalize arrays
+  for (var value in normalizedItem) {
+    if (normalizedItem.hasOwnProperty(value)) {
+      if (Array.isArray(normalizedItem[value])) {
+        normalizedItem[value].forEach(function (arItem) {
+          delete arItem._id;
+        });
+      }
+    }
+  }
+
   delete normalizedItem.__v;
   delete normalizedItem._id;
 
