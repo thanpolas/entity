@@ -598,6 +598,8 @@ entity.read()
 
 ## Release History
 
+- **v0.5.6**, *18 Oct 2016*
+  - Will now normalize arrays of objects too.
 - **v0.5.5**, *16 Jan 2016*
   - Fixed issues caused by upgrading the dependencies.
 - **v0.5.4**, *16 Jan 2016*
