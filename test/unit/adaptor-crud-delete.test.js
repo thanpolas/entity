@@ -48,7 +48,14 @@ module.exports = function(adaptor, majNum) {
           }).then(done, done);
         }).then(null, done);
       });
-
+      test(majNum + '.8.2.4 Delete with undefined id', function() {
+        return ent.delete({_id: undefined})
+          .return(null)
+          .then(ent.read)
+          .then(function(res) {
+            assert.lengthOf(res, 1, 'Records should not be deleted');
+          });
+      });
     });
   });
 };
