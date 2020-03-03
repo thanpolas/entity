@@ -34,18 +34,18 @@ core.init = function() {
         return entMong;
       },
     },
-    {
-      name: 'Sequelize',
-      Entity: Entity.Sequelize,
-      majNum: '11',
-      stub: seqStub,
-      factory: function() {
-        var EntSeq = Entity.Sequelize.extend();
-        var entSeq = new EntSeq();
-        entSeq.setModel(seqStub.Model);
-        return entSeq;
-      },
-    },
+    // {
+    //   name: 'Sequelize',
+    //   Entity: Entity.Sequelize,
+    //   majNum: '11',
+    //   stub: seqStub,
+    //   factory: function() {
+    //     var EntSeq = Entity.Sequelize.extend();
+    //     var entSeq = new EntSeq();
+    //     entSeq.setModel(seqStub.Model);
+    //     return entSeq;
+    //   },
+    // },
   ];
 
 

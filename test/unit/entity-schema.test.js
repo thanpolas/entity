@@ -62,12 +62,13 @@ suite('5.2 Entity Schema', function() {
         age: 'number',
       });
       var schema = ent.getSchema();
+      console.log('GOT:', schema.firstName);
       assert.property(schema, 'firstName');
       assert.property(schema, 'lastName');
       assert.property(schema, 'age');
-      assert.deepPropertyVal(schema, 'firstName.type', 'string');
-      assert.deepPropertyVal(schema, 'lastName.type', 'string');
-      assert.deepPropertyVal(schema, 'age.type', 'number');
+      assert.propertyVal(schema.firstName, 'type', 'string');
+      assert.propertyVal(schema.lastName, 'type', 'string');
+      assert.propertyVal(schema.age, 'type', 'number');
     });
 
 
@@ -94,9 +95,9 @@ suite('5.2 Entity Schema', function() {
 
       assert.property(schema, 'firstName');
       assert.property(schema, 'lastName');
-      assert.deepPropertyVal(schema, 'firstName.type', 'string');
-      assert.deepPropertyVal(schema, 'lastName.type', 'string');
-      assert.deepPropertyVal(schema, 'age.type', 'number');
+      assert.propertyVal(schema.firstName, 'type', 'string');
+      assert.propertyVal(schema.lastName, 'type', 'string');
+      assert.propertyVal(schema.age, 'type', 'number');
     });
 
 
@@ -105,10 +106,10 @@ suite('5.2 Entity Schema', function() {
       var schema = ent.getSchema();
       assert.notOk(Array.isArray(schema), 'schema should not be an array');
       assert.isObject(schema);
-      assert.deepPropertyVal(schema, 'firstName.name', 'firstName');
-      assert.deepPropertyVal(schema, 'firstName.path', 'firstName');
-      assert.deepPropertyVal(schema, 'firstName.canShow', true);
-      assert.deepPropertyVal(schema, 'firstName.type', 'string');
+      assert.propertyVal(schema.firstName, 'name', 'firstName');
+      assert.propertyVal(schema.firstName, 'path', 'firstName');
+      assert.propertyVal(schema.firstName, 'canShow', true);
+      assert.propertyVal(schema.firstName, 'type', 'string');
     });
 
 

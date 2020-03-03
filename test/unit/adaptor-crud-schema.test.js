@@ -38,8 +38,8 @@ module.exports = function(adaptor, majNum) {
       var schema = ent.getSchema();
       assert.property(schema, 'name');
       assert.property(schema, '_isActive');
-      assert.deepPropertyVal(schema, 'name.canShow', true);
-      assert.deepPropertyVal(schema, '_isActive.canShow', false);
+      assert.propertyVal(schema.name, 'canShow', true);
+      assert.propertyVal(schema._isActive, 'canShow', false);
     });
 
 
@@ -51,8 +51,8 @@ module.exports = function(adaptor, majNum) {
         });
         test(majNum + '.9.10.2 Expect special keys to cannot show', function() {
           var schema = ent.getSchema();
-          assert.deepPropertyVal(schema, '__v.canShow', false);
-          assert.deepPropertyVal(schema, '_id.canShow', false);
+          assert.propertyVal(schema.__v, 'canShow', false);
+          assert.propertyVal(schema._id, 'canShow', false);
         });
       });
       break;
@@ -63,8 +63,8 @@ module.exports = function(adaptor, majNum) {
         });
         test(majNum + '.9.11.2 Expect special keys to cannot show', function() {
           var schema = ent.getSchema();
-          assert.deepPropertyVal(schema, 'createdAt.canShow', false);
-          assert.deepPropertyVal(schema, 'updatedAt.canShow', false);
+          assert.propertyVal(schema.createdAt, 'canShow', false);
+          assert.propertyVal(schema.updatedAt, 'canShow', false);
         });
       });
       break;

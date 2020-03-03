@@ -227,7 +227,7 @@ MongooseAdapter.prototype._delete = function(id) {
 
   var query = this._getQuery(id);
 
-  return Promise.resolve(this.Model.remove(query));
+  return Promise.resolve(this.Model.deleteMany(query));
 };
 
 /**

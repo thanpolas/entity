@@ -598,6 +598,9 @@ entity.read()
 
 ## Release History
 
+- **v0.6.0**, *03 Mar 2020*
+  - Fixed mongoose adaptor delete method.
+  - Updated all dependencies to latest.
 - **v0.5.6**, *18 Oct 2016*
   - Will now normalize arrays of objects too.
 - **v0.5.5**, *16 Jan 2016*

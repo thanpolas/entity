@@ -1,12 +1,14 @@
 language: node_js
 node_js:
-  - 0.10
+  - 12
 env:
   - TRAVIS=true
 services:
   - mongodb
-before_script:
-  - psql -c 'create database entity_test;' -U postgres
+
+# Don't do postgres
+# before_script:
+  # - psql -c 'create database entity_test;' -U postgres
 
 # exclude work in progress
 branches:

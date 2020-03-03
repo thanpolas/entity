@@ -96,11 +96,7 @@ mong.connect = function(done) {
   // http://mongoosejs.com/docs/connections.html
   var mongoUri = 'mongodb://127.0.0.1/crude-test';
   var mongoOpts = {
-    server: {
-      socketOptions: {
-        keepAlive: 1
-      }
-    }
+      useNewUrlParser: true,
   };
 
   mongoose.connect(mongoUri, mongoOpts);
@@ -111,13 +107,11 @@ mong.connect = function(done) {
   function onErrorLocal(err) {
     if (cbDone) {return;}
     cbDone = true;
-    db.removeListener('open', onOpenLocal);
     done(err);
   }
   function onOpenLocal() {
     if (cbDone) {return;}
     cbDone = true;
-    db.removeListener('error', onErrorLocal);
 
     mong._initModels();
     done();
