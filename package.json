@@ -28,7 +28,7 @@
   },
   "main": "./",
   "scripts": {
-    "test": "./node_modules/.bin/grunt jshint && node_modules/.bin/mocha -u tdd -R spec test/unit"
+    "test": "./node_modules/.bin/grunt jshint && node_modules/.bin/mocha test/unit"
   },
   "mocha": {
     "timeout": 12000,
