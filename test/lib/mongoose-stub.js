@@ -107,13 +107,11 @@ mong.connect = function(done) {
   function onErrorLocal(err) {
     if (cbDone) {return;}
     cbDone = true;
-    db.removeListener('open', onOpenLocal);
     done(err);
   }
   function onOpenLocal() {
     if (cbDone) {return;}
     cbDone = true;
-    db.removeListener('error', onErrorLocal);
 
     mong._initModels();
     done();
