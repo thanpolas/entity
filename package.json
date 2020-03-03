@@ -30,6 +30,11 @@
   "scripts": {
     "test": "./node_modules/.bin/grunt jshint && node_modules/.bin/mocha -u tdd -R spec test/unit"
   },
+  "mocha": {
+    "timeout": 12000,
+    "u": "tdd",
+    "R": "spec"
+  },
   "dependencies": {
     "lodash": "4.17.15",
     "middlewarify": "1.0.1",
