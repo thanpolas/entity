@@ -96,11 +96,7 @@ mong.connect = function(done) {
   // http://mongoosejs.com/docs/connections.html
   var mongoUri = 'mongodb://127.0.0.1/crude-test';
   var mongoOpts = {
-    server: {
-      socketOptions: {
-        keepAlive: 1
-      }
-    }
+      useNewUrlParser: true,
   };
 
   mongoose.connect(mongoUri, mongoOpts);
