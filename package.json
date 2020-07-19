@@ -36,7 +36,7 @@
     "R": "spec"
   },
   "dependencies": {
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "middlewarify": "1.0.1",
     "mschema": "0.5.6",
     "bluebird": "3.7.2",
